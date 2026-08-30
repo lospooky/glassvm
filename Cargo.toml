@@ -1,11 +1,11 @@
 [workspace]
 members = [
-	"core",
-	"normalizer-contract",
-	"query",
-	"recorder",
-	"registry",
-	"py",
+	"crates/core",
+	"crates/normalizer-contract",
+	"crates/query",
+	"crates/recorder",
+	"crates/registry",
+	"python/facade",
 ]
 resolver = "2"
 

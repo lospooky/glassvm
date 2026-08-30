@@ -21,9 +21,9 @@ The initial publication set contains three first-class bundles:
 
 | Bundle | Machine role | Rust plugin |
 | --- | --- | --- |
-| CHIP-8 | bytecode virtual machine | `machines/chip8/plugin` |
-| Hexwell | synchronous reaction lattice | `machines/hexwell/plugin` |
-| Wyrd-16 | mutable code/state machine | `machines/wyrd16/plugin` |
+| CHIP-8 | bytecode virtual machine | [`glassvm-machines/chip8/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/chip8/plugin) |
+| Hexwell | synchronous reaction lattice | [`glassvm-machines/hexwell/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/hexwell/plugin) |
+| Wyrd-16 | mutable code/state machine | [`glassvm-machines/wyrd16/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/wyrd16/plugin) |
 
 The common caller is not specialized for any of these machine semantics.
 
@@ -265,9 +265,9 @@ These exclusions are part of the abstraction, not missing convenience APIs.
 
 ## Release evidence boundary
 
-The current workspace demonstrates the clean contract in Rust across the three
-reference bundles and exercises local entry-point discovery and recorder
-publication. Independent repository extraction, package-index publication,
-paper-scale boundedness measurements, and regenerated paper figures remain
-release gates. The claim map records those gates without promoting local
-implementation evidence into publication claims.
+The standalone `glassvm` and `glassvm-machines` repositories now provide the
+clean Rust workspace baselines across the three reference bundles and exercise
+local entry-point discovery and recorder publication. Package-index
+publication, paper-scale boundedness measurements, and regenerated paper
+figures remain release gates. The claim map records those gates without
+promoting local implementation evidence into publication claims.

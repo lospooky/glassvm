@@ -4,15 +4,14 @@
 
 This map separates claims supported by the clean in-tree implementation from
 claims that require independent release artifacts or paper-scale measurements.
-The paper outline in
-[`glassvm_paper_structure_recap.md`](../glassvm_paper/glassvm_paper_structure_recap.md)
-is publication intent; this file is the evidence boundary.
+The paper outline is maintained with the research workspace; this file is the
+standalone release evidence boundary.
 
 ## Primary claims
 
 | Claim | What the release must show | Current evidence | Status |
 | --- | --- | --- | --- |
-| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8, Hexwell, and Wyrd-16 implement the clean core contract. Registry conformance exercises one machine-independent prepared-run path across all three. | In-tree demonstrated; clean-room release proof pending. |
+| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8, Hexwell, and Wyrd-16 implement the clean core contract. Registry conformance exercises one machine-independent prepared-run path across all three. | In-tree demonstrated; package-release proof pending. |
 | **C2 — Observation inversion.** An experiment requests the evidence it needs through an explicit contract. | Preparation resolves exact channel, event-kind, native, frame, snapshot, final-state, and capability prerequisites before execution; emission and derived outputs remain separate. | `ObservationRequest`, `PreparedObservation`, dependency closure, optional downgrade, bounded normalizers, typed frame/native/input-value channels, and `EvidenceReceipt` tests are present in `glassvm_core`. | In-tree substantial; full public artifact and Python evidence matrix pending. |
 | **C3 — Practical selectable observation.** Observation cost is selectable, measurable, and suitable for long-running experimentation. | Measurements distinguish execution, normalization, sink, encoding, durable storage, memory, and file-count costs across observation selections and workloads. | Synchronous borrowed emissions, hard block/segment/buffer limits, independent channels, finalized `RecorderReceipt`, atomic publication, and recorder round-trip tests provide engineering support. | Mechanism demonstrated; paper-scale measurements pending. |
 
@@ -82,12 +81,12 @@ require the evidence items above.
 
 ## Baseline boundary
 
-The records in
-[`baselines/20260818-pc-5900x-wsl2-amd-ryzen-9-5900x/`](baselines/20260818-pc-5900x-wsl2-amd-ryzen-9-5900x/)
-are a reproducible current-state regression baseline. They identify the host,
-toolchain, source state, fixtures, configuration, observation recipe, result
-digest, runtime, RSS, and emitted-volume measurements for the recorded smoke
-matrix.
+Optional local records under
+`baselines/20260818-pc-5900x-wsl2-amd-ryzen-9-5900x/` are a reproducible
+current-state regression baseline. They identify the host, toolchain, source
+state, fixtures, configuration, observation recipe, result digest, runtime,
+RSS, and emitted-volume measurements for the recorded smoke matrix. Generated
+baseline data is intentionally not part of the clean source repository.
 
 They are not cross-host performance evidence, a durable-storage acceptance
 report, a proof of run-length-independent memory, or a population-scale
@@ -98,20 +97,18 @@ GlassVM publication evidence boundary.
 
 | Contract area | In-tree anchor |
 | --- | --- |
-| Bundle, artifact, and emulator boundary | [`core/src/bundle.rs`](../core/src/bundle.rs) |
-| Preparation and execution identity | [`core/src/preparation.rs`](../core/src/preparation.rs) |
-| Observation negotiation | [`core/src/observation_contract.rs`](../core/src/observation_contract.rs) |
-| Emission and budgets | [`core/src/emission.rs`](../core/src/emission.rs) |
-| Online normalization | [`core/src/normalizer.rs`](../core/src/normalizer.rs) |
-| Reference persistence | [`recorder/src/lib.rs`](../recorder/src/lib.rs) |
-| Projection queries | [`query/src/lib.rs`](../query/src/lib.rs) |
-| Python provider discovery | [`py/src/lib.rs`](../py/src/lib.rs) |
+| Bundle, artifact, and emulator boundary | [`crates/core/src/bundle.rs`](../../crates/core/src/bundle.rs) |
+| Preparation and execution identity | [`crates/core/src/preparation.rs`](../../crates/core/src/preparation.rs) |
+| Observation negotiation | [`crates/core/src/observation_contract.rs`](../../crates/core/src/observation_contract.rs) |
+| Emission and budgets | [`crates/core/src/emission.rs`](../../crates/core/src/emission.rs) |
+| Online normalization | [`crates/core/src/normalizer.rs`](../../crates/core/src/normalizer.rs) |
+| Reference persistence | [`crates/recorder/src/lib.rs`](../../crates/recorder/src/lib.rs) |
+| Projection queries | [`crates/query/src/lib.rs`](../../crates/query/src/lib.rs) |
+| Python provider discovery | [`python/facade/src/lib.rs`](../../python/facade/src/lib.rs) |
 | Cross-bundle conformance | Maintained by the companion `glassvm-machines` repository. |
 
 ## Current milestone position
 
-CB-01 through CB-11 are complete in the implementation ledger. CB-12 is the
-documentation and claim-map cleanup represented by this file and
-[`PUBLICATION_CONTRACT.md`](PUBLICATION_CONTRACT.md). Repository extraction,
-package publication, paper-scale measurement, and paper artifact regeneration
-remain the next release gates.
+CB-01 through CB-12 are complete in the implementation ledger. The standalone
+repository baselines are now established; package publication, paper-scale
+measurement, and paper artifact regeneration remain the next release gates.
