@@ -1,0 +1,12 @@
+[package]
+name = "glassvm_py"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "glassvm_py"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pyo3 = { version = "0.23", features = ["extension-module"] }
+serde_json = "1"

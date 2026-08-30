@@ -1,0 +1,23 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "glassvm_py"
+version = "0.1.0"
+requires-python = ">=3.9"
+description = "Generic Python facade for entry-point-discovered GlassVM machine bundles"
+
+[project.optional-dependencies]
+chip8 = ["glassvm-machine-chip8==0.1.0"]
+hexwell = ["glassvm-machine-hexwell==0.1.0"]
+wyrd16 = ["glassvm-machine-wyrd16==0.1.0"]
+all = [
+    "glassvm-machine-chip8==0.1.0",
+    "glassvm-machine-hexwell==0.1.0",
+    "glassvm-machine-wyrd16==0.1.0",
+]
+
+[tool.maturin]
+module-name = "glassvm_py"
+manifest-path = "Cargo.toml"
