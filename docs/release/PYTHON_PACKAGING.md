@@ -143,7 +143,7 @@ solely from installed entry points.
 
 ## Local wheel check
 
-After building the four wheels into one directory, a local equivalent of an
+After building the six wheels into one directory, a local equivalent of an
 index installation is:
 
 ```bash
