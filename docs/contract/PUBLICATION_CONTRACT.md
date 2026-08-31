@@ -27,6 +27,11 @@ The initial publication set contains three first-class bundles:
 
 The common caller is not specialized for any of these machine semantics.
 
+The companion `glassvm-machines` repository also contains PICO-8 and TIC-80 as
+additional clean-core bundles with the same contracts and Python provider
+protocol. They expand the package inventory and conformance surface without
+changing the paper's three-bundle reference denominator.
+
 ## Contract layers
 
 ```text
@@ -266,8 +271,9 @@ These exclusions are part of the abstraction, not missing convenience APIs.
 ## Release evidence boundary
 
 The standalone `glassvm` and `glassvm-machines` repositories now provide the
-clean Rust workspace baselines across the three reference bundles and exercise
-local entry-point discovery and recorder publication. Package-index
+clean Rust workspace baselines across the five clean-core bundles and exercise
+local entry-point discovery and recorder publication. The paper's current
+reference evidence remains scoped to CHIP-8, Hexwell, and Wyrd-16. Package-index
 publication, paper-scale boundedness measurements, and regenerated paper
 figures remain release gates. The claim map records those gates without
 promoting local implementation evidence into publication claims.
