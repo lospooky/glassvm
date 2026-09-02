@@ -422,6 +422,25 @@ mod tests {
     }
 
     #[test]
+    fn legacy_protocol_name_is_rejected_without_fallback() {
+        let error = validate_bundle_provider(
+            json!({
+                "protocol": "glassvm.python_bundle.v1",
+                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                "machine_id": "chip8",
+                "distribution": "glassvm-machine-chip8",
+                "module": "glassvm_py_chip8",
+                "prepare_function": "prepare_run",
+                "execute_function": "execute_prepared",
+                "bundle_version": "0.1.0"
+            }),
+            "chip8",
+        )
+        .expect_err("legacy protocol names must not dispatch");
+        assert!(error.contains("unsupported provider protocol"));
+    }
+
+    #[test]
     fn canonical_provider_rejects_missing_execute_operation() {
         let error = validate_bundle_provider(
             json!({
