@@ -11,7 +11,7 @@ standalone release evidence boundary.
 
 | Claim | What the release must show | Current evidence | Status |
 | --- | --- | --- | --- |
-| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8, Hexwell, and Wyrd-16 implement the clean core contract. Registry conformance exercises one machine-independent prepared-run path across all three, and the fresh-clone Python matrix exercises the same installed facade across all five local bundle wheels. | Local candidate gate passed; package-index proof pending. |
+| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8 is the baseline/reference implementation; PICO-8 and TIC-80 provide independently designed external validation specimens. Hexwell and Wyrd-16 provide polished adversarial/internal validation. Registry conformance exercises one machine-independent prepared-run path across all five, and the fresh-clone Python matrix exercises the same installed facade across all five local bundle wheels. | Local candidate gate passed; package-index proof pending. |
 | **C2 — Observation inversion.** An experiment requests the evidence it needs through an explicit contract. | Preparation resolves exact channel, event-kind, native, frame, snapshot, final-state, and capability prerequisites before execution; emission and derived outputs remain separate. | `ObservationRequest`, `PreparedObservation`, dependency closure, optional downgrade, bounded normalizers, typed frame/native/input-value channels, and `EvidenceReceipt` tests are present in `glassvm_core`; the clean-room providers exercise preparation and separate result domains from installed wheels. | Local candidate gate passed; public artifact and full evidence matrix pending. |
 | **C3 — Practical selectable observation.** Observation cost is selectable, measurable, and suitable for long-running experimentation. | Measurements distinguish execution, normalization, sink, encoding, durable storage, memory, and file-count costs across observation selections and workloads. | Synchronous borrowed emissions, hard block/segment/buffer limits, independent channels, finalized `RecorderReceipt`, atomic publication, and recorder round-trip tests provide engineering support. | Mechanism demonstrated; paper-scale measurements pending. |
 
@@ -42,7 +42,7 @@ The current publication workspace establishes these properties:
 - Query code accepts caller-supplied finite event projections; it does not read
   recorder storage or reconstruct an aggregate run.
 - The generic Python runtime discovers installed providers through
-  `glassvm.machine_bundles`; the three bundle providers use the same
+  `glassvm.machine_bundles`; all five bundle providers use the same
   preparation/execution shape in local smoke coverage.
 
 These are architectural and conformance results. They do not by themselves
@@ -53,7 +53,7 @@ index availability.
 
 | Evidence item | Supports | Required artifact or test |
 | --- | --- | --- |
-| Shared-runner heterogeneous execution | C1 | A clean-room example whose caller is unchanged across CHIP-8, Hexwell, and Wyrd-16. |
+| Shared-runner heterogeneous execution | C1 | A clean-room example whose caller is unchanged across CHIP-8, PICO-8, and TIC-80, with Hexwell and Wyrd-16 retained in the full conformance matrix. |
 | Preparation and failure behavior | C2 | Required-prerequisite rejection, optional downgrade, dependency closure, typed input/configuration admission, and pre-`RunStarted` failure tests in every released bundle. |
 | Selective observation matrix | C2, C3 | No observation, summary, selected normalized events, complete normalized events, selected native evidence, frame capture, and capability-output runs with explicit receipts. |
 | Bounded online execution | C3 | Long-run RSS/allocation measurements showing memory bounded by configured sink/reducer state rather than run length. |
@@ -69,10 +69,14 @@ The release and paper drafts may state:
 > GlassVM provides a machine-neutral execution substrate with preparation-time
 > observation negotiation, bundle-owned online normalization, independently
 > selectable evidence channels, and a bounded reference recorder. The current
-> workspace demonstrates these contracts across CHIP-8, Hexwell, and Wyrd-16.
+> workspace demonstrates these contracts across CHIP-8, PICO-8, and TIC-80,
+> with Hexwell and Wyrd-16 retained as polished adversarial/internal validation
+> specimens.
 
-They may describe the three bundles as first-class in-tree reference bundles
-and report the checked-in baseline as a host-specific regression artifact.
+They may describe CHIP-8 as the baseline/reference bundle and PICO-8 and TIC-80
+as the primary independent validation machines. Hexwell and Wyrd-16 may be
+described as first-class polished adversarial/internal validation bundles.
+The checked-in baseline remains a host-specific regression artifact.
 
 They must not yet state that GlassVM has independently published repositories,
 package-index releases, paper-scale boundedness, population-scale throughput,
