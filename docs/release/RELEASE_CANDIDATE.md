@@ -9,7 +9,7 @@ contract.
 
 ## Candidate source heads
 
-The clean-room gate was run from fresh clones at:
+The earlier clean-room gate was run from fresh clones at:
 
 | Repository | Candidate commit |
 | --- | --- |
@@ -72,17 +72,22 @@ applied to installed bundles whose contract rejects malformed bytes during
 preparation; an absent provider is tested through the missing-provider check,
 not the artifact check.
 
-## Coordinate requirement before source publication
+## Dependency and publication order
 
-Bundle source distributions must resolve the same GlassVM contract source that
-was tested. Before publishing machine sdists, every machine Cargo manifest
-must point to one exact, remotely available GlassVM release revision rather
-than the historical scaffold tag. A local commit that has not been pushed is
-not a valid sdist dependency coordinate.
+Bundle source distributions must resolve the published GlassVM contract
+versions declared by their manifests. The release order is:
 
-This requirement is deliberately separate from wheel execution: a wheel can
-be built from a local checkout while its sdist still fails to reproduce the
-build if its Git dependency points at the wrong remote revision.
+1. publish the GlassVM crates to crates.io in dependency order;
+2. regenerate and commit the machine workspace lockfile against those registry
+   releases;
+3. build and verify the machine source distributions and wheels; and
+4. publish the machine distributions.
+
+The machine manifests use ordinary `0.1.0` crates.io requirements. No Git tag,
+monorepo path dependency, or hidden local fallback is part of the clean-room
+release path. This requirement is deliberately separate from wheel execution:
+a wheel can be built from a local checkout while its sdist still fails to
+reproduce the build until the declared registry dependencies exist.
 
 ## Publication boundary
 
