@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-glassvm_core = { path = "../core" }
+glassvm_core = { version = "0.1.0", path = "../core" }
