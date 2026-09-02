@@ -2,6 +2,12 @@
 name = "glassvm_normalizer_contract"
 version = "0.1.0"
 edition = "2024"
+license = "BSD-3-Clause"
+description = "Machine-independent normalizer and capability contracts for GlassVM."
+repository = "https://github.com/lospooky/glassvm"
+readme = "../../README.md"
+keywords = ["glassvm", "observation", "capabilities"]
+categories = ["development-tools"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }

@@ -2,6 +2,12 @@
 name = "glassvm_query"
 version = "0.1.0"
 edition = "2024"
+license = "BSD-3-Clause"
+description = "Caller-owned querying over selected GlassVM execution-event projections."
+repository = "https://github.com/lospooky/glassvm"
+readme = "../../README.md"
+keywords = ["glassvm", "query", "events"]
+categories = ["development-tools"]
 
 [dependencies]
 glassvm_core = { version = "0.1.0", path = "../core" }
