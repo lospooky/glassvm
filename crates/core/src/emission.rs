@@ -693,7 +693,23 @@ impl<S: EmissionSink> EmissionSink for BudgetedSink<S> {
     }
 
     fn record_capability_outputs(&mut self, outputs: &[CapabilityOutput]) {
-        self.inner.record_capability_outputs(outputs);
+        for output in outputs {
+            let logical_bytes = match Self::measure(output) {
+                Ok(bytes) => bytes,
+                Err(error) => {
+                    self.mark_failure(Some(EmissionChannel::Capabilities), error.message().into());
+                    continue;
+                }
+            };
+            match self.account_plan(EmissionChannel::Capabilities, 1, logical_bytes) {
+                Ok(true) => {
+                    self.inner
+                        .record_capability_outputs(std::slice::from_ref(output));
+                    self.commit(EmissionChannel::Capabilities, 1, logical_bytes);
+                }
+                Ok(false) | Err(_) => {}
+            }
+        }
     }
 }
 
@@ -733,6 +749,21 @@ mod tests {
             } else {
                 Ok(())
             }
+        }
+    }
+
+    #[derive(Debug, Default)]
+    struct CapabilityOutputSink {
+        outputs: usize,
+    }
+
+    impl EmissionSink for CapabilityOutputSink {
+        fn emit(&mut self, _emission: Emission<'_>) -> Result<(), SinkError> {
+            Ok(())
+        }
+
+        fn record_capability_outputs(&mut self, outputs: &[CapabilityOutput]) {
+            self.outputs += outputs.len();
         }
     }
 
@@ -892,6 +923,44 @@ mod tests {
             .emit_receipt()
             .expect_err("receipt publication must be exactly once");
         assert!(duplicate.message().contains("already emitted"));
+    }
+
+    #[test]
+    fn capability_output_bytes_are_hard_budgeted_before_forwarding() {
+        let mut request = ObservationRequest::summary();
+        request
+            .capabilities
+            .push(glassvm_normalizer_contract::CapabilityRequest::required(
+                glassvm_normalizer_contract::CapabilityId::new("test.capability")
+                    .expect("capability"),
+            ));
+        request.budgets.max_capability_bytes = Some(1);
+        request.overflow = OverflowPolicy::AllowIncomplete;
+        let mut sink = BudgetedSink::new(
+            CapabilityOutputSink::default(),
+            request,
+            RunId::from("run"),
+            MachineId::from("test"),
+            VersionStamp::from("test.v1"),
+        )
+        .expect("budget sink");
+        let output = CapabilityOutput {
+            schema: glassvm_normalizer_contract::CapabilityId::new("test.capability")
+                .expect("capability")
+                .schema(),
+            value: serde_json::json!({"value": 7}),
+        };
+
+        sink.record_capability_outputs(std::slice::from_ref(&output));
+        let receipt = sink.receipt();
+        let capabilities = receipt
+            .channels
+            .iter()
+            .find(|channel| channel.channel == EmissionChannel::Capabilities)
+            .expect("capability channel");
+        assert_eq!(capabilities.status, ChannelStatus::Truncated);
+        assert_eq!(capabilities.item_count, 0);
+        assert_eq!(sink.into_inner().outputs, 0);
     }
 
     #[test]
