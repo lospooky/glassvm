@@ -1,13 +1,14 @@
 # GlassVM release-candidate preflight
 
-**Status:** local candidate gate passed; package-index publication is not yet
-authorized or complete.
+**Status:** GlassVM contract crates are published at `0.1.0`; machine crates
+and Python distributions remain unpublished. Registry-only machine build and
+clean-room checks passed locally on 2026-10-01.
 
 This document records the release-candidate boundary for the two standalone
 repositories. It is a packaging and evidence checklist, not a new runtime
 contract.
 
-## Candidate source heads
+## Earlier candidate source heads
 
 The earlier clean-room gate was run from fresh clones at:
 
@@ -19,6 +20,30 @@ The earlier clean-room gate was run from fresh clones at:
 Both repositories were clean at the tested heads. The gate used CPython 3.13
 on Linux and built the generic facade plus all five bundle wheels from source
 distributions.
+
+## Registry-only verification after crates.io publication
+
+The five GlassVM contract crates are available on crates.io at `0.1.0`:
+`glassvm_normalizer_contract`, `glassvm_core`, `glassvm_recorder`,
+`glassvm_query`, and `glassvm_registry`.
+
+The follow-up verification used the machine workspace at commit
+`2443d08fceb2c6d19a5202cb47a39c2818bf63fe` and the generic facade after its
+BSD-3-Clause metadata correction. The facade wheel was rebuilt from its source
+distribution. Its wheel metadata reports `License-Expression: BSD-3-Clause`
+and declares all six documented extras (`chip8`, `hexwell`, `pico8`, `tic80`,
+`wyrd16`, and `all`).
+
+The machine lockfile resolves all five GlassVM crates from the crates.io
+registry with registry checksums. `cargo test --workspace --locked
+--no-fail-fast` passed. The installed-wheel smoke matrix passed for base-only,
+each individual provider, and all five providers. Every documented extra was
+also resolved using only the local wheel directory with package-index access
+disabled. Invalid-artifact rejection was checked for PICO-8 and TIC-80 only;
+absence checks covered providers not installed in each isolated environment.
+
+These checks validate local artifacts; they do not publish machine crates or
+Python distributions.
 
 ## Artifact set
 
