@@ -11,16 +11,12 @@ license = "BSD-3-Clause"
 
 [project.optional-dependencies]
 chip8 = ["glassvm-machine-chip8==0.1.0"]
-hexwell = ["glassvm-machine-hexwell==0.1.0"]
-wyrd16 = ["glassvm-machine-wyrd16==0.1.0"]
 pico8 = ["glassvm-machine-pico8==0.1.0"]
 tic80 = ["glassvm-machine-tic80==0.1.0"]
 all = [
     "glassvm-machine-chip8==0.1.0",
-    "glassvm-machine-hexwell==0.1.0",
     "glassvm-machine-pico8==0.1.0",
     "glassvm-machine-tic80==0.1.0",
-    "glassvm-machine-wyrd16==0.1.0",
 ]
 
 [tool.maturin]

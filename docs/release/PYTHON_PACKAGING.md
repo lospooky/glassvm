@@ -10,14 +10,10 @@ The publication names are:
 
 - `glassvm_py`: generic runtime facade and provider discovery;
 - `glassvm-machine-chip8`: CHIP-8 provider, imported as `glassvm_py_chip8`;
-- `glassvm-machine-hexwell`: Hexwell provider, imported as
-  `glassvm_py_hexwell`; and
 - `glassvm-machine-pico8`: PICO-8 provider, imported as
-  `glassvm_py_pico8`;
+  `glassvm_py_pico8`; and
 - `glassvm-machine-tic80`: TIC-80 provider, imported as
-  `glassvm_py_tic80`; and
-- `glassvm-machine-wyrd16`: Wyrd-16 provider, imported as
-  `glassvm_py_wyrd16`.
+  `glassvm_py_tic80`.
 
 Each bundle wheel supplies one provider and statically links its machine
 implementation. A compatible wheel installation does not require a Rust
@@ -30,16 +26,12 @@ Extras are ordinary dependency selection:
 ```toml
 [project.optional-dependencies]
 chip8 = ["glassvm-machine-chip8==0.1.0"]
-hexwell = ["glassvm-machine-hexwell==0.1.0"]
-wyrd16 = ["glassvm-machine-wyrd16==0.1.0"]
 pico8 = ["glassvm-machine-pico8==0.1.0"]
 tic80 = ["glassvm-machine-tic80==0.1.0"]
 all = [
     "glassvm-machine-chip8==0.1.0",
-    "glassvm-machine-hexwell==0.1.0",
     "glassvm-machine-pico8==0.1.0",
     "glassvm-machine-tic80==0.1.0",
-    "glassvm-machine-wyrd16==0.1.0",
 ]
 ```
 
@@ -131,11 +123,9 @@ The clean-room matrix is:
 | --- | --- | --- |
 | base only | none | Runtime imports; an unavailable machine fails clearly. |
 | `chip8` | CHIP-8 | Typed preparation and a published run. |
-| `hexwell` | Hexwell | Typed preparation and a published run. |
 | `pico8` | PICO-8 | Typed preparation and a published run. |
 | `tic80` | TIC-80 | Typed preparation and a published run. |
-| `wyrd16` | Wyrd-16 | Typed preparation and a published run. |
-| `all` | all five | The same caller lifecycle works for every provider. |
+| `all` | CHIP-8, PICO-8, TIC-80 | The same caller lifecycle works for every release provider. |
 
 Each environment also checks invalid artifact, configuration, input, limit,
 and required observation requests fail at preparation. Discovery is derived
@@ -143,8 +133,8 @@ solely from installed entry points.
 
 ## Local wheel check
 
-After building the six wheels into one directory, a local equivalent of an
-index installation is:
+After building the four release wheels into one directory, a local equivalent
+of an index installation is:
 
 ```bash
 uv pip install --find-links dist "glassvm_py[chip8]"

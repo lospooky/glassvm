@@ -1,8 +1,12 @@
 # GlassVM release-candidate preflight
 
 **Status:** GlassVM contract crates are published at `0.1.0`; machine crates
-and Python distributions remain unpublished. Registry-only machine build and
-clean-room checks passed locally on 2026-10-01.
+and Python distributions remain unpublished. The initial machine release set
+is CHIP-8, PICO-8, and TIC-80. Local Rust, wheel-build, base-only, and
+all-provider checks for this narrowed set passed on 2026-10-01; the isolated
+CI matrix and package-index checks remain pending. Hexwell and Wyrd-16 are
+preserved on the `glassvm-machines` branch `parked/hexwell-wyrd16` and are
+excluded from this candidate.
 
 This document records the release-candidate boundary for the two standalone
 repositories. It is a packaging and evidence checklist, not a new runtime
@@ -17,9 +21,10 @@ The earlier clean-room gate was run from fresh clones at:
 | `glassvm` | `38c7c688f68fcee9573050087602379353b6e4de` |
 | `glassvm-machines` | `88a67062d2db1d7b44016be358d91afa0d0eaa44` |
 
-Both repositories were clean at the tested heads. The gate used CPython 3.13
-on Linux and built the generic facade plus all five bundle wheels from source
-distributions.
+Both repositories were clean at the tested heads. That historical gate used
+CPython 3.13 on Linux and built the generic facade plus five bundle wheels.
+It verifies the previous broader workspace, not the current three-bundle
+release set.
 
 ## Registry-only verification after crates.io publication
 
@@ -27,32 +32,31 @@ The five GlassVM contract crates are available on crates.io at `0.1.0`:
 `glassvm_normalizer_contract`, `glassvm_core`, `glassvm_recorder`,
 `glassvm_query`, and `glassvm_registry`.
 
-The follow-up verification used the machine workspace at commit
+The historical follow-up verification used the machine workspace at commit
 `2443d08fceb2c6d19a5202cb47a39c2818bf63fe` and the generic facade after its
 BSD-3-Clause metadata correction. The facade wheel was rebuilt from its source
 distribution. Its wheel metadata reports `License-Expression: BSD-3-Clause`
-and declares all six documented extras (`chip8`, `hexwell`, `pico8`, `tic80`,
-`wyrd16`, and `all`).
+and declared extras for all five bundles at that time. Current metadata is
+narrowed to `chip8`, `pico8`, `tic80`, and `all`.
 
 The machine lockfile resolves all five GlassVM crates from the crates.io
 registry with registry checksums. `cargo test --workspace --locked
---no-fail-fast` passed. The installed-wheel smoke matrix passed for base-only,
-each individual provider, and all five providers. Every documented extra was
-also resolved using only the local wheel directory with package-index access
-disabled. Invalid-artifact rejection was checked for PICO-8 and TIC-80 only;
-absence checks covered providers not installed in each isolated environment.
+--no-fail-fast` passed. The historical installed-wheel smoke matrix passed
+for base-only, each individual provider, and all five providers. These results
+do not replace a fresh clean-room run for the narrowed release set. Invalid-
+artifact rejection was checked for PICO-8 and TIC-80 only; absence checks
+covered providers not installed in each isolated environment.
 
 These checks validate local artifacts; they do not publish machine crates or
 Python distributions.
 
 ## Artifact set
 
-The candidate contains six Python distributions, all at version `0.1.0`:
+The narrowed candidate contains four Python distributions, all at version
+`0.1.0`:
 
 - `glassvm_py`;
 - `glassvm-machine-chip8`;
-- `glassvm-machine-hexwell`;
-- `glassvm-machine-wyrd16`;
 - `glassvm-machine-pico8`; and
 - `glassvm-machine-tic80`.
 
@@ -75,17 +79,17 @@ From a clean clone of `glassvm-machines`:
 ```bash
 cargo test --workspace --locked --no-fail-fast
 
-for machine in chip8 hexwell wyrd16 pico8 tic80; do
+for machine in chip8 pico8 tic80; do
     uv build --python 3.13 --directory "$machine" --no-sources
 done
 ```
 
-Place the six wheels in one temporary local index and run
+Place the four wheels in one temporary local index and run
 `conformance/python_clean_room.py` in isolated environments for:
 
 - base only;
 - each individual bundle; and
-- all five bundles together.
+- all three release bundles together.
 
 Every environment must verify installed entry-point discovery, native-module
 loading, preparation-time validation, separate execution/evidence/recorder

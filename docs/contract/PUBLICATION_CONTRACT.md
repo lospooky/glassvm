@@ -17,24 +17,22 @@ GlassVM is a machine-execution substrate. It supplies:
 - bundle-owned normalization and derived capability outputs; and
 - a reference file recorder with explicit publication accounting.
 
-The publication workspace contains five first-class bundles:
+The initial publication workspace contains three first-class bundles:
 
 | Bundle | Machine role | Rust plugin |
 | --- | --- | --- |
 | CHIP-8 | baseline/reference bytecode virtual machine | [`glassvm-machines/chip8/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/chip8/plugin) |
 | PICO-8 | independently designed external validation machine | [`glassvm-machines/pico8/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/pico8/plugin) |
 | TIC-80 | independently designed external validation machine | [`glassvm-machines/tic80/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/tic80/plugin) |
-| Hexwell | polished adversarial/internal validation machine | [`glassvm-machines/hexwell/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/hexwell/plugin) |
-| Wyrd-16 | polished adversarial/internal validation machine | [`glassvm-machines/wyrd16/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/wyrd16/plugin) |
 
 The common caller is not specialized for any of these machine semantics.
 
-All five bundles implement the same clean contracts and Python provider
-protocol. CHIP-8 is the baseline/reference implementation. PICO-8 and TIC-80
-are the independent external validation machines used for the paper's primary
-cross-machine publication denominator. Hexwell and Wyrd-16 remain fully
-supported, polished clean-contract bundles used as adversarial/internal
-validation specimens rather than primary empirical machines.
+All three release bundles implement the same clean contracts and Python
+provider protocol. CHIP-8 is the baseline/reference implementation. PICO-8
+and TIC-80 are the independently designed external validation machines used
+for the paper's cross-machine publication denominator. Hexwell and Wyrd-16 are
+preserved on the [`parked/hexwell-wyrd16` branch](https://github.com/lospooky/glassvm-machines/tree/parked/hexwell-wyrd16)
+and are not part of this release candidate.
 
 ## Contract layers
 
@@ -274,12 +272,9 @@ These exclusions are part of the abstraction, not missing convenience APIs.
 
 ## Release evidence boundary
 
-The standalone `glassvm` and `glassvm-machines` repositories now provide the
-clean Rust workspace baselines across all five clean-core bundles and exercise
-local entry-point discovery and recorder publication. The paper's primary
-machine denominator is CHIP-8, PICO-8, and TIC-80. Hexwell and Wyrd-16 remain
-part of the full conformance and release surface as adversarial/internal
-validation specimens. Package-index publication, paper-scale boundedness
-measurements, and regenerated paper figures remain release gates. The claim
-map records those gates without promoting local implementation evidence into
-publication claims.
+The standalone `glassvm` and `glassvm-machines` repositories provide clean
+workspace baselines across the three release bundles and exercise local
+entry-point discovery and recorder publication. Package-index publication,
+paper-scale boundedness measurements, and regenerated paper figures remain
+release gates. The claim map records those gates without promoting local
+implementation evidence into publication claims.
