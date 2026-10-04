@@ -5,7 +5,7 @@ build-backend = "maturin"
 [project]
 name = "glassvm_py"
 version = "0.1.0"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 description = "Generic Python facade for entry-point-discovered GlassVM machine bundles"
 license = "BSD-3-Clause"
 
