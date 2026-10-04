@@ -425,7 +425,7 @@ mod tests {
     fn legacy_protocol_name_is_rejected_without_fallback() {
         let error = validate_bundle_provider(
             json!({
-                "protocol": "glassvm.python_bundle.v1",
+                "protocol": format!("{PYTHON_BUNDLE_PROVIDER_CONTRACT}.v1"),
                 "protocol_version": {"major": 1, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-machine-chip8",

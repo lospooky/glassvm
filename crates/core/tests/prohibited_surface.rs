@@ -27,7 +27,6 @@ fn repository_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .parent()
         .and_then(Path::parent)
-        .and_then(Path::parent)
         .expect("core test must be nested beneath crates/core")
         .to_path_buf()
 }
