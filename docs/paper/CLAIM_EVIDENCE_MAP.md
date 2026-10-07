@@ -1,6 +1,6 @@
 # GlassVM paper claim-to-evidence map
 
-**Status:** current release and paper evidence boundary, 2026-10-01
+**Status:** current release and paper evidence boundary, 2026-10-04
 
 This map separates claims supported by the clean in-tree implementation from
 claims that require independent release artifacts or paper-scale measurements.
@@ -11,8 +11,8 @@ standalone release evidence boundary.
 
 | Claim | What the release must show | Current evidence | Status |
 | --- | --- | --- | --- |
-| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8 is the baseline/reference implementation; PICO-8 and TIC-80 provide independently designed external validation specimens. Registry conformance and the clean-room Python matrix exercise the same prepared-run and installed-facade paths across those three release bundles. Hexwell and Wyrd-16 are preserved on a separate parked branch and are outside this release denominator. | Local three-bundle Rust, wheel-build, and base/all smoke checks passed; isolated CI matrix and package-index proof pending. |
-| **C2 — Observation inversion.** An experiment requests the evidence it needs through an explicit contract. | Preparation resolves exact channel, event-kind, native, frame, snapshot, final-state, and capability prerequisites before execution; emission and derived outputs remain separate. | `ObservationRequest`, `PreparedObservation`, dependency closure, optional downgrade, bounded normalizers, typed frame/native/input-value channels, and `EvidenceReceipt` tests are present in `glassvm_core`; the clean-room providers exercise preparation and separate result domains from installed wheels. | Local three-bundle Rust, wheel-build, and base/all smoke checks passed; isolated CI matrix and package-index proof pending. |
+| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8 is the baseline/reference implementation; PICO-8 and TIC-80 provide independently designed external validation specimens. Shared conformance and installed-wheel tests exercise the same prepared-run and facade paths across the three release bundles. Hexwell and Wyrd-16 are preserved on a separate parked branch and are outside this release denominator. | Architecture and three-machine behavior are verified at GlassVM `cf7dee8444e1f5968f7206f65335663855c981e2` and Machines `56563bd0dfb92a67d272ed4d8ab4868e448b265d`; current CPython 3.12/3.13/3.14 CI is green. Python package-index publication and install proof remain open. |
+| **C2 — Observation inversion.** An experiment requests the evidence it needs through an explicit contract. | Preparation resolves exact channel, event-kind, native, frame, snapshot, final-state, and capability prerequisites before execution; emission and derived outputs remain separate. | `ObservationRequest`, `PreparedObservation`, exact dependency closure, optional downgrade, bounded normalizers, typed frame/native/input-value channels, and `EvidenceReceipt` tests are exercised by shared conformance cases for every release bundle. The installed-wheel clean-room path checks preparation and separate result domains. | Preparation and evidence semantics are verified across all three bundles; the current 3.12/3.13/3.14 source-distribution-to-wheel and provider matrix is green. Package-index publication and install proof remain open. |
 | **C3 — Practical selectable observation.** Observation cost is selectable, measurable, and suitable for long-running experimentation. | Measurements distinguish execution, normalization, sink, encoding, durable storage, memory, and file-count costs across observation selections and workloads. | Synchronous borrowed emissions, hard block/segment/buffer limits, independent channels, finalized `RecorderReceipt`, atomic publication, and recorder round-trip tests provide engineering support. | Mechanism demonstrated; paper-scale measurements pending. |
 
 The machine-independent downstream analysis demonstration supports C2 and C3;
@@ -43,7 +43,10 @@ The current publication workspace establishes these properties:
   recorder storage or reconstruct an aggregate run.
 - The generic Python runtime discovers installed providers through
   `glassvm.machine_bundles`; all three release providers use the same
-  preparation/execution shape in local smoke coverage.
+  preparation/execution shape in the published clean-room CI matrix.
+- Each provider source distribution can be rebuilt into a wheel from the
+  archive itself. The current matrix performs this rebuild before exercising
+  base-only, per-provider, and all-provider installations.
 
 These are architectural and conformance results. They do not by themselves
 establish cross-host performance, population-scale throughput, or package
@@ -59,7 +62,7 @@ index availability.
 | Bounded online execution | C3 | Long-run RSS/allocation measurements showing memory bounded by configured sink/reducer state rather than run length. |
 | Recorder/storage cost | C3 | Logical bytes, encoded bytes, block/segment counts, file counts, and publication outcomes under identical workloads and observation requests. |
 | Downstream analysis | C2, C3 | Refinery or equivalent caller consuming selected normalized projections and capability outputs without requiring whole-run GlassVM materialization. |
-| Independent publication | C1, C2, C3 | Extracted `glassvm` and `glassvm-machines` repositories, source-reproducible released crates/wheels, and clean environments with no monorepo paths. The local fresh-clone and wheel matrix passes; package-index publication remains open. |
+| Independent publication | C1, C2, C3 | Both repositories are public and the five machine-neutral GlassVM crates are published at `0.1.0`. Bundle source archives and wheels build from the split repositories without GlassVM path overrides. The four Python distributions are not yet published to PyPI, so package-index-only installation remains open. |
 | Paper regeneration | All | Versioned scripts regenerate every table and figure from public result files. |
 
 ## Permitted claim language before those gates close
@@ -77,10 +80,10 @@ as the independent validation machines. Hexwell and Wyrd-16 are parked outside
 the current release branch and should not be counted as publication specimens.
 The checked-in baseline remains a host-specific regression artifact.
 
-They must not yet state that GlassVM has independently published repositories,
-package-index releases, paper-scale boundedness, population-scale throughput,
-or a completed machine-independent Refinery benchmark. Those statements
-require the evidence items above.
+They must not yet state that the machine Python distributions are published to
+PyPI, that the system has paper-scale boundedness or population-scale
+throughput, or that a machine-independent Refinery benchmark is complete.
+Those statements require the evidence items above.
 
 ## Baseline boundary
 
@@ -112,7 +115,9 @@ GlassVM publication evidence boundary.
 
 ## Current milestone position
 
-CB-01 through CB-12 are complete in the implementation ledger. The local
-clean-room extraction and packaging gate has now passed from fresh repository
-clones. Source-coordinate reconciliation, package publication, paper-scale
-measurement, and paper artifact regeneration remain the next release gates.
+CB-01 through CB-12 are complete in the implementation ledger. Slice 2's
+source audit and cross-bundle conformance matrix are recorded in
+[`PAPER_RELEASE_SLICE_02.md`](PAPER_RELEASE_SLICE_02.md). Both public source
+coordinates and their current Rust/Python CI are green. PyPI publication,
+empty-cache release verification, paper-scale measurement, and paper artifact
+regeneration remain open gates.

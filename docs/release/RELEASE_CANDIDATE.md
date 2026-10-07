@@ -1,10 +1,18 @@
 # GlassVM release-candidate preflight
 
-**Status:** GlassVM contract crates are published at `0.1.0`; machine crates
-and Python distributions remain unpublished. The initial machine release set
-is CHIP-8, PICO-8, and TIC-80. Local Rust, wheel-build, base-only, and
-all-provider checks for this narrowed set passed on 2026-10-01; the isolated
-CI matrix and package-index checks remain pending. Hexwell and Wyrd-16 are
+**Status (2026-10-04):** The five machine-neutral GlassVM contract crates are
+published at `0.1.0`. Machine-specific Rust crates are implementation details
+and are marked `publish = false`; the three machine Python distributions have
+not been published to PyPI. The release denominator is CHIP-8, PICO-8, and
+TIC-80. The exact public source coordinates are GlassVM
+[GlassVM `cf7dee8`](https://github.com/lospooky/glassvm/commit/cf7dee8444e1f5968f7206f65335663855c981e2)
+and [Machines `56563bd`](https://github.com/lospooky/glassvm-machines/commit/56563bd0dfb92a67d272ed4d8ab4868e448b265d).
+[GlassVM CI](https://github.com/lospooky/glassvm/actions/runs/37216452075)
+and [Machines CI](https://github.com/lospooky/glassvm-machines/actions/runs/37216276015)
+pass on those heads, including CPython 3.12, 3.13, and 3.14
+source-distribution-to-wheel builds and the base/per-bundle/all-bundle
+clean-room matrix. Package-index installation and empty-cache publication
+checks remain open. Hexwell and Wyrd-16 are
 preserved on the `glassvm-machines` branch `parked/hexwell-wyrd16` and are
 excluded from this candidate.
 
@@ -26,11 +34,20 @@ CPython 3.13 on Linux and built the generic facade plus five bundle wheels.
 It verifies the previous broader workspace, not the current three-bundle
 release set.
 
-## Registry-only verification after crates.io publication
+## Published Rust contract crates
 
-The five GlassVM contract crates are available on crates.io at `0.1.0`:
-`glassvm_normalizer_contract`, `glassvm_core`, `glassvm_recorder`,
-`glassvm_query`, and `glassvm_registry`.
+The only crates.io publication targets are the five machine-neutral GlassVM
+contract crates, all available at `0.1.0`:
+[`glassvm_normalizer_contract`](https://crates.io/crates/glassvm_normalizer_contract/0.1.0),
+[`glassvm_core`](https://crates.io/crates/glassvm_core/0.1.0),
+[`glassvm_recorder`](https://crates.io/crates/glassvm_recorder/0.1.0),
+[`glassvm_query`](https://crates.io/crates/glassvm_query/0.1.0), and
+[`glassvm_registry`](https://crates.io/crates/glassvm_registry/0.1.0).
+
+Machine-specific Rust packages are not crates.io release targets and have
+`publish = false`. Their sibling path dependencies are internal to each
+machine's complete Python source distribution. The machine lockfile resolves
+all five GlassVM dependencies from crates.io with registry checksums.
 
 The historical follow-up verification used the machine workspace at commit
 `2443d08fceb2c6d19a5202cb47a39c2818bf63fe` and the generic facade after its
@@ -47,18 +64,23 @@ do not replace a fresh clean-room run for the narrowed release set. Invalid-
 artifact rejection was checked for PICO-8 and TIC-80 only; absence checks
 covered providers not installed in each isolated environment.
 
-These checks validate local artifacts; they do not publish machine crates or
-Python distributions.
+The 2026-10-04 source-archive round-trip check built all four sdists and
+rebuilt their wheels from the archives under CPython 3.14. This validates the
+included sibling Rust source closure; it did not use a fresh empty Cargo/uv
+cache and is not package-index installation evidence.
 
 ## Artifact set
 
 The narrowed candidate contains four Python distributions, all at version
-`0.1.0`:
+`0.1.0`, with `Requires-Python: >=3.12`:
 
-- `glassvm_py`;
-- `glassvm-machine-chip8`;
-- `glassvm-machine-pico8`; and
-- `glassvm-machine-tic80`.
+- `glassvm` (the generic facade and `glassvm` import module);
+- `glassvm-chip8`;
+- `glassvm-pico8`; and
+- `glassvm-tic80`.
+
+CI covers CPython 3.12, 3.13, and 3.14 on Ubuntu 24.04 x86_64. No Windows or
+macOS wheel/build claim is made by this evidence.
 
 The provider protocol is the exact metadata contract
 `glassvm.python_bundle` at numeric version `1.0.0`. The base distribution has
@@ -71,7 +93,7 @@ From a clean clone of `glassvm`:
 
 ```bash
 cargo test --workspace --locked --no-fail-fast
-uv build --python 3.13 --directory python/facade --no-sources
+uv build --python 3.14 --directory python/facade --no-sources
 ```
 
 From a clean clone of `glassvm-machines`:
@@ -80,9 +102,14 @@ From a clean clone of `glassvm-machines`:
 cargo test --workspace --locked --no-fail-fast
 
 for machine in chip8 pico8 tic80; do
-    uv build --python 3.13 --directory "$machine" --no-sources
+    uv build --python 3.14 --directory "$machine" --no-sources
 done
 ```
+
+The public CI goes further: it creates each sdist, rebuilds the wheel from
+that archive, then runs the clean-room install matrix for CPython 3.12, 3.13,
+and 3.14. The commands above are a concise local checkout smoke, not a
+substitute for the CI source-archive round trip.
 
 Place the four wheels in one temporary local index and run
 `conformance/python_clean_room.py` in isolated environments for:
@@ -103,14 +130,18 @@ not the artifact check.
 
 ## Dependency and publication order
 
-Bundle source distributions must resolve the published GlassVM contract
-versions declared by their manifests. The release order is:
+Bundle source distributions resolve the published GlassVM contract versions
+declared by their manifests. For this candidate:
 
-1. publish the GlassVM crates to crates.io in dependency order;
-2. regenerate and commit the machine workspace lockfile against those registry
-   releases;
-3. build and verify the machine source distributions and wheels; and
-4. publish the machine distributions.
+1. **Complete:** publish the five GlassVM crates to crates.io in dependency
+   order at `0.1.0`.
+2. **Complete:** resolve and commit the machine workspace lockfile against
+   those registry releases.
+3. **Complete for the evaluated source:** build each source distribution and
+   wheel, rebuild wheels from the sdists in CI, and pass the clean-room
+   provider matrix. Fresh empty-cache reproducibility remains open.
+4. **Pending:** publish the four machine Python distributions to PyPI and
+   verify installation from the package index in clean environments.
 
 The machine manifests use ordinary `0.1.0` crates.io requirements. No Git tag,
 monorepo path dependency, or hidden local fallback is part of the clean-room
@@ -120,7 +151,7 @@ reproduce the build until the declared registry dependencies exist.
 
 ## Publication boundary
 
-This preflight does not publish to PyPI, crates.io, or GitHub; it does not
-create or move tags; and it does not push either repository. Those are explicit
-release operations after the candidate source coordinates and package-index
-credentials have been reviewed.
+This preflight does not publish machine distributions to PyPI, publish new
+GlassVM crate versions, create or move tags, or push the repositories. Those
+remain explicit release operations after package-index credentials and the
+candidate artifact coordinates have been reviewed.
