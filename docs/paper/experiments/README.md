@@ -72,11 +72,12 @@ presented as pure emulator time. Peak RSS is process high-water memory, not an
 allocation counter. Allocator high-water is explicitly null because the
 provider protocol exposes no portable allocator statistic.
 
-`PreparedRun` remains opaque and has no identity accessor in the Python
-facade. The runner reports `prepared_run_identity: null` and the reason. It
-does report the `PreparedObservation` identity recovered from published
-manifest metadata when available; it never creates a substitute digest from
-raw Python objects.
+`PreparedRun` remains opaque; these experiments do not require an identity
+accessor. Reproducibility is recorded through the artifact digest, explicit
+configuration, input schedule, execution controls, provider/package metadata,
+exact observation request, and the `PreparedObservation` identity recovered
+from published manifest metadata when available. No identity is synthesized
+from raw Python objects.
 
 The raw record distinguishes checkout references from installed package
 provenance. The provider entry point and installed distribution versions are

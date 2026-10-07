@@ -222,8 +222,6 @@ def run_trial(args: argparse.Namespace) -> dict:
         },
         "request": {},
         "negotiation": {
-            "prepared_run_identity": None,
-            "prepared_run_identity_note": "Opaque Python PreparedRun exposes no identity accessor; no surrogate derived from caller syntax is reported.",
             "prepared_observation_identity": None,
             "optional_unavailable_capabilities": [],
         },

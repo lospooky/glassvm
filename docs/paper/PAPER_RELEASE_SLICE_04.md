@@ -1,6 +1,6 @@
 # Slice 4: experiment harness and result contract
 
-Execution date: 2026-10-07. Status: **implementation and pilot harness green; two exit-gate items remain open**.
+Execution date: 2026-10-07. Status: **implementation and pilot harness green; recorder-counter end-to-end validation remains open**.
 
 ## Deliverables
 
@@ -30,7 +30,7 @@ revision/dirty state. Run directories are temporary; no segment record is
 decoded or retained. Physical file bytes are measured independently from
 logical and encoded receipt bytes.
 
-## Open exit-gate items
+## Exit-gate status
 
 1. **Recorder counters:** the public `0.1.1` wheels use recorder receipt schema
    `1.0.0`, which has aggregate bytes/segments but no per-channel record,
@@ -39,15 +39,15 @@ logical and encoded receipt bytes.
    are separate from this wheel-based pilot. Therefore the summary explicitly
    marks persisted per-channel counters unavailable. It does not derive them
    from `EvidenceReceipt` or parse storage segments in Python.
-2. **Prepared execution identity:** the Python `PreparedRun` is opaque as
-   designed and exposes no `PreparedRunIdentity` accessor. The runner records
-   the exact admitted request and the prepared-observation identity available
-   in the run manifest, but leaves the prepared-run identity null rather than
-   hashing caller dictionaries or pretending they are resolved identity
-   material.
+2. **Prepared execution identity:** resolved by decision. The Python
+   `PreparedRun` remains opaque; no identity accessor or reference is needed
+   for these experiments. Each trial records the artifact digest, explicit
+   configuration, schedule, execution controls, provider/package metadata,
+   exact observation request, and prepared-observation identity. These are
+   reproducibility inputs, not a replacement serialization of `PreparedRun`.
 
-Resolving either item requires a deliberate release/API choice before Slice 4
-can be called complete. No packages were published and no commits were made.
+Only the recorder-counter validation requires further work. No packages were
+published as part of this slice.
 
 ## Validation
 

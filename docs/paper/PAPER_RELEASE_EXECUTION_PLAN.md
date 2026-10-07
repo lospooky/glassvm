@@ -201,10 +201,12 @@ The pilot used the published `0.1.1` wheels. Those wheels still return recorder
 receipt schema `1.0.0`, which has no per-channel counters; the harness records
 that limitation explicitly and does not infer persisted-channel counters from
 the independent `EvidenceReceipt`. The in-workspace recorder source is at
-schema `1.1.0`, but has not yet been exercised end-to-end through Python. Also,
-the facade keeps `PreparedRun` opaque and exposes no `PreparedRunIdentity`, so
-only the prepared-observation identity and exact submitted request are
-currently recorded. These are open Slice 4 exit-gate items, not paper results.
+schema `1.1.0`, but has not yet been exercised end-to-end through Python. The
+identity-reporting requirement is resolved without changing the opaque Python
+facade: trials record the artifact digest, explicit configuration, schedule,
+execution controls, provider/package metadata, and `PreparedObservation`
+identity. The experiment does not need to expose the internal `PreparedRun`
+identity object or add an identity-reference API.
 
 ### Tasks
 
@@ -212,7 +214,7 @@ currently recorded. These are open Slice 4 exit-gate items, not paper results.
 - [x] Implement one shared execution driver that submits typed JSON requests through the installed-provider preparation and file-backed execution lifecycle.
 - [x] Define recipes for disabled, minimal, selected/all normalized, selected native, hash/full frames, visual capability, and mixed observation.
 - [x] Resolve all nine recipes on CHIP-8, PICO-8, and TIC-80 in the pilot; no unsupported recipe cells occurred. Missing provider cells are represented as explicit exclusions.
-- [ ] Fix artifact/configuration/input/seed/control material across observation comparisons and record both prepared identities. The pilot keeps execution material fixed and records the submitted request plus `PreparedObservation` identity, but `PreparedRunIdentity` is not exposed by the facade.
+- [x] Fix artifact/configuration/input/seed/control material across observation comparisons and record reproducibility metadata plus negotiated observation identity. Keep `PreparedRun` opaque; no identity accessor is required.
 - [x] Separate provider discovery, preparation, execute-and-publish, worker-process, and process-lifecycle timing. Pure emulator-only time is not exposed and is not inferred.
 - [x] Define raw fields for evidence/recorder counters, outcomes, runtime, peak RSS, and optional allocator high-water; unavailable counters remain explicitly null/unavailable.
 - [x] Launch each trial in an independent Python 3.12 process and record repetition policy, host/toolchain/package versions, provider metadata, and both source revisions/dirty state.
@@ -223,11 +225,12 @@ currently recorded. These are open Slice 4 exit-gate items, not paper results.
 ### Deliverables and exit gate
 
 A runnable harness, workload/observation manifests, a versioned result schema,
-pilot results, and a regeneration scaffold are present. Slice 4 remains open
-until the prepared-run identity reporting boundary and an end-to-end pilot with
-recorder receipt `1.1.0` are resolved. Every reported pilot metric has defined
-units and a measurement source; missing fields are explicit rather than
-reconstructed from another channel.
+pilot results, and a regeneration scaffold are present. The prepared-run
+identity boundary is resolved by retaining the opaque facade and recording
+execution inputs directly. Slice 4 remains open until an end-to-end pilot with
+recorder receipt `1.1.0` validates persisted per-channel accounting. Every
+reported pilot metric has defined units and a measurement source; missing
+fields are explicit rather than reconstructed from another channel.
 
 Fixture/configuration fingerprints are reproducibility metadata. They do not
 introduce an authenticity, signature, or cryptographic audit protocol.

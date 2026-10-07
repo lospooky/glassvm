@@ -182,7 +182,7 @@ Slice 4 harness and pilot status:
 - [x] Add the isolated-process provider runner, nine explicit recipes, versioned result schema, and summary regeneration.
 - [x] Smoke all nine recipes on CHIP-8, PICO-8, and TIC-80 (27 independent eight-frame trials); all published with complete evidence and recorder status.
 - [x] Preserve separate machine, evidence, recorder, and publication outcomes; capture request, prepared-observation identity, timing, RSS, and physical output size.
-- [ ] Record `PreparedRunIdentity` without exposing the full identity material. The Python facade currently keeps `PreparedRun` opaque and has no identity-reference accessor.
+- [x] Record the reproducible execution inputs explicitly (artifact digest, configuration, schedule, controls, and provider/package metadata), separately from observation and its negotiated identity. `PreparedRun` remains opaque; exposing its internal identity is not required for this experiment.
 - [ ] Validate per-channel persisted counters end-to-end through Python. The published `0.1.1` wheels emit recorder receipt `1.0.0`; local recorder source schema `1.1.0` has not yet been exercised by the installed-provider pilot.
 
 The pilot validates wiring, not performance or run-length boundedness. The

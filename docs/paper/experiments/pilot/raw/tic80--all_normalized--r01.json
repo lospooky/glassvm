@@ -173,10 +173,10 @@
   "memory": {
     "allocator_high_water_bytes": null,
     "allocator_note": "No allocator high-water API is exposed by the Python provider protocol.",
-    "peak_rss_bytes": 29036544,
+    "peak_rss_bytes": 29077504,
     "peak_rss_native_unit": "KiB",
-    "peak_rss_native_value": 28356,
-    "rss_before_native_value": 21752
+    "peak_rss_native_value": 28396,
+    "rss_before_native_value": 21532
   },
   "negotiation": {
     "optional_unavailable_capabilities": [],
@@ -216,9 +216,7 @@
         128,
         201
       ]
-    },
-    "prepared_run_identity": null,
-    "prepared_run_identity_note": "Opaque Python PreparedRun exposes no identity accessor; no surrogate derived from caller syntax is reported."
+    }
   },
   "outcomes": {
     "evidence_status": "complete",
@@ -368,7 +366,7 @@
     "workspace_references": {
       "glassvm_checkout": {
         "dirty": true,
-        "revision": "70a3c97a900e359c0d36f2e2c05e4c9a9cffe565"
+        "revision": "d0c7a02d41134a6e559e276fd3ef81def96566bb"
       },
       "machines_checkout": {
         "dirty": false,
@@ -377,17 +375,17 @@
     }
   },
   "timing": {
-    "discovery_seconds": 0.0014758430006622802,
-    "execute_and_publish_seconds": 0.01970617000006314,
-    "preparation_seconds": 0.00021297499915817752,
-    "process_lifecycle_seconds": 0.03604488900055003,
-    "worker_process_seconds": 0.08278596200034372
+    "discovery_seconds": 0.0013990010011184495,
+    "execute_and_publish_seconds": 0.01956042599886132,
+    "preparation_seconds": 0.0002108610005961964,
+    "process_lifecycle_seconds": 0.03595608199975686,
+    "worker_process_seconds": 0.08157643400045345
   },
   "trial": {
     "machine_id": "tic80",
     "recipe_id": "all_normalized",
     "repetition": 1,
-    "started_utc": "2026-10-07T21:40:59.973678+00:00"
+    "started_utc": "2026-10-07T21:58:18.036322+00:00"
   },
   "workload": {
     "artifact_bytes": 11013,
