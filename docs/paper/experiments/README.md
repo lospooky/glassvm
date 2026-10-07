@@ -30,8 +30,8 @@ Use Python 3.12 or newer with the base `glassvm` wheel and the selected
 machine fixture root is the `glassvm-machines` repository. For example:
 
 ```sh
-uv run --python 3.12 --with glassvm==0.1.1 --with glassvm-chip8==0.1.1 \
-  --with glassvm-pico8==0.1.1 --with glassvm-tic80==0.1.1 \
+uv run --python 3.14 --with glassvm==0.1.2 --with glassvm-chip8==0.1.2 \
+  --with glassvm-pico8==0.1.2 --with glassvm-tic80==0.1.2 \
   python docs/paper/experiments/run_pilot.py \
     --glassvm-root "$PWD" \
     --machines-root ../glassvm-machines \

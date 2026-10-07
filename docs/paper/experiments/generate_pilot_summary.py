@@ -22,12 +22,10 @@ def render(results: list[dict]) -> str:
         "",
         "These short, eight-frame runs validate harness wiring and receipt separation;",
         "they are not performance or bounded-memory evidence. Each run used the",
-        "published 0.1.1 Python distributions in an isolated Python 3.12 environment.",
-        "The published recorder receipt is schema 1.0.0, so its per-channel bounded",
-        "recorder counters are unavailable; do not infer them from evidence receipts.",
-        "The local recorder source tests cover the new counter aggregation path, but",
-        "a package rebuilt against that source is still needed for an end-to-end pilot",
-        "of per-channel recorder counters.",
+        "published 0.1.2 Python distributions in an isolated Python 3.14 environment.",
+        "Recorder receipt schema 1.1.0 exposes per-channel persisted segment, record,",
+        "block, logical-byte, and encoded-byte counters; the harness validates these",
+        "against aggregate receipt totals without reading stored records.",
         "",
         "| Machine | Recipe | Frames | Evidence | Recorder | Published | Evidence records | Evidence logical bytes | Physical directory bytes | Per-channel recorder counters |",
         "| --- | --- | ---: | --- | --- | --- | ---: | ---: | ---: | --- |",
@@ -59,7 +57,7 @@ def render(results: list[dict]) -> str:
                 records=record_count,
                 logical=logical_bytes,
                 physical=result["publication"].get("run_directory_bytes", "—"),
-                counters="available" if result["recorder"].get("channel_stats_available") else "unavailable (receipt 1.0.0)",
+                counters="available" if result["recorder"].get("channel_stats_available") else "missing",
             )
         )
     lines.extend([

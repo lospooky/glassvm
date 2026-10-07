@@ -82,6 +82,7 @@ class TrialContractTests(unittest.TestCase):
             "memory": {}, "publication": {"published": True},
             "execution_result": {}, "evidence_receipt": {},
             "recorder_receipt": {
+                "schema": RUN_PILOT.RECORDER_RECEIPT_SCHEMA,
                 "status": "complete", "segment_count": 1, "record_count": 2,
                 "block_count": 1, "logical_bytes": 20, "encoded_bytes": 16,
                 "channels": [{"stats": {
@@ -95,6 +96,19 @@ class TrialContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "record_count"):
             RUN_PILOT.validate_result(result)
 
+    def test_pilot_requires_the_published_counter_schema(self):
+        result = {
+            "result_schema_version": "1.0.0", "kind": "run", "trial": {},
+            "source": {}, "host": {}, "timing": {}, "workload": {},
+            "request": {}, "negotiation": {}, "outcomes": {}, "evidence_channels": [],
+            "recorder": {"status": "complete", "channel_stats_available": False},
+            "memory": {}, "publication": {"published": True},
+            "execution_result": {}, "evidence_receipt": {},
+            "recorder_receipt": {"schema": {"id": "glassvm.recorder_receipt"}},
+        }
+        with self.assertRaisesRegex(ValueError, "expected recorder receipt schema 1.1.0"):
+            RUN_PILOT.validate_result(result)
+
     def test_pilot_checks_per_channel_recorder_totals_without_reconstructing_records(self):
         result = {
             "result_schema_version": "1.0.0",
@@ -105,6 +119,7 @@ class TrialContractTests(unittest.TestCase):
             "memory": {}, "publication": {"published": True},
             "execution_result": {}, "evidence_receipt": {},
             "recorder_receipt": {
+                "schema": RUN_PILOT.RECORDER_RECEIPT_SCHEMA,
                 "status": "complete",
                 "segment_count": 1, "record_count": 2, "block_count": 1,
                 "logical_bytes": 20, "encoded_bytes": 16,

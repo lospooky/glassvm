@@ -197,16 +197,17 @@ framing, and remains distinct from physical file size.
 Implementation record: the Slice 4 harness, nine explicit observation recipes,
 versioned single-trial result schema, and 27-cell eight-frame pilot now exist in
 [`experiments/`](experiments/), with regeneration instructions in its README.
-The pilot used the published `0.1.1` wheels. Those wheels still return recorder
-receipt schema `1.0.0`, which has no per-channel counters; the harness records
-that limitation explicitly and does not infer persisted-channel counters from
-the independent `EvidenceReceipt`. The in-workspace recorder source is at
-schema `1.1.0`, but has not yet been exercised end-to-end through Python. The
-identity-reporting requirement is resolved without changing the opaque Python
-facade: trials record the artifact digest, explicit configuration, schedule,
-execution controls, provider/package metadata, and `PreparedObservation`
-identity. The experiment does not need to expose the internal `PreparedRun`
-identity object or add an identity-reference API.
+The initial pilot used published `0.1.1` wheels and could not observe
+per-channel recorder counters. GlassVM `0.1.2` publishes recorder receipt schema
+`1.1.0`; the machine wheels were rebuilt against those crates, and the pilot is
+being regenerated from installed `0.1.2` distributions. The harness now requires
+schema `1.1.0` and checks per-channel totals against recorder aggregates, without
+inferring persistence counters from `EvidenceReceipt` or reading stored records.
+The identity-reporting requirement is resolved without changing the opaque
+Python facade: trials record the artifact digest, explicit configuration,
+schedule, execution controls, provider/package metadata, and
+`PreparedObservation` identity. The experiment does not need to expose the
+internal `PreparedRun` identity object or add an identity-reference API.
 
 ### Tasks
 
@@ -217,9 +218,9 @@ identity object or add an identity-reference API.
 - [x] Fix artifact/configuration/input/seed/control material across observation comparisons and record reproducibility metadata plus negotiated observation identity. Keep `PreparedRun` opaque; no identity accessor is required.
 - [x] Separate provider discovery, preparation, execute-and-publish, worker-process, and process-lifecycle timing. Pure emulator-only time is not exposed and is not inferred.
 - [x] Define raw fields for evidence/recorder counters, outcomes, runtime, peak RSS, and optional allocator high-water; unavailable counters remain explicitly null/unavailable.
-- [x] Launch each trial in an independent Python 3.12 process and record repetition policy, host/toolchain/package versions, provider metadata, and both source revisions/dirty state.
+- [x] Launch each trial in an independent Python 3.14 process and record repetition policy, host/toolchain/package versions, provider metadata, and both source revisions/dirty state.
 - [x] Keep the measurement driver bounded: it retains receipts and metadata only, scans file sizes incrementally, and never reads segment records.
-- [ ] Validate per-channel recorder accounting end-to-end using recorder receipt schema `1.1.0`. The published `0.1.1` wheels used for the pilot contain schema `1.0.0` and lack these counters.
+- [ ] Regenerate the 27-cell pilot from published `0.1.2` distributions and validate per-channel recorder accounting under schema `1.1.0`.
 - [x] Run the small 27-cell pilot and validate request preparation, separate outcomes, receipt completion, publication, schema shape, and evidence/physical-byte accounting boundaries.
 
 ### Deliverables and exit gate
@@ -227,8 +228,8 @@ identity object or add an identity-reference API.
 A runnable harness, workload/observation manifests, a versioned result schema,
 pilot results, and a regeneration scaffold are present. The prepared-run
 identity boundary is resolved by retaining the opaque facade and recording
-execution inputs directly. Slice 4 remains open until an end-to-end pilot with
-recorder receipt `1.1.0` validates persisted per-channel accounting. Every
+execution inputs directly. Slice 4 remains open until the regenerated pilot
+with recorder receipt `1.1.0` validates persisted per-channel accounting. Every
 reported pilot metric has defined units and a measurement source; missing
 fields are explicit rather than reconstructed from another channel.
 

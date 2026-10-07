@@ -1,6 +1,6 @@
 # Slice 4: experiment harness and result contract
 
-Execution date: 2026-10-07. Status: **implementation and pilot harness green; recorder-counter end-to-end validation remains open**.
+Execution date: 2026-10-08. Status: **implementation green; 0.1.2 recorder-counter pilot regeneration in progress**.
 
 ## Deliverables
 
@@ -13,12 +13,13 @@ Execution date: 2026-10-07. Status: **implementation and pilot harness green; re
 
 ## Pilot scope and result
 
-The pilot ran one 8-frame trial for each of nine recipes on each of CHIP-8,
-PICO-8, and TIC-80 using isolated Python 3.12 environments with the published
-GlassVM and bundle distributions at version `0.1.1`. All 27 preparations
-succeeded; every run reported complete evidence, complete/finalized recorder
-status, and successful publication. CHIP-8 reached its configured frame bound
-with `Timeout`; PICO-8 and TIC-80 reported `frame_limit`. These are short
+The initial pilot ran one 8-frame trial for each of nine recipes on each of
+CHIP-8, PICO-8, and TIC-80 using the published `0.1.1` distributions. It proved
+provider wiring and publication but could not report persisted per-channel
+counters because those wheels used recorder receipt schema `1.0.0`. GlassVM and
+all three machine distributions have now been released at `0.1.2`; the machine
+wheels resolve recorder `0.1.2`, which emits receipt schema `1.1.0`. The result
+set below is being regenerated from those installed packages. These remain short
 contract-wiring checks, not performance samples or bounded-memory evidence.
 
 The runner fixes artifact hash, structured configuration/seed, empty input
@@ -32,13 +33,10 @@ logical and encoded receipt bytes.
 
 ## Exit-gate status
 
-1. **Recorder counters:** the public `0.1.1` wheels use recorder receipt schema
-   `1.0.0`, which has aggregate bytes/segments but no per-channel record,
-   block, or logical/encoded-byte counters. The current local recorder source
-   adds those fields under receipt schema `1.1.0`; its Rust accounting tests
-   are separate from this wheel-based pilot. Therefore the summary explicitly
-   marks persisted per-channel counters unavailable. It does not derive them
-   from `EvidenceReceipt` or parse storage segments in Python.
+1. **Recorder counters:** the regenerated `0.1.2` pilot requires recorder
+   receipt schema `1.1.0` and checks per-channel segment, record, block,
+   logical-byte, and encoded-byte totals against the receipt aggregates. It does
+   not derive them from `EvidenceReceipt` or parse storage segments in Python.
 2. **Prepared execution identity:** resolved by decision. The Python
    `PreparedRun` remains opaque; no identity accessor or reference is needed
    for these experiments. Each trial records the artifact digest, explicit
@@ -46,8 +44,8 @@ logical and encoded receipt bytes.
    exact observation request, and prepared-observation identity. These are
    reproducibility inputs, not a replacement serialization of `PreparedRun`.
 
-Only the recorder-counter validation requires further work. No packages were
-published as part of this slice.
+The recorder-counter validation is the current remaining Slice 4 gate. The
+GlassVM crates/facade and three machine wheels at `0.1.2` are published.
 
 ## Validation
 
@@ -55,8 +53,8 @@ published as part of this slice.
 - JSON Schema validation passed for all 27 raw result files.
 - Five Python unit tests pass for typed configuration encoding, frame/event
   independence, extension event tagging, and versioned outcome separation.
-- `run_pilot.py` rejects internally inconsistent per-channel/aggregate
-  counters whenever the installed receipt schema provides those counters.
+- `run_pilot.py` requires receipt schema `1.1.0` and rejects missing or
+  internally inconsistent per-channel/aggregate counters.
 - The recorder source's `1.1.0` bounded counter tests were already run as part
   of the preceding recorder-counter change; no Rust source changed in Slice 4.
 

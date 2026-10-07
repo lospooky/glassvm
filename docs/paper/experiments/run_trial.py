@@ -317,10 +317,7 @@ def run_trial(args: argparse.Namespace) -> dict:
             "status": recorder.get("status"),
             "finalized": recorder.get("finalized"),
             "channel_stats_available": isinstance(recorder.get("channels"), list),
-            "channel_stats_note": (
-                None if isinstance(recorder.get("channels"), list)
-                else "Installed recorder receipt predates per-channel bounded counters."
-            ),
+            "channel_stats_note": None,
             "record_count": recorder.get("record_count"),
             "logical_bytes": recorder.get("logical_bytes"),
             "encoded_bytes": recorder.get("encoded_bytes"),

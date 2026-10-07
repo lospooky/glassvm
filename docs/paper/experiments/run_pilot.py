@@ -15,6 +15,11 @@ from pathlib import Path
 
 import tomllib
 
+RECORDER_RECEIPT_SCHEMA = {
+    "id": "glassvm.recorder_receipt",
+    "version": {"major": 1, "minor": 1, "patch": 0},
+}
+
 
 def command_output(*command: str) -> str:
     try:
@@ -38,21 +43,19 @@ def validate_result(result: dict, path: Path = Path("<result>")) -> dict:
         if not {"execution_result", "evidence_receipt", "recorder_receipt"} <= result.keys():
             raise ValueError(f"{path} does not preserve all outcome receipts")
         receipt = result["recorder_receipt"]
+        if receipt.get("schema") != RECORDER_RECEIPT_SCHEMA:
+            raise ValueError(f"{path}: expected recorder receipt schema 1.1.0")
         channels = receipt.get("channels")
-        if channels is not None:
-            aggregate_fields = ("segment_count", "record_count", "block_count", "logical_bytes", "encoded_bytes")
-            for field in aggregate_fields:
-                channel_total = sum(item["stats"][field] for item in channels)
-                aggregate = receipt.get(field)
-                if aggregate is not None and field != "encoded_bytes" and channel_total != aggregate:
-                    raise ValueError(f"{path}: per-channel {field} does not equal recorder aggregate")
-                if aggregate is not None and field == "encoded_bytes" and channel_total != aggregate:
-                    raise ValueError(f"{path}: per-channel encoded bytes do not equal recorder aggregate")
-            if not result["recorder"].get("channel_stats_available"):
-                result["recorder"]["channel_stats_note"] = (
-                    "Receipt schema does not expose per-channel persisted counters; "
-                    "do not infer these from the EvidenceReceipt."
-                )
+        if not isinstance(channels, list):
+            raise ValueError(f"{path}: recorder receipt 1.1.0 lacks per-channel counters")
+        aggregate_fields = ("segment_count", "record_count", "block_count", "logical_bytes")
+        for field in aggregate_fields:
+            channel_total = sum(item["stats"][field] for item in channels)
+            if channel_total != receipt[field]:
+                raise ValueError(f"{path}: per-channel {field} does not equal recorder aggregate")
+        encoded_total = sum(item["stats"]["encoded_bytes"] for item in channels)
+        if receipt["encoded_bytes"] is not None and encoded_total != receipt["encoded_bytes"]:
+            raise ValueError(f"{path}: per-channel encoded bytes do not equal recorder aggregate")
         if result["publication"].get("published") and result["recorder"].get("status") != "complete":
             raise ValueError(f"{path}: published run lacks complete recorder status")
     elif result["kind"] == "excluded" and not result.get("exclusion_reason"):
