@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "title": "Three publication specimens, one caller contract",
+  "evaluated_revisions": {
+    "glassvm": "ba5637a72d5484ac170069021fbcbc28ee25f61e",
+    "glassvm-machines": "7cf884861e3cc22d6f15badc7265c969af032e0a"
+  },
+  "machine_order": ["chip8", "pico8", "tic80"],
+  "machine_labels": {
+    "chip8": "CHIP-8",
+    "pico8": "PICO-8",
+    "tic80": "TIC-80"
+  },
+  "sources": {
+    "core-preparation": {"repository": "glassvm", "path": "crates/core/src/preparation.rs", "label": "Prepared execution and identity"},
+    "core-observation": {"repository": "glassvm", "path": "crates/core/src/normalizer.rs", "label": "Normalizer lifecycle and negotiated observation"},
+    "core-recorder": {"repository": "glassvm", "path": "crates/recorder/src/lib.rs", "label": "Shared file-backed run lifecycle"},
+    "core-python": {"repository": "glassvm", "path": "python/facade/src/lib.rs", "label": "Generic Python facade"},
+    "ch8-contract": {"repository": "machines", "path": "chip8/bundle/src/contract.rs", "label": "CHIP-8 artifact and input contract"},
+    "ch8-descriptor": {"repository": "machines", "path": "chip8/bundle/src/descriptor.rs", "label": "CHIP-8 semantics and coordinates"},
+    "ch8-config": {"repository": "machines", "path": "chip8/bundle/src/emulator_backend.rs", "label": "CHIP-8 configuration and execution setup"},
+    "ch8-session": {"repository": "machines", "path": "chip8/bundle/src/emulator_session.rs", "label": "CHIP-8 normalized events, frames, and native evidence"},
+    "ch8-normalizer": {"repository": "machines", "path": "chip8/bundle/src/normalizer.rs", "label": "CHIP-8 capability catalog and reducers"},
+    "ch8-native": {"repository": "machines", "path": "chip8/bundle/src/adapters/native_events.rs", "label": "CHIP-8 native-to-normalized event mapping"},
+    "ch8-snapshot": {"repository": "machines", "path": "chip8/bundle/src/identity.rs", "label": "CHIP-8 snapshot schema identity"},
+    "ch8-services": {"repository": "machines", "path": "chip8/bundle/src/adapters/static_analyzer.rs", "label": "CHIP-8 static analysis"},
+    "ch8-verifier": {"repository": "machines", "path": "chip8/bundle/src/adapters/verifier.rs", "label": "CHIP-8 verifier"},
+    "ch8-provider": {"repository": "machines", "path": "chip8/python/src/lib.rs", "label": "CHIP-8 Python provider"},
+    "ch8-package": {"repository": "machines", "path": "chip8/pyproject.toml", "label": "CHIP-8 Python distribution metadata"},
+    "ch8-readme": {"repository": "machines", "path": "chip8/README.md", "label": "CHIP-8 supported subset"},
+    "pico-contract": {"repository": "machines", "path": "pico8/bundle/src/contract.rs", "label": "PICO-8 artifact and input contract"},
+    "pico-descriptor": {"repository": "machines", "path": "pico8/bundle/src/descriptor.rs", "label": "PICO-8 semantics and coordinates"},
+    "pico-config": {"repository": "machines", "path": "pico8/bundle/src/emulator_backend.rs", "label": "PICO-8 configuration and execution setup"},
+    "pico-session": {"repository": "machines", "path": "pico8/bundle/src/emulator_session.rs", "label": "PICO-8 normalized events, frames, and native evidence"},
+    "pico-normalizer": {"repository": "machines", "path": "pico8/bundle/src/normalizer.rs", "label": "PICO-8 capability catalog and reducers"},
+    "pico-snapshot": {"repository": "machines", "path": "pico8/bundle/src/identity.rs", "label": "PICO-8 snapshot schema identity"},
+    "pico-services": {"repository": "machines", "path": "pico8/bundle/src/adapters/static_analyzer.rs", "label": "PICO-8 static analysis"},
+    "pico-verifier": {"repository": "machines", "path": "pico8/bundle/src/adapters/verifier.rs", "label": "PICO-8 verifier"},
+    "pico-provider": {"repository": "machines", "path": "pico8/python/src/lib.rs", "label": "PICO-8 Python provider"},
+    "pico-package": {"repository": "machines", "path": "pico8/pyproject.toml", "label": "PICO-8 Python distribution metadata"},
+    "pico-readme": {"repository": "machines", "path": "pico8/README.md", "label": "PICO-8 supported subset and runtime qualification"},
+    "tic-contract": {"repository": "machines", "path": "tic80/bundle/src/contract.rs", "label": "TIC-80 artifact and input contract"},
+    "tic-descriptor": {"repository": "machines", "path": "tic80/bundle/src/descriptor.rs", "label": "TIC-80 semantics and coordinates"},
+    "tic-config": {"repository": "machines", "path": "tic80/bundle/src/emulator_backend.rs", "label": "TIC-80 configuration and execution setup"},
+    "tic-session": {"repository": "machines", "path": "tic80/bundle/src/emulator_session.rs", "label": "TIC-80 normalized events, frames, and native evidence"},
+    "tic-normalizer": {"repository": "machines", "path": "tic80/bundle/src/normalizer.rs", "label": "TIC-80 capability catalog and reducers"},
+    "tic-snapshot": {"repository": "machines", "path": "tic80/bundle/src/identity.rs", "label": "TIC-80 snapshot schema identity"},
+    "tic-services": {"repository": "machines", "path": "tic80/bundle/src/adapters/static_analyzer.rs", "label": "TIC-80 static analysis"},
+    "tic-verifier": {"repository": "machines", "path": "tic80/bundle/src/adapters/verifier.rs", "label": "TIC-80 verifier"},
+    "tic-provider": {"repository": "machines", "path": "tic80/python/src/lib.rs", "label": "TIC-80 Python provider"},
+    "tic-package": {"repository": "machines", "path": "tic80/pyproject.toml", "label": "TIC-80 Python distribution metadata"},
+    "tic-readme": {"repository": "machines", "path": "tic80/README.md", "label": "TIC-80 supported subset and runtime qualification"}
+  },
+  "rows": [
+    {
+      "dimension": "Artifact admission",
+      "chip8": {"text": "Raw bytes loaded at 0x200; 1–63,488 bytes; CHIP-8/SCHIP/XO-CHIP variants are selected through configuration.", "sources": ["ch8-contract", "ch8-descriptor"]},
+      "pico8": {"text": "Cartridge extension accepts text .p8, steganographic .p8.png, and .p8.rom forms; 1 byte–4 MiB.", "sources": ["pico-contract", "pico-readme"]},
+      "tic80": {"text": "Binary .tic cartridge artifact; 1 byte–16 MiB; Lua is the implemented runtime.", "sources": ["tic-contract", "tic-readme"]}
+    },
+    {
+      "dimension": "Execution model",
+      "chip8": {"text": "Instruction-stepped virtual machine with 64 KiB address space and timer/frame ticks; instruction schema is word16.", "sources": ["ch8-descriptor", "ch8-session"]},
+      "pico8": {"text": "Bounded Lua compatibility runtime invokes cartridge callbacks; the exposed instruction schema is a Lua operation, not an instruction-exact PICO-8 trace.", "sources": ["pico-descriptor", "pico-readme"]},
+      "tic80": {"text": "Bounded Lua compatibility runtime invokes BOOT/TIC callbacks; the exposed instruction schema is a Lua operation, not an instruction-exact TIC-80 trace.", "sources": ["tic-descriptor", "tic-readme"]}
+    },
+    {
+      "dimension": "Machine configuration",
+      "chip8": {"text": "Schema chip8.machine_configuration@2: quirk preset (default chip8), instructions per hardware frame (default 12), machine seed (default 0).", "sources": ["ch8-config"]},
+      "pico8": {"text": "Schema pico8.machine_configuration@1: one callback per frame (fixed at 1), per-callback Lua instruction budget, machine seed (default 0).", "sources": ["pico-config"]},
+      "tic80": {"text": "Schema tic80.machine_configuration@1: one callback per frame (fixed at 1), Lua runtime only, machine seed (default 0).", "sources": ["tic-config"]}
+    },
+    {
+      "dimension": "Runtime inputs",
+      "chip8": {"text": "Sixteen separately identified hexadecimal keys; typed key values, scheduled or live delivery, frame-start coordinate.", "sources": ["ch8-contract", "ch8-session"]},
+      "pico8": {"text": "Sixteen separately identified buttons; scheduled frame-start delivery; digital-key family enables selective value evidence.", "sources": ["pico-contract", "pico-session"]},
+      "tic80": {"text": "One scheduled frame-start gamepad input carrying an unsigned 32-bit button mask; no live delivery advertised.", "sources": ["tic-contract", "tic-session"]}
+    },
+    {
+      "dimension": "Timing and coordinates",
+      "chip8": {"text": "Hardware frame boundary at 60 Hz; step coordinate counts instructions. Configurable instructions/frame change machine progression.", "sources": ["ch8-descriptor", "ch8-config"]},
+      "pico8": {"text": "Callback boundary defines a semantic frame; step coordinate is a tick. The callback is the bundle’s frame unit, not a claim of exact upstream timing.", "sources": ["pico-descriptor", "pico-config", "pico-readme"]},
+      "tic80": {"text": "Callback boundary defines a semantic frame; step coordinate is a tick. One callback per frame; no instruction-level trace claim.", "sources": ["tic-descriptor", "tic-config", "tic-readme"]}
+    },
+    {
+      "dimension": "Frame representation",
+      "chip8": {"text": "128×64 physical backing pixels in plane-major form; hash and full artifact schemas. Low-resolution modes are represented on the backing surface.", "sources": ["ch8-session", "ch8-readme"]},
+      "pico8": {"text": "128×128 palette-index bytes; separate fingerprint and full-frame schemas.", "sources": ["pico-session", "pico-readme"]},
+      "tic80": {"text": "240×136 RGBA8 pixels; separate SHA-256 fingerprint and full-frame schemas.", "sources": ["tic-session", "tic-readme"]}
+    },
+    {
+      "dimension": "Normalized event families",
+      "chip8": {"text": "Execution lifecycle, frame, instruction, branch/call/return, memory/register/stack/display, input, timer/sound, and trap events.", "sources": ["ch8-session", "ch8-native"]},
+      "pico8": {"text": "Lifecycle, frame-completed, input-applied, halt/crash events; no per-Lua-operation stream is promised.", "sources": ["pico-session"]},
+      "tic80": {"text": "Lifecycle, frame, input-applied/sampled, and TIC-80 trace-extension events; trace granularity is bundle-defined, not per Lua instruction.", "sources": ["tic-session", "tic-readme"]}
+    },
+    {
+      "dimension": "Native evidence families",
+      "chip8": {"text": "Typed chip8.event evidence includes display/draw, control transfer, key wait/sample, timer, memory, stack, and invalid-opcode facts.", "sources": ["ch8-native", "ch8-session"]},
+      "pico8": {"text": "Versioned native events for frame completion, accepted input, runtime errors, and execution summary.", "sources": ["pico-session"]},
+      "tic80": {"text": "Versioned native events for frame completion, accepted/sampled gamepad input, TIC trace records, and execution summary.", "sources": ["tic-session"]}
+    },
+    {
+      "dimension": "Snapshot and continuation",
+      "chip8": {"text": "Session snapshot schema chip8.session.snapshot@5; snapshot captures resumable state, not frame history.", "sources": ["ch8-snapshot", "ch8-session"]},
+      "pico8": {"text": "State-only session snapshot pico8.state.session_snapshot@2; continuation does not depend on retained frame history.", "sources": ["pico-snapshot", "pico-session"]},
+      "tic80": {"text": "State-only session snapshot tic80.state.session_snapshot@2; continuation does not depend on retained frame history.", "sources": ["tic-snapshot", "tic-session"]}
+    },
+    {
+      "dimension": "Capabilities and normalizers",
+      "chip8": {"text": "Native-backed framebuffer, execution summary, interestingness, coverage, trajectory identity; bounded control-flow, visual-trajectory, and input-summary reducers.", "sources": ["ch8-normalizer"]},
+      "pico8": {"text": "Native-backed execution summary; bounded visual-motif and input-summary reducers over declared frame/event or selected input evidence.", "sources": ["pico-normalizer"]},
+      "tic80": {"text": "Native-backed execution summary; bounded visual-motif and input-summary reducers over declared frame/event or selected gamepad evidence.", "sources": ["tic-normalizer"]}
+    },
+    {
+      "dimension": "Static analysis and verification",
+      "chip8": {"text": "Optional static analyzer and verifier inspect CHIP-8 instruction/program structure and machine-specific validity.", "sources": ["ch8-services", "ch8-verifier"]},
+      "pico8": {"text": "Optional static analyzer and verifier report cartridge/Lua structure and the explicitly supported PICO-8 compatibility subset.", "sources": ["pico-services", "pico-verifier", "pico-readme"]},
+      "tic80": {"text": "Optional static analyzer and verifier inspect cartridge chunks, Lua language selection, and callback structure for the implemented subset.", "sources": ["tic-services", "tic-verifier", "tic-readme"]}
+    },
+    {
+      "dimension": "Python provider surface",
+      "chip8": {"text": "glassvm-chip8; entry point chip8; import module glassvm_chip8; Python ≥3.12; glassvm.python_bundle protocol 1.0.0.", "sources": ["ch8-package", "ch8-provider"]},
+      "pico8": {"text": "glassvm-pico8; entry point pico8; import module glassvm_pico8; Python ≥3.12; glassvm.python_bundle protocol 1.0.0.", "sources": ["pico-package", "pico-provider"]},
+      "tic80": {"text": "glassvm-tic80; entry point tic80; import module glassvm_tic80; Python ≥3.12; glassvm.python_bundle protocol 1.0.0.", "sources": ["tic-package", "tic-provider"]}
+    }
+  ],
+  "shared_contract": {
+    "text": "All three use the same caller-owned request and preparation boundary: artifact, typed configuration, input schedule, execution controls, and observation are resolved before execution; PreparedRun remains separate from PreparedObservation. The shared FileRunSession owns sink assembly, execution/evidence accounting, recorder finalization, and atomic publication. Machine-specific schemas, timing, event semantics, and supported subsets remain bundle-owned.",
+    "sources": ["core-preparation", "core-observation", "core-recorder", "core-python"]
+  },
+  "scope_note": "CHIP-8 is the baseline/reference implementation. PICO-8 and TIC-80 are external publication-validation specimens, not complete or instruction-exact emulators. Both use bounded Lua 5.4 compatibility runtimes; upstream PICO-8 semantics are not claimed as exact, and upstream TIC-80 targets Lua 5.3. Claims are limited to the documented and tested subsets."
+}
