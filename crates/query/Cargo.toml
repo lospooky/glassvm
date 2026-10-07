@@ -1,6 +1,6 @@
 [package]
 name = "glassvm_query"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 license = "BSD-3-Clause"
 description = "Caller-owned querying over selected GlassVM execution-event projections."
@@ -10,6 +10,6 @@ keywords = ["glassvm", "query", "events"]
 categories = ["development-tools"]
 
 [dependencies]
-glassvm_core = { version = "0.1.0", path = "../core" }
+glassvm_core = { version = "0.1.1", path = "../core" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

@@ -4,19 +4,19 @@ build-backend = "maturin"
 
 [project]
 name = "glassvm"
-version = "0.1.0"
+version = "0.1.1"
 requires-python = ">=3.12"
 description = "Generic Python facade for entry-point-discovered GlassVM machine bundles"
 license = "BSD-3-Clause"
 
 [project.optional-dependencies]
-chip8 = ["glassvm-chip8==0.1.0"]
-pico8 = ["glassvm-pico8==0.1.0"]
-tic80 = ["glassvm-tic80==0.1.0"]
+chip8 = ["glassvm-chip8==0.1.1"]
+pico8 = ["glassvm-pico8==0.1.1"]
+tic80 = ["glassvm-tic80==0.1.1"]
 all = [
-    "glassvm-chip8==0.1.0",
-    "glassvm-pico8==0.1.0",
-    "glassvm-tic80==0.1.0",
+    "glassvm-chip8==0.1.1",
+    "glassvm-pico8==0.1.1",
+    "glassvm-tic80==0.1.1",
 ]
 
 [tool.maturin]
