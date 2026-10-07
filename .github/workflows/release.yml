@@ -83,15 +83,18 @@ jobs:
       - name: Test workspace
         run: cargo test --workspace --locked --no-fail-fast
 
-      - name: Dry-run public crate packages
+      - name: Validate public crate packages
         run: |
+          # Only the first crate is independent of this release's other crate
+          # versions. Dry-running downstream crates here would resolve their
+          # 0.1.1 dependencies from crates.io before this release publishes them.
+          cargo publish --dry-run --locked --package glassvm_normalizer_contract
           for package in \
-            glassvm_normalizer_contract \
             glassvm_core \
             glassvm_recorder \
             glassvm_query \
             glassvm_registry; do
-            cargo publish --dry-run --locked --package "$package"
+            cargo package --list --locked --package "$package" >/dev/null
           done
 
       - name: Build facade sdist and wheel from the sdist
