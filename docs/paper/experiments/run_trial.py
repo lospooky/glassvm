@@ -189,7 +189,7 @@ def run_trial(args: argparse.Namespace) -> dict:
             "started_utc": started,
         },
         "source": {
-            "workspace_references": {
+            "workspace_references": args.source_snapshot or {
                 "glassvm_checkout": git_metadata(Path(args.glassvm_root)),
                 "machines_checkout": git_metadata(machines_root),
             },
@@ -361,6 +361,7 @@ def main() -> None:
     parser.add_argument("--frame-limit", type=int, default=600)
     parser.add_argument("--uv-version", default="unknown")
     parser.add_argument("--rustc-version", default="unknown")
+    parser.add_argument("--source-snapshot", type=json.loads, default=None)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
     result = run_trial(args)

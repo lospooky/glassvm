@@ -28,6 +28,15 @@ def command_output(*command: str) -> str:
         return "unavailable"
 
 
+def git_metadata(path: Path) -> dict[str, object]:
+    revision = command_output("git", "-C", str(path), "rev-parse", "HEAD")
+    status = command_output("git", "-C", str(path), "status", "--porcelain")
+    return {
+        "revision": None if revision == "unavailable" else revision,
+        "dirty": status != "",
+    }
+
+
 def validate_result(result: dict, path: Path = Path("<result>")) -> dict:
     required = {
         "result_schema_version", "kind", "trial", "source", "host", "timing",
@@ -95,6 +104,10 @@ def main() -> None:
     worker = Path(__file__).with_name("run_trial.py")
     uv_version = command_output("uv", "--version")
     rustc_version = command_output("rustc", "--version")
+    source_snapshot = {
+        "glassvm_checkout": git_metadata(args.glassvm_root.resolve()),
+        "machines_checkout": git_metadata(args.machines_root.resolve()),
+    }
     manifest = {
         "pilot_schema_version": "1.0.0",
         "measurement_policy": {
@@ -126,6 +139,7 @@ def main() -> None:
                     "--frame-limit", str(args.frame_limit),
                     "--uv-version", uv_version,
                     "--rustc-version", rustc_version,
+                    "--source-snapshot", json.dumps(source_snapshot, sort_keys=True),
                     "--output", str(result_path),
                 ]
                 start = time.perf_counter()

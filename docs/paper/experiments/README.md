@@ -43,6 +43,8 @@ Each machine/recipe/repetition runs in a fresh Python subprocess. Change the
 recipes/repetition count for the collection phase only after the pilot is
 validated. Run output directories are temporary; the raw trial retains the
 published flag and physical byte count, not a stale path to deleted files.
+The runner snapshots both checkout revisions and dirty states before writing
+trial files, so the pilot's own outputs cannot mark later trials as dirty.
 The default selects every recipe in the manifest. Regenerate and check the
 summary from saved raw results with:
 
