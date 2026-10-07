@@ -24,7 +24,7 @@ use serde_json::Value;
 
 pub const REFERENCE_RUN_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 0, 0);
 pub const REFERENCE_SEGMENT_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 0, 0);
-pub const RECORDER_RECEIPT_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 0, 0);
+pub const RECORDER_RECEIPT_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 1, 0);
 pub const SEGMENT_FORMAT_VERSION: u8 = 1;
 const SEGMENT_MAGIC: &[u8; 4] = b"GVS1";
 const BLOCK_MAGIC: &[u8; 4] = b"BLK1";
@@ -40,6 +40,45 @@ pub enum ReferenceChannel {
     Frames,
     Snapshots,
     CapabilityOutputs,
+}
+
+/// Bounded aggregate accounting for one persisted evidence channel.
+///
+/// `logical_bytes` counts canonical-JSON record sizes. `encoded_bytes` counts
+/// encoded block payload bytes, excluding segment/block framing and metadata.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(deny_unknown_fields)]
+pub struct ChannelRecorderStats {
+    pub segment_count: u64,
+    pub record_count: u64,
+    pub block_count: u64,
+    pub logical_bytes: u64,
+    pub encoded_bytes: u64,
+}
+
+impl ChannelRecorderStats {
+    fn checked_add_footer(&self, footer: &SegmentFooter) -> Result<Self, RecorderError> {
+        let checked = |current: u64, increment: u64, label: &str| {
+            current
+                .checked_add(increment)
+                .ok_or_else(|| RecorderError::new(format!("channel {label} counter overflowed")))
+        };
+        Ok(Self {
+            segment_count: checked(self.segment_count, 1, "segment-count")?,
+            record_count: checked(
+                self.record_count,
+                footer.header.record_count,
+                "record-count",
+            )?,
+            block_count: checked(self.block_count, footer.block_count, "block-count")?,
+            logical_bytes: checked(
+                self.logical_bytes,
+                footer.header.logical_bytes,
+                "logical-byte",
+            )?,
+            encoded_bytes: checked(self.encoded_bytes, footer.encoded_bytes, "encoded-byte")?,
+        })
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -791,11 +830,23 @@ pub struct RecorderReceipt {
     pub evidence_receipt_published: bool,
     /// Evidence fulfillment is reported independently from recorder status.
     pub evidence_status: EvidenceStatus,
+    /// Per-channel recording totals, in canonical `ReferenceChannel` order.
+    /// The vector is bounded by the fixed set of recorder channels.
+    pub channels: Vec<RecorderChannelReceipt>,
     pub segment_count: u64,
+    pub record_count: u64,
+    pub block_count: u64,
     pub logical_bytes: u64,
     pub encoded_bytes: Option<u64>,
     pub file_count: u64,
     pub failure: Option<RecorderFailure>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RecorderChannelReceipt {
+    pub channel: ReferenceChannel,
+    pub stats: ChannelRecorderStats,
 }
 
 impl RecorderReceipt {
@@ -815,6 +866,68 @@ impl RecorderReceipt {
         }
         if self.status == RecorderStatus::Failed && self.failure.is_none() {
             return Err("failed recorder receipt must contain a recorder failure".into());
+        }
+        let mut previous_channel: Option<&ReferenceChannel> = None;
+        let mut totals = ChannelRecorderStats::default();
+        for entry in &self.channels {
+            if previous_channel.is_some_and(|previous| previous >= &entry.channel) {
+                return Err(
+                    "recorder channel statistics must be unique and canonically ordered".into(),
+                );
+            }
+            previous_channel = Some(&entry.channel);
+            let stats = &entry.stats;
+            if stats.segment_count == 0
+                || stats.record_count == 0
+                || stats.block_count == 0
+                || stats.logical_bytes == 0
+                || stats.encoded_bytes == 0
+            {
+                return Err("recorded channel statistics must contain non-zero totals".into());
+            }
+            totals = ChannelRecorderStats {
+                segment_count: totals
+                    .segment_count
+                    .checked_add(stats.segment_count)
+                    .ok_or("recorder segment-count total overflowed")?,
+                record_count: totals
+                    .record_count
+                    .checked_add(stats.record_count)
+                    .ok_or("recorder record-count total overflowed")?,
+                block_count: totals
+                    .block_count
+                    .checked_add(stats.block_count)
+                    .ok_or("recorder block-count total overflowed")?,
+                logical_bytes: totals
+                    .logical_bytes
+                    .checked_add(stats.logical_bytes)
+                    .ok_or("recorder logical-byte total overflowed")?,
+                encoded_bytes: totals
+                    .encoded_bytes
+                    .checked_add(stats.encoded_bytes)
+                    .ok_or("recorder encoded-byte total overflowed")?,
+            };
+        }
+        if totals.segment_count != self.segment_count
+            || totals.record_count != self.record_count
+            || totals.block_count != self.block_count
+            || totals.logical_bytes != self.logical_bytes
+        {
+            return Err("recorder channel totals do not match receipt totals".into());
+        }
+        if let Some(encoded_bytes) = self.encoded_bytes
+            && totals.encoded_bytes != encoded_bytes
+        {
+            return Err("recorder channel encoded-byte totals do not match receipt".into());
+        }
+        if self.status == RecorderStatus::Complete {
+            let expected_files = self
+                .segment_count
+                .checked_add(3)
+                .ok_or("recorder file-count total overflowed")?;
+            if self.encoded_bytes.is_none() || self.file_count != expected_files {
+                return Err("complete recorder receipt has inconsistent file totals".into());
+            }
         }
         Ok(())
     }
@@ -842,7 +955,7 @@ pub struct FileRunRecorder {
     manifest: ReferenceRunManifest,
     active: BTreeMap<ReferenceChannel, FileSegmentWriter>,
     next_segment_index: BTreeMap<ReferenceChannel, u64>,
-    closed_footers: Vec<SegmentFooter>,
+    channel_stats: BTreeMap<ReferenceChannel, ChannelRecorderStats>,
     evidence_receipt: Option<EvidenceReceipt>,
 }
 
@@ -1053,7 +1166,7 @@ impl FileRunRecorder {
             manifest,
             active: BTreeMap::new(),
             next_segment_index: BTreeMap::new(),
-            closed_footers: Vec::new(),
+            channel_stats: BTreeMap::new(),
             evidence_receipt: None,
         })
     }
@@ -1110,27 +1223,63 @@ impl FileRunRecorder {
         for channel in channels {
             self.close_channel(&channel)?;
         }
-        let logical_bytes = self.closed_footers.iter().try_fold(0u64, |total, footer| {
-            total
-                .checked_add(footer.header.logical_bytes)
-                .ok_or_else(|| RecorderError::new("run logical-byte count overflowed"))
-        })?;
-        let encoded_bytes = self.closed_footers.iter().try_fold(0u64, |total, footer| {
-            total
-                .checked_add(footer.encoded_bytes)
-                .ok_or_else(|| RecorderError::new("run encoded-byte count overflowed"))
-        })?;
-        let segment_count = self.closed_footers.len() as u64;
+        let channels: Vec<_> = self
+            .channel_stats
+            .iter()
+            .map(|(channel, stats)| RecorderChannelReceipt {
+                channel: channel.clone(),
+                stats: stats.clone(),
+            })
+            .collect();
+        let totals = channels.iter().try_fold(
+            ChannelRecorderStats::default(),
+            |totals, entry| -> Result<ChannelRecorderStats, RecorderError> {
+                let add = |left: u64, right: u64, label: &str| {
+                    left.checked_add(right)
+                        .ok_or_else(|| RecorderError::new(format!("run {label} total overflowed")))
+                };
+                Ok(ChannelRecorderStats {
+                    segment_count: add(
+                        totals.segment_count,
+                        entry.stats.segment_count,
+                        "segment-count",
+                    )?,
+                    record_count: add(
+                        totals.record_count,
+                        entry.stats.record_count,
+                        "record-count",
+                    )?,
+                    block_count: add(totals.block_count, entry.stats.block_count, "block-count")?,
+                    logical_bytes: add(
+                        totals.logical_bytes,
+                        entry.stats.logical_bytes,
+                        "logical-byte",
+                    )?,
+                    encoded_bytes: add(
+                        totals.encoded_bytes,
+                        entry.stats.encoded_bytes,
+                        "encoded-byte",
+                    )?,
+                })
+            },
+        )?;
+        let file_count = totals
+            .segment_count
+            .checked_add(3)
+            .ok_or_else(|| RecorderError::new("run file-count total overflowed"))?;
         let receipt = RecorderReceipt {
             schema: SchemaRef::new("glassvm.recorder_receipt", RECORDER_RECEIPT_SCHEMA_VERSION),
             status: RecorderStatus::Complete,
             finalized: true,
             evidence_receipt_published: true,
             evidence_status: evidence_receipt.status,
-            segment_count,
-            logical_bytes,
-            encoded_bytes: Some(encoded_bytes),
-            file_count: segment_count + 3,
+            channels,
+            segment_count: totals.segment_count,
+            record_count: totals.record_count,
+            block_count: totals.block_count,
+            logical_bytes: totals.logical_bytes,
+            encoded_bytes: Some(totals.encoded_bytes),
+            file_count,
             failure: None,
         };
         receipt.validate().map_err(RecorderError::new)?;
@@ -1161,9 +1310,19 @@ impl FileRunRecorder {
             return Ok(());
         };
         let footer = writer.finish()?;
-        self.next_segment_index
-            .insert(channel.clone(), footer.header.segment_index + 1);
-        self.closed_footers.push(footer);
+        let next_index = footer
+            .header
+            .segment_index
+            .checked_add(1)
+            .ok_or_else(|| RecorderError::new("channel segment index overflowed"))?;
+        self.next_segment_index.insert(channel.clone(), next_index);
+        let next_stats = self
+            .channel_stats
+            .get(channel)
+            .cloned()
+            .unwrap_or_default()
+            .checked_add_footer(&footer)?;
+        self.channel_stats.insert(channel.clone(), next_stats);
         Ok(())
     }
 }
@@ -1196,13 +1355,23 @@ impl PublishedFileRun {
                 "recorder receipt evidence status does not match evidence receipt",
             ));
         }
-        let segment_count = ReferenceChannel::all()
-            .into_iter()
-            .map(|channel| segment_paths(&root, &channel))
-            .collect::<Result<Vec<_>, _>>()?
-            .into_iter()
-            .map(|paths| paths.len() as u64)
-            .sum::<u64>();
+        let mut segment_count = 0u64;
+        for channel in ReferenceChannel::all() {
+            let actual_count = count_segment_files(&root, &channel)?;
+            let recorded_count = recorder_receipt
+                .channels
+                .iter()
+                .find(|entry| entry.channel == channel)
+                .map_or(0, |entry| entry.stats.segment_count);
+            if actual_count != recorded_count {
+                return Err(RecorderError::new(format!(
+                    "published {channel:?} segment count does not match recorder receipt"
+                )));
+            }
+            segment_count = segment_count
+                .checked_add(actual_count)
+                .ok_or_else(|| RecorderError::new("published segment count overflowed"))?;
+        }
         if segment_count != recorder_receipt.segment_count {
             return Err(RecorderError::new(
                 "published segment count does not match recorder receipt",
@@ -1307,6 +1476,27 @@ fn segment_paths(root: &Path, channel: &ReferenceChannel) -> Result<Vec<PathBuf>
     });
     paths.sort();
     Ok(paths)
+}
+
+fn count_segment_files(root: &Path, channel: &ReferenceChannel) -> Result<u64, RecorderError> {
+    let directory = root.join(channel_directory_name(channel));
+    if !directory.exists() {
+        return Ok(0);
+    }
+    let mut count = 0u64;
+    for entry in fs::read_dir(directory).map_err(io_error)? {
+        let entry = entry.map_err(io_error)?;
+        if entry
+            .path()
+            .extension()
+            .is_some_and(|extension| extension == "gvmseg")
+        {
+            count = count
+                .checked_add(1)
+                .ok_or_else(|| RecorderError::new("segment file count overflowed"))?;
+        }
+    }
+    Ok(count)
 }
 
 fn write_json_file<T: Serialize>(path: &Path, value: &T) -> Result<(), RecorderError> {
@@ -1498,10 +1688,22 @@ mod tests {
             finalized: true,
             evidence_receipt_published: true,
             evidence_status: EvidenceStatus::Failed,
+            channels: vec![RecorderChannelReceipt {
+                channel: ReferenceChannel::Frames,
+                stats: ChannelRecorderStats {
+                    segment_count: 1,
+                    record_count: 1,
+                    block_count: 1,
+                    logical_bytes: 10,
+                    encoded_bytes: 8,
+                },
+            }],
             segment_count: 1,
+            record_count: 1,
+            block_count: 1,
             logical_bytes: 10,
             encoded_bytes: Some(8),
-            file_count: 1,
+            file_count: 4,
             failure: None,
         };
         assert!(receipt.validate().is_ok());
@@ -1516,10 +1718,13 @@ mod tests {
             finalized: true,
             evidence_receipt_published: false,
             evidence_status: EvidenceStatus::Complete,
+            channels: Vec::new(),
             segment_count: 0,
+            record_count: 0,
+            block_count: 0,
             logical_bytes: 0,
             encoded_bytes: None,
-            file_count: 1,
+            file_count: 3,
             failure: None,
         };
         assert!(receipt.validate().is_err());
@@ -1682,6 +1887,36 @@ mod tests {
         );
         assert_eq!(published.recorder_receipt().segment_count, 3);
         assert_eq!(published.recorder_receipt().file_count, 6);
+        let recorder_receipt = published.recorder_receipt();
+        assert_eq!(recorder_receipt.channels.len(), 2);
+        let frame_stats = recorder_receipt
+            .channels
+            .iter()
+            .find(|entry| entry.channel == ReferenceChannel::Frames)
+            .unwrap();
+        assert_eq!(frame_stats.stats.segment_count, 2);
+        assert_eq!(frame_stats.stats.record_count, 2);
+        assert!(frame_stats.stats.block_count >= 2);
+        assert!(frame_stats.stats.logical_bytes > 0);
+        assert!(frame_stats.stats.encoded_bytes > 0);
+        let capability_stats = recorder_receipt
+            .channels
+            .iter()
+            .find(|entry| entry.channel == ReferenceChannel::CapabilityOutputs)
+            .unwrap();
+        assert_eq!(capability_stats.stats.segment_count, 1);
+        assert_eq!(capability_stats.stats.record_count, 1);
+        assert_eq!(
+            serde_json::from_value::<RecorderReceipt>(
+                serde_json::to_value(recorder_receipt).unwrap()
+            )
+            .unwrap(),
+            *recorder_receipt
+        );
+        assert!(recorder_receipt.channels.len() <= ReferenceChannel::all().len());
+        let mut inconsistent_receipt = recorder_receipt.clone();
+        inconsistent_receipt.channels[0].stats.record_count += 1;
+        assert!(inconsistent_receipt.validate().is_err());
         let mut reader = published.open_segment(ReferenceChannel::Frames, 1).unwrap();
         assert_eq!(
             reader.next_record().unwrap(),

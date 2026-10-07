@@ -64,7 +64,7 @@ dependencies = [
 
 [[package]]
 name = "glassvm"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "pyo3",
  "serde_json",
@@ -72,7 +72,7 @@ dependencies = [
 
 [[package]]
 name = "glassvm_core"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "glassvm_normalizer_contract",
  "serde",
@@ -82,7 +82,7 @@ dependencies = [
 
 [[package]]
 name = "glassvm_normalizer_contract"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "serde",
  "serde_json",
@@ -90,7 +90,7 @@ dependencies = [
 
 [[package]]
 name = "glassvm_query"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "glassvm_core",
  "serde",
@@ -99,7 +99,7 @@ dependencies = [
 
 [[package]]
 name = "glassvm_recorder"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "glassvm_core",
  "serde",
@@ -109,7 +109,7 @@ dependencies = [
 
 [[package]]
 name = "glassvm_registry"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "glassvm_core",
 ]

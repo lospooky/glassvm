@@ -44,10 +44,21 @@ The published reference exists only when the finalized recorder receipt passes
 the publication gate. Evidence failure does not redefine machine execution,
 and recorder failure does not become a successful publication.
 
+The recorder receipt includes fixed-set, per-channel counters for persisted
+segments, records, blocks, logical bytes, and encoded block-payload bytes. Its
+channel list is in canonical channel order and is bounded by the recorder's six
+declared channels. `encoded_bytes` excludes segment and block framing. The
+receipt schema is `glassvm.recorder_receipt@1.1.0`; aggregate segment, record,
+block, logical-byte, and encoded-byte totals are checked against the per-channel
+counters before publication.
+
 ## Boundedness and recovery
 
-The sink path emits records incrementally. Block and segment limits are hard
-buffering limits, not rotation suggestions. A record larger than the block
+The sink path emits records incrementally. Recorder accounting aggregates each
+closed segment into fixed per-channel counters; it does not retain a growing
+list of segment footers. Publication validation counts segment files while
+streaming directory entries. Block and segment limits are hard buffering
+limits, not rotation suggestions. A record larger than the block
 limit is rejected; valid records satisfy:
 
 ```text
