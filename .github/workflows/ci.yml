@@ -64,4 +64,4 @@ jobs:
           uv build --python "${{ matrix.python-version }}" --sdist --no-sources --out-dir "$sdist_dir" python/facade
           sdist=$(find "$sdist_dir" -maxdepth 1 -name '*.tar.gz' -print -quit)
           test -n "$sdist"
-          uv build --python "${{ matrix.python-version }}" --wheel --no-sources --out-dir "$wheel_dir" "$sdist"
+          MATURIN_PEP517_ARGS="--zig --compatibility pypi" uv build --python "${{ matrix.python-version }}" --wheel --no-sources --out-dir "$wheel_dir" "$sdist"
