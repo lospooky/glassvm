@@ -20,6 +20,10 @@ const FORBIDDEN_SURFACES: &[&str] = &[
     "glassvm_episode",
     "create_execution_with_prepared_observation",
     "glassvm.python_bundle.v1",
+    "pub mod caps;",
+    "DISPLAY_FRAMEBUFFER_FLAT",
+    "CHIP8_FRAME_HASHES",
+    "SOFT_CHIP8_",
     "fn create_execution(\n",
 ];
 

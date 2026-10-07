@@ -1,6 +1,5 @@
 pub mod bundle;
 pub mod canonical;
-pub mod caps;
 pub mod configuration;
 pub mod emission;
 pub mod event;
