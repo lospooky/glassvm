@@ -196,11 +196,11 @@
   "host": {
     "machine": "x86_64",
     "packages": {
-      "glassvm": "0.1.1",
-      "glassvm-chip8": "0.1.1"
+      "glassvm": "0.1.2",
+      "glassvm-chip8": "0.1.2"
     },
     "processor": "x86_64",
-    "python": "3.12.13 (main, Jul 18 2026, 17:02:19) [Clang 22.1.3 ]",
+    "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]",
     "python_implementation": "CPython",
     "release": "5.15.133.1-microsoft-standard-WSL2",
     "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
@@ -211,10 +211,10 @@
   "memory": {
     "allocator_high_water_bytes": null,
     "allocator_note": "No allocator high-water API is exposed by the Python provider protocol.",
-    "peak_rss_bytes": 29577216,
+    "peak_rss_bytes": 31485952,
     "peak_rss_native_unit": "KiB",
-    "peak_rss_native_value": 28884,
-    "rss_before_native_value": 21572
+    "peak_rss_native_value": 30748,
+    "rss_before_native_value": 22612
   },
   "negotiation": {
     "optional_unavailable_capabilities": [],
@@ -268,24 +268,65 @@
   },
   "publication": {
     "published": true,
-    "run_directory_bytes": 25693,
+    "run_directory_bytes": 26614,
     "run_reference_retained": false
   },
   "recorder": {
-    "block_count": null,
-    "channel_stats_available": false,
-    "channel_stats_note": "Installed recorder receipt predates per-channel bounded counters.",
-    "channels": null,
+    "block_count": 4,
+    "channel_stats_available": true,
+    "channel_stats_note": null,
+    "channels": [
+      {
+        "channel": "normalized_events",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 15004,
+          "logical_bytes": 19557,
+          "record_count": 34,
+          "segment_count": 1
+        }
+      },
+      {
+        "channel": "native_evidence",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 390,
+          "logical_bytes": 480,
+          "record_count": 1,
+          "segment_count": 1
+        }
+      },
+      {
+        "channel": "frames",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 2847,
+          "logical_bytes": 3809,
+          "record_count": 8,
+          "segment_count": 1
+        }
+      },
+      {
+        "channel": "capability_outputs",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 382,
+          "logical_bytes": 434,
+          "record_count": 1,
+          "segment_count": 1
+        }
+      }
+    ],
     "encoded_bytes": 18623,
     "file_count": 7,
     "finalized": true,
     "logical_bytes": 24280,
-    "record_count": null,
+    "record_count": 44,
     "schema": {
       "id": "glassvm.recorder_receipt",
       "version": {
         "major": 1,
-        "minor": 0,
+        "minor": 1,
         "patch": 0
       }
     },
@@ -293,6 +334,49 @@
     "status": "complete"
   },
   "recorder_receipt": {
+    "block_count": 4,
+    "channels": [
+      {
+        "channel": "normalized_events",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 15004,
+          "logical_bytes": 19557,
+          "record_count": 34,
+          "segment_count": 1
+        }
+      },
+      {
+        "channel": "native_evidence",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 390,
+          "logical_bytes": 480,
+          "record_count": 1,
+          "segment_count": 1
+        }
+      },
+      {
+        "channel": "frames",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 2847,
+          "logical_bytes": 3809,
+          "record_count": 8,
+          "segment_count": 1
+        }
+      },
+      {
+        "channel": "capability_outputs",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 382,
+          "logical_bytes": 434,
+          "record_count": 1,
+          "segment_count": 1
+        }
+      }
+    ],
     "encoded_bytes": 18623,
     "evidence_receipt_published": true,
     "evidence_status": "complete",
@@ -300,11 +384,12 @@
     "file_count": 7,
     "finalized": true,
     "logical_bytes": 24280,
+    "record_count": 44,
     "schema": {
       "id": "glassvm.recorder_receipt",
       "version": {
         "major": 1,
-        "minor": 0,
+        "minor": 1,
         "patch": 0
       }
     },
@@ -417,27 +502,27 @@
     },
     "workspace_references": {
       "glassvm_checkout": {
-        "dirty": true,
-        "revision": "d0c7a02d41134a6e559e276fd3ef81def96566bb"
+        "dirty": false,
+        "revision": "5f2cdab32216c11c7d2e04708b19e72f3f232275"
       },
       "machines_checkout": {
         "dirty": false,
-        "revision": "7cf884861e3cc22d6f15badc7265c969af032e0a"
+        "revision": "1aca8f625f141adb72b959e413a11fb9e371cf3e"
       }
     }
   },
   "timing": {
-    "discovery_seconds": 0.001362208999125869,
-    "execute_and_publish_seconds": 0.030627792999439407,
-    "preparation_seconds": 0.0005062799991719658,
-    "process_lifecycle_seconds": 0.0478099360007036,
-    "worker_process_seconds": 0.0913529949993972
+    "discovery_seconds": 0.0015298120015359018,
+    "execute_and_publish_seconds": 0.03174327200031257,
+    "preparation_seconds": 0.0005250319991318975,
+    "process_lifecycle_seconds": 0.04212993199871562,
+    "worker_process_seconds": 0.08890627500113624
   },
   "trial": {
     "machine_id": "chip8",
     "recipe_id": "mixed",
     "repetition": 1,
-    "started_utc": "2026-10-07T21:58:16.924940+00:00"
+    "started_utc": "2026-10-07T22:27:30.815297+00:00"
   },
   "workload": {
     "artifact_bytes": 1240,

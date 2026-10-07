@@ -1,6 +1,6 @@
 # Slice 4: experiment harness and result contract
 
-Execution date: 2026-10-08. Status: **implementation green; 0.1.2 recorder-counter pilot regeneration in progress**.
+Execution date: 2026-10-08. Status: **complete for the pilot gate; full measurement matrix remains open**.
 
 ## Deliverables
 
@@ -18,9 +18,9 @@ CHIP-8, PICO-8, and TIC-80 using the published `0.1.1` distributions. It proved
 provider wiring and publication but could not report persisted per-channel
 counters because those wheels used recorder receipt schema `1.0.0`. GlassVM and
 all three machine distributions have now been released at `0.1.2`; the machine
-wheels resolve recorder `0.1.2`, which emits receipt schema `1.1.0`. The result
-set below is being regenerated from those installed packages. These remain short
-contract-wiring checks, not performance samples or bounded-memory evidence.
+wheels resolve recorder `0.1.2`, which emits receipt schema `1.1.0`. The 27-row
+result set below was regenerated from those installed packages. These remain
+short contract-wiring checks, not performance samples or bounded-memory evidence.
 
 The runner fixes artifact hash, structured configuration/seed, empty input
 schedule, and execution-control shape across recipes for a given machine. It
@@ -44,14 +44,16 @@ logical and encoded receipt bytes.
    exact observation request, and prepared-observation identity. These are
    reproducibility inputs, not a replacement serialization of `PreparedRun`.
 
-The recorder-counter validation is the current remaining Slice 4 gate. The
-GlassVM crates/facade and three machine wheels at `0.1.2` are published.
+The recorder-counter validation gate is complete. The GlassVM crates/facade and
+three machine wheels at `0.1.2` are published.
 
 ## Validation
 
-- The isolated 27-cell pilot completed all recipes across all three providers.
-- JSON Schema validation passed for all 27 raw result files.
-- Five Python unit tests pass for typed configuration encoding, frame/event
+- The isolated 27-cell pilot completed all recipes across all three providers
+  using published GlassVM and machine packages at `0.1.2`.
+- All 27 raw results identify recorder receipt schema `1.1.0`, expose channel
+  statistics, and pass per-channel/aggregate consistency checks.
+- Nine Python unit tests pass for typed configuration encoding, frame/event
   independence, extension event tagging, and versioned outcome separation.
 - `run_pilot.py` requires receipt schema `1.1.0` and rejects missing or
   internally inconsistent per-channel/aggregate counters.

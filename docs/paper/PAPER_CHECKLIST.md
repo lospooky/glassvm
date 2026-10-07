@@ -183,7 +183,7 @@ Slice 4 harness and pilot status:
 - [x] Smoke all nine recipes on CHIP-8, PICO-8, and TIC-80 (27 independent eight-frame trials); all published with complete evidence and recorder status.
 - [x] Preserve separate machine, evidence, recorder, and publication outcomes; capture request, prepared-observation identity, timing, RSS, and physical output size.
 - [x] Record the reproducible execution inputs explicitly (artifact digest, configuration, schedule, controls, and provider/package metadata), separately from observation and its negotiated identity. `PreparedRun` remains opaque; exposing its internal identity is not required for this experiment.
-- [ ] Regenerate the 27-cell pilot through published `0.1.2` Python distributions and validate recorder receipt `1.1.0` per-channel counters end-to-end.
+- [x] Regenerate the 27-cell pilot through published `0.1.2` Python distributions and validate recorder receipt `1.1.0` per-channel counters end-to-end.
 
 The pilot validates wiring, not performance or run-length boundedness. The
 full benchmark matrix below remains open. See

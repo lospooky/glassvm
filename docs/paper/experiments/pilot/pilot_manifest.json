@@ -18,7 +18,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "disabled",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--disabled--r01.json"
@@ -30,7 +30,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "minimal",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--minimal--r01.json"
@@ -42,7 +42,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "selected_normalized",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--selected_normalized--r01.json"
@@ -54,7 +54,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "all_normalized",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--all_normalized--r01.json"
@@ -66,7 +66,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "selected_native",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--selected_native--r01.json"
@@ -78,7 +78,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "frame_hashes",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--frame_hashes--r01.json"
@@ -90,7 +90,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "frame_full",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--frame_full--r01.json"
@@ -102,7 +102,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "visual_capability",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--visual_capability--r01.json"
@@ -114,7 +114,7 @@
       "machine_id": "chip8",
       "published": true,
       "recipe_id": "mixed",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/chip8--mixed--r01.json"
@@ -126,7 +126,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "disabled",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--disabled--r01.json"
@@ -138,7 +138,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "minimal",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--minimal--r01.json"
@@ -150,7 +150,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "selected_normalized",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--selected_normalized--r01.json"
@@ -162,7 +162,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "all_normalized",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--all_normalized--r01.json"
@@ -174,7 +174,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "selected_native",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--selected_native--r01.json"
@@ -186,7 +186,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "frame_hashes",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--frame_hashes--r01.json"
@@ -198,7 +198,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "frame_full",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--frame_full--r01.json"
@@ -210,7 +210,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "visual_capability",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--visual_capability--r01.json"
@@ -222,7 +222,7 @@
       "machine_id": "pico8",
       "published": true,
       "recipe_id": "mixed",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/pico8--mixed--r01.json"
@@ -234,7 +234,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "disabled",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--disabled--r01.json"
@@ -246,7 +246,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "minimal",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--minimal--r01.json"
@@ -258,7 +258,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "selected_normalized",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--selected_normalized--r01.json"
@@ -270,7 +270,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "all_normalized",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--all_normalized--r01.json"
@@ -282,7 +282,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "selected_native",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--selected_native--r01.json"
@@ -294,7 +294,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "frame_hashes",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--frame_hashes--r01.json"
@@ -306,7 +306,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "frame_full",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--frame_full--r01.json"
@@ -318,7 +318,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "visual_capability",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--visual_capability--r01.json"
@@ -330,7 +330,7 @@
       "machine_id": "tic80",
       "published": true,
       "recipe_id": "mixed",
-      "recorder_channel_stats_available": false,
+      "recorder_channel_stats_available": true,
       "recorder_status": "complete",
       "repetition": 1,
       "result": "raw/tic80--mixed--r01.json"
