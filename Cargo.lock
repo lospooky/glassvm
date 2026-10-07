@@ -63,6 +63,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "glassvm"
+version = "0.1.0"
+dependencies = [
+ "pyo3",
+ "serde_json",
+]
+
+[[package]]
 name = "glassvm_core"
 version = "0.1.0"
 dependencies = [
@@ -77,14 +85,6 @@ name = "glassvm_normalizer_contract"
 version = "0.1.0"
 dependencies = [
  "serde",
- "serde_json",
-]
-
-[[package]]
-name = "glassvm_py"
-version = "0.1.0"
-dependencies = [
- "pyo3",
  "serde_json",
 ]
 

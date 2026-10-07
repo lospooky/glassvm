@@ -358,7 +358,7 @@ impl PreparedRun {
 }
 
 #[pymodule]
-fn glassvm_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn glassvm(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Runtime>()?;
     m.add_class::<PreparedRun>()?;
     m.add_function(wrap_pyfunction!(discover_bundles, m)?)?;
@@ -381,8 +381,8 @@ mod tests {
                 "protocol": "glassvm.python_bundle",
                 "protocol_version": {"major": 1, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
-                "distribution": "glassvm-machine-chip8",
-                "module": "glassvm_py_chip8",
+                "distribution": "glassvm-chip8",
+                "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
                 "bundle_version": "0.1.0"
@@ -409,8 +409,8 @@ mod tests {
                 "protocol": "glassvm.python_bundle",
                 "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
-                "distribution": "glassvm-machine-chip8",
-                "module": "glassvm_py_chip8",
+                "distribution": "glassvm-chip8",
+                "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
                 "bundle_version": "0.1.0"
@@ -428,8 +428,8 @@ mod tests {
                 "protocol": format!("{PYTHON_BUNDLE_PROVIDER_CONTRACT}.v1"),
                 "protocol_version": {"major": 1, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
-                "distribution": "glassvm-machine-chip8",
-                "module": "glassvm_py_chip8",
+                "distribution": "glassvm-chip8",
+                "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
                 "bundle_version": "0.1.0"
@@ -447,8 +447,8 @@ mod tests {
                 "protocol": "glassvm.python_bundle",
                 "protocol_version": {"major": 1, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
-                "distribution": "glassvm-machine-chip8",
-                "module": "glassvm_py_chip8",
+                "distribution": "glassvm-chip8",
+                "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "bundle_version": "0.1.0"
             }),

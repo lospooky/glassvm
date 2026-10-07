@@ -19,11 +19,11 @@ GlassVM is a machine-execution substrate. It supplies:
 
 The initial publication workspace contains three first-class bundles:
 
-| Bundle | Machine role | Rust plugin |
+| Bundle | Machine role | Rust bundle crate |
 | --- | --- | --- |
-| CHIP-8 | baseline/reference bytecode virtual machine | [`glassvm-machines/chip8/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/chip8/plugin) |
-| PICO-8 | independently designed external validation machine | [`glassvm-machines/pico8/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/pico8/plugin) |
-| TIC-80 | independently designed external validation machine | [`glassvm-machines/tic80/plugin`](https://github.com/lospooky/glassvm-machines/tree/main/tic80/plugin) |
+| CHIP-8 | baseline/reference bytecode virtual machine | [`glassvm-machines/chip8/bundle`](https://github.com/lospooky/glassvm-machines/tree/main/chip8/bundle) |
+| PICO-8 | independently designed external validation machine | [`glassvm-machines/pico8/bundle`](https://github.com/lospooky/glassvm-machines/tree/main/pico8/bundle) |
+| TIC-80 | independently designed external validation machine | [`glassvm-machines/tic80/bundle`](https://github.com/lospooky/glassvm-machines/tree/main/tic80/bundle) |
 
 The common caller is not specialized for any of these machine semantics.
 
@@ -219,7 +219,7 @@ core execution or query code.
 
 ## Python distribution
 
-The generic `glassvm_py` wheel contains the runtime facade only. Each bundle
+The generic `glassvm` wheel contains the runtime facade only. Each bundle
 wheel supplies one provider through the installed
 `glassvm.machine_bundles` entry-point group. The provider protocol is:
 
@@ -238,7 +238,7 @@ do not compile bundles at install time or activate a static registry.
 The Python lifecycle is the same for every bundle:
 
 ```python
-runtime = glassvm_py.Runtime.discover()
+runtime = glassvm.Runtime.discover()
 prepared = runtime.prepare(
     machine_id=machine_id,
     artifact=artifact,

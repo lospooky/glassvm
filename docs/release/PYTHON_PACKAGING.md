@@ -8,12 +8,14 @@ points; it does not contain a machine registry or machine-specific dispatch.
 
 The publication names are:
 
-- `glassvm_py`: generic runtime facade and provider discovery;
-- `glassvm-machine-chip8`: CHIP-8 provider, imported as `glassvm_py_chip8`;
-- `glassvm-machine-pico8`: PICO-8 provider, imported as
-  `glassvm_py_pico8`; and
-- `glassvm-machine-tic80`: TIC-80 provider, imported as
-  `glassvm_py_tic80`.
+- `glassvm`: generic runtime facade and provider discovery, imported as `glassvm`;
+- `glassvm-chip8`: CHIP-8 provider wheel;
+- `glassvm-pico8`: PICO-8 provider wheel; and
+- `glassvm-tic80`: TIC-80 provider wheel.
+
+The bundle modules named in provider metadata are implementation modules used
+by entry-point discovery, not supported direct-import APIs. Callers use the
+`glassvm` facade and select a machine by its canonical machine ID.
 
 Each bundle wheel supplies one provider and statically links its machine
 implementation. A compatible wheel installation does not require a Rust
@@ -25,13 +27,13 @@ Extras are ordinary dependency selection:
 
 ```toml
 [project.optional-dependencies]
-chip8 = ["glassvm-machine-chip8==0.1.0"]
-pico8 = ["glassvm-machine-pico8==0.1.0"]
-tic80 = ["glassvm-machine-tic80==0.1.0"]
+chip8 = ["glassvm-chip8==0.1.0"]
+pico8 = ["glassvm-pico8==0.1.0"]
+tic80 = ["glassvm-tic80==0.1.0"]
 all = [
-    "glassvm-machine-chip8==0.1.0",
-    "glassvm-machine-pico8==0.1.0",
-    "glassvm-machine-tic80==0.1.0",
+    "glassvm-chip8==0.1.0",
+    "glassvm-pico8==0.1.0",
+    "glassvm-tic80==0.1.0",
 ]
 ```
 
@@ -48,8 +50,8 @@ Every bundle registers exactly one entry point in the
   "protocol": "glassvm.python_bundle",
   "protocol_version": {"major": 1, "minor": 0, "patch": 0},
   "machine_id": "chip8",
-  "distribution": "glassvm-machine-chip8",
-  "module": "glassvm_py_chip8",
+  "distribution": "glassvm-chip8",
+  "module": "glassvm_chip8",
   "prepare_function": "prepare_run",
   "execute_function": "execute_prepared",
   "bundle_version": "0.1.0"
@@ -78,9 +80,9 @@ explicit in the negotiated result.
 The caller shape is identical for all installed bundles:
 
 ```python
-import glassvm_py
+import glassvm
 
-runtime = glassvm_py.Runtime.discover()
+runtime = glassvm.Runtime.discover()
 prepared = runtime.prepare(
     machine_id="chip8",
     artifact=artifact,
@@ -137,8 +139,8 @@ After building the four release wheels into one directory, a local equivalent
 of an index installation is:
 
 ```bash
-uv pip install --find-links dist "glassvm_py[chip8]"
-uv pip install --find-links dist "glassvm_py[all]"
+uv pip install --find-links dist "glassvm[chip8]"
+uv pip install --find-links dist "glassvm[all]"
 ```
 
 The local `dist` directory only supplies wheel files for the check. Published

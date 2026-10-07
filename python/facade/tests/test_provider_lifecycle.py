@@ -3,11 +3,11 @@
 import json
 import unittest
 
-import glassvm_py
+import glassvm
 
 class ProviderDiscoveryTests(unittest.TestCase):
     def setUp(self):
-        self.runtime = glassvm_py.Runtime.discover()
+        self.runtime = glassvm.Runtime.discover()
 
     def test_base_runtime_discovers_entry_points_without_static_bundle_assumptions(self):
         metadata = json.loads(self.runtime.bundles())
