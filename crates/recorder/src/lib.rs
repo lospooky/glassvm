@@ -24,9 +24,13 @@ use serde_json::Value;
 
 mod python_sink;
 
+#[cfg(feature = "python")]
+pub use python_sink::PythonCallbackConsumer;
 pub use python_sink::{
-    OwnedEmission, PythonEmissionConsumer, PythonSinkCallbackKind, PythonSinkDeliveryOutcome,
-    PythonSinkDeliveryStatus, PythonSinkFailure, RunFinishedRecord, RunStartedRecord,
+    DEFAULT_PYTHON_BATCH_MAX_ITEMS, DEFAULT_PYTHON_BATCH_MAX_LOGICAL_BYTES, OwnedEmission,
+    PythonBatchPolicy, PythonBatchingSink, PythonEmissionConsumer, PythonSinkCallbackKind,
+    PythonSinkDeliveryOutcome, PythonSinkDeliveryStatus, PythonSinkFailure, RunFinishedRecord,
+    RunStartedRecord,
 };
 
 pub const REFERENCE_RUN_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 0, 0);
