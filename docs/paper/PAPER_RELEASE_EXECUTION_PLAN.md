@@ -239,14 +239,34 @@ introduce an authenticity, signature, or cryptographic audit protocol.
 
 ## Slice 5: collect selectable-observation measurements
 
+Execution record: completed 2026-10-08. The five repetitions of nine explicit
+observation recipes over CHIP-8, PICO-8, and TIC-80 produced 135/135 published
+runs from the released `0.1.2` wheels on Python 3.14, Linux x86_64 under WSL2.
+All runs reached 600 frames with identical per-machine cycles and termination
+across recipes. CHIP-8 reported `Timeout` after the caller's 600-frame bound;
+PICO-8 and TIC-80 reported `frame_limit`. All evidence and recorder receipts
+were complete, publication succeeded, and the mechanical anomaly report was
+empty. The seeded shuffled order is recorded in the measurement manifest.
+
+Raw trials and the generated table are in
+[`experiments/measurements/`](experiments/measurements/); the exact command and
+measurement boundaries are in [`experiments/README.md`](experiments/README.md).
+Evidence budgets were explicitly unbounded (all maxima null); the provider's
+hard recorder limits were recorded in every trial. Full TIC-80 frame capture
+produced about 120.3 MB of physical run data and a 9.91 s median
+execute-and-publish interval, versus about 219 KB and 0.18 s for frame hashes
+on this host/workload. This is a workload-specific observation-cost contrast,
+not a general performance or bounded-memory claim. Allocator high-water is
+not exposed; process peak RSS includes Python/provider startup.
+
 ### Tasks
 
-- [ ] Execute each supported observation recipe for each selected machine workload.
-- [ ] Use the same resolved machine execution material across mode comparisons and verify actual completed frames/steps.
-- [ ] Collect repetitions using the recorded policy and retain the individual observations.
-- [ ] Record item/byte accounting, storage layout counts, publication outcome, and evidence/recorder receipts for every run.
-- [ ] Check that evidence budgets and recorder limits are explicit; distinguish intentionally incomplete evidence from successful complete runs.
-- [ ] Produce a normalized result table and identify anomalies requiring investigation before interpreting overhead.
+- [x] Execute each supported observation recipe for each selected machine workload.
+- [x] Use the same resolved machine execution material across mode comparisons and verify actual completed frames/cycles and termination.
+- [x] Collect five independent repetitions in seeded shuffled order and retain the individual observations.
+- [x] Record item/byte accounting, storage layout counts, publication outcome, and separate evidence/recorder receipts for every run.
+- [x] Check explicit evidence-budget policy and hard recorder limits; mechanically flag incomplete evidence, recorder failure, publication failure, and work/counter mismatches.
+- [x] Produce the normalized result table and investigate anomalies before interpreting overhead; no mechanical anomalies were found.
 
 ### Deliverables and exit gate
 
@@ -258,21 +278,32 @@ Do not infer bounded memory from these fixed-length comparisons.
 
 ### Tasks
 
-- [ ] Select several geometric lengths, targeting 1x/10x/100x/1000x where practical, and record any resource-based exclusions.
-- [ ] For each workload, run disabled observation, observation with NullSink, bounded normalizers, and the durable recorder.
-- [ ] Keep machine parameters and evidence recipes fixed across the length sweep; extend only the declared stopping bound/input schedule as needed and record those changes.
-- [ ] Measure peak RSS, runtime, logical volume, durable volume, and allocation high-water if available in separate processes.
-- [ ] Verify each run reaches the intended length, and record evidence truncation or resource failures explicitly.
-- [ ] Investigate whether observed memory growth comes from machine state, Lua/runtime allocation, reducer state, sink buffering, or the measurement harness.
-- [ ] Generate memory-versus-length and emitted/stored-volume-versus-length plots.
-- [ ] Write C3 claim language constrained to the measured workloads, hosts, lengths, and configured bounds.
+- [x] Select four geometric lengths (600, 6,000, 60,000, 600,000 frames) and record the repetition count (three through 60,000; one at 600,000).
+- [x] Run all four paths—observation disabled, selected events to `NullSink`, selected events plus hash frames and visual normalizer to `NullSink`, and the same request through the durable recorder—for all three release workloads (120 trials).
+- [x] Keep artifact, configuration, and empty input schedule fixed per machine; vary only the frame limit and the explicitly defined observation/sink path.
+- [x] Measure per-process peak RSS, wall/runtime, evidence logical bytes, and finalized recorder encoded bytes. Allocator high-water is unavailable; RSS is Linux `/proc/self/status` `VmHWM`.
+- [x] Verify every run reached the requested frame count; all 120 executions and evidence receipts completed, and all 30 recorder trials finalized and published.
+- [x] Diagnose the initial CHIP-8 memory growth as retained per-frame/per-transition state in `chip8_core::Engine`, updated even with observation disabled. PICO-8 and TIC-80 RSS stayed approximately flat in that baseline.
+- [x] Generate the memory-versus-length and evidence/storage-volume plots from the raw result files.
+- [x] Constrain the original result: it did **not** support a cross-bundle run-length-independent memory claim because CHIP-8 RSS grew with run length.
+- [x] Clean the CHIP-8 path: remove frame-hash histories, the exact unique-frame set, unbounded per-transition metric samples, and retained whole-run native events. Keep scalar event counters; derive visual motifs in the bounded normalizer from selected frame artifacts. Remove the legacy native interestingness/trajectory-identity outputs and version the execution-summary schema.
+- [x] Repeat the four-mode/four-length CHIP-8 matrix (40 trials); the observed peak RSS range is approximately 5.0–6.1 MiB from 600 through 600,000 frames on this host.
+- [x] Prepare a clean-versioned regeneration command that builds with `--locked`, records exact checkout/tag/lockfile/binary coordinates, requires clean pinned revisions, validates complete execution-outcome equivalence, and refuses source/matrix-mismatched resume data. Results are directed outside the source checkouts.
+- [ ] Repeat all three machines together at the same source coordinate before closing the cross-bundle bounded-memory claim.
 
 ### Deliverables and exit gate
 
-Raw measurements, two generated plots, and a supported boundedness statement.
-If memory grows with length, expose and diagnose the growth before claiming
-bounded pipeline behavior. Growing durable output is reported independently.
-This is the central remaining empirical gate for C3.
+The original three-machine matrix and its generated plots are retained under
+[`experiments/measurements/memory-scaling/`](experiments/measurements/memory-scaling/).
+The CHIP-8 cleanup follow-up, 40 raw trials, manifest, summary, and plots are
+under
+[`experiments/measurements/chip8-retention-cleanup/`](experiments/measurements/chip8-retention-cleanup/).
+The new CHIP-8 sweep observed approximately flat RSS across the tested modes
+and lengths. Because it was run separately from the PICO-8/TIC-80 baseline,
+repeat the complete matrix against one source coordinate before closing the
+cross-bundle gate. The runner and command are ready, but the final clean-versioned
+matrix has not been launched. Recorder encoded volume remains a separate
+evidence/storage cost and grows with emitted records.
 
 ## Slice 7: consumer costs, equivalence, and downstream use
 

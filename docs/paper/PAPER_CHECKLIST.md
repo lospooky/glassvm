@@ -204,64 +204,66 @@ For representative workloads on each release machine, run:
 
 For each mode record:
 
-- [ ] wall-clock runtime
-- [ ] execution duration separately where possible
-- [ ] item counts per channel
-- [ ] logical bytes per channel
-- [ ] encoded bytes per channel
-- [ ] recorder block count
-- [ ] segment count
-- [ ] file count
-- [ ] publication result
-- [ ] evidence receipt status
-- [ ] recorder receipt status
-- [ ] peak RSS
-- [ ] allocator high-water mark if practical
+- [x] wall-clock runtime (isolated worker-process and lifecycle timings)
+- [x] execute-and-publish duration separately; pure emulator-only duration is not exposed
+- [x] item counts per channel
+- [x] logical bytes per channel
+- [x] encoded bytes per recorder channel
+- [x] recorder block count
+- [x] segment count
+- [x] file count
+- [x] publication result
+- [x] evidence receipt status
+- [x] recorder receipt status
+- [x] peak RSS (process high-water, including interpreter/provider startup)
+- [x] allocator high-water checked; unavailable from the Python provider protocol
 
-Use identical machine workload/config/input when comparing observation modes.
+Use identical machine workload/config/input when comparing observation modes. **Complete:** five repetitions per cell, 600-frame bound, nine exact recipes, three machines; all returned work coordinates matched within each machine and all 135 runs published with complete receipts. See [`experiments/measurements/OBSERVATION_SUMMARY.md`](experiments/measurements/OBSERVATION_SUMMARY.md).
 
-Output:
-- raw versioned result files
-- one normalized result table
+Output: **Complete** — raw versioned result files and one generated normalized result table are retained under `experiments/measurements/`.
 
 ## 8. Run-length bounded-memory experiment
 
 This is a paper-critical C3 experiment.
 
-For at least several geometrically increasing execution lengths, e.g.
+Completed across four geometrically increasing execution lengths:
 
-- [ ] 1x
-- [ ] 10x
-- [ ] 100x
-- [ ] 1000x where practical
+- [x] 600 frames
+- [x] 6,000 frames
+- [x] 60,000 frames
+- [x] 600,000 frames (one repetition; three repetitions at shorter lengths)
 
 run at least:
 
-- [ ] observation disabled
-- [ ] observation + `NullSink`
-- [ ] observation + bounded normalizer(s)
-- [ ] observation + durable recorder
+- [x] observation disabled
+- [x] selected normalized events + `NullSink`
+- [x] selected events, hash frames, and bounded visual normalizer + `NullSink`
+- [x] same normalizer request + durable recorder
 
 Measure:
 
-- [ ] peak RSS
-- [ ] allocator high-water if practical
-- [ ] logical emitted volume
-- [ ] durable encoded volume
-- [ ] runtime
+- [x] peak RSS (`VmHWM` in isolated Linux processes)
+- [x] allocator high-water checked; not exposed by this path
+- [x] logical emitted volume
+- [x] durable encoded volume
+- [x] runtime
 
 Check:
 
-- [ ] NullSink memory does not scale with run length except bounded runtime noise.
-- [ ] Normalizer memory remains bounded by reducer state.
-- [ ] Recorder memory remains bounded by configured block/segment buffering.
-- [ ] Durable output volume may scale with run length and is reported separately.
+- [x] The original 120-trial matrix exposed CHIP-8 RSS growth in all four paths, including disabled observation (5.65 MiB at 600 frames; 113.64 MiB at 600,000). PICO-8 and TIC-80 stayed approximately flat on this host.
+- [x] Remove CHIP-8's retained per-frame hash history, unique-frame set, per-transition visual metric histories, and all-run native event log. Keep only scalar event counters in the engine; let the bounded visual normalizer consume requested frame artifacts.
+- [x] Remove the legacy `chip8.interestingness` and `chip8.trajectory_identity` native capability outputs; keep frame hashes as a capture mode and visual motifs as a derived capability. Version the changed `chip8.execution_summary` schema.
+- [x] Repeat all four CHIP-8 observation/sink paths at the four run lengths (40 trials). RSS remained about 5.0–6.1 MiB across the matrix; recorder bytes are still reported separately and grow with persisted evidence.
+- [x] Prepare the clean-versioned regeneration path: require exact clean checkout revisions, build the locked release example, record source/tag/lockfile/binary digests, and reject stale or mismatched resume data. Validate equality of frame/cycle totals, boot outcome, and termination.
+- [ ] Repeat the full 120-trial, three-machine matrix against one clean source coordinate before making a cross-bundle bounded-memory claim.
 
-Output:
-- raw measurements
-- plot: peak memory vs run length
-- plot: emitted/stored bytes vs run length
-- short result summary suitable for paper text
+Original baseline data remains under
+[`experiments/measurements/memory-scaling/`](experiments/measurements/memory-scaling/).
+The CHIP-8 cleanup follow-up, raw trials, manifest, generated summary, and plots
+are under
+[`experiments/measurements/chip8-retention-cleanup/`](experiments/measurements/chip8-retention-cleanup/).
+The cleanup result is positive for CHIP-8 and this host/workload; the matching
+three-machine rerun remains the paper gate.
 
 ## 9. Sink-cost decomposition
 
@@ -304,22 +306,31 @@ Output:
 
 ## 11. Package-index-only install proof
 
-Once packages are published:
+Package-index Python execution in a fresh `uv` environment was exercised by the
+135 Slice 5 trials using
+`uv run --with glassvm==0.1.2 --with glassvm-chip8==0.1.2 --with
+glassvm-pico8==0.1.2 --with glassvm-tic80==0.1.2`; the raw trials record the
+installed distribution versions and entry-point provider metadata. The cartridge
+bytes were read from the documented fixture checkout and passed as caller-owned
+artifact data; no bundle implementation was loaded from that checkout. This is
+not yet the separate zero-checkout consumer-project proof: the runner and
+fixture manifest came from the GlassVM checkout. The Rust external-consumer
+build and fully checkout-free packaging proof below remain open.
 
-From a fresh clean environment with no repository checkout:
+Package-index Python execution (evidenced by Slice 5):
 
-- [ ] install generic `glassvm` Python facade from package index
-- [ ] install CHIP-8 provider from package index
-- [ ] discover CHIP-8 by entry point
-- [ ] prepare and execute
-- [ ] produce receipts
-- [ ] produce published run
+- [x] install generic `glassvm` Python facade from package index
+- [x] install CHIP-8 provider from package index
+- [x] discover CHIP-8 by entry point
+- [x] prepare and execute
+- [x] produce receipts
+- [x] produce published run
 
 Repeat independently for:
 
-- [ ] PICO-8
-- [ ] TIC-80
-- [ ] all three installed together
+- [x] PICO-8
+- [x] TIC-80
+- [x] all three installed together
 
 For Rust:
 

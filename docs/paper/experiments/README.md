@@ -1,7 +1,8 @@
 # Paper experiment harness
 
 This directory holds the deterministic recipe manifest, raw single-trial
-schema, isolated-process runner, and Slice 4 pilot outputs. The runner uses
+schema, isolated-process runner, Slice 4 pilot, and repeated Slice 5
+selectable-observation measurements. The runner uses
 only installed `glassvm.machine_bundles` providers through:
 
 ```python
@@ -39,10 +40,27 @@ uv run --python 3.14 --with glassvm==0.1.2 --with glassvm-chip8==0.1.2 \
     --repetitions 1 --frame-limit 600
 ```
 
-Each machine/recipe/repetition runs in a fresh Python subprocess. Change the
-recipes/repetition count for the collection phase only after the pilot is
-validated. Run output directories are temporary; the raw trial retains the
-published flag and physical byte count, not a stale path to deleted files.
+Each machine/recipe/repetition runs in a fresh Python subprocess. The 27-cell
+Slice 4 pilot is a harness/accounting check only. Slice 5 uses five
+independent repetitions at 600 frames and a seeded shuffled trial order, stored
+separately under `measurements/`; it is a fixed-workload observation-cost
+comparison, not bounded-memory evidence. Reproduce it with:
+
+```sh
+uv run --python 3.14 --with glassvm==0.1.2 --with glassvm-chip8==0.1.2 \
+  --with glassvm-pico8==0.1.2 --with glassvm-tic80==0.1.2 \
+  python docs/paper/experiments/run_pilot.py \
+    --glassvm-root "$PWD" \
+    --machines-root ../glassvm-machines \
+    --output-dir docs/paper/experiments/measurements \
+    --manifest-name measurement_manifest.json \
+    --repetitions 5 --frame-limit 600
+uv run --python 3.14 python docs/paper/experiments/generate_observation_summary.py \
+  --measurement-dir docs/paper/experiments/measurements
+```
+
+Run output directories are temporary; the raw trial retains the published flag
+and physical byte count, not a stale path to deleted files.
 The runner snapshots both checkout revisions and dirty states before writing
 trial files, so the pilot's own outputs cannot mark later trials as dirty.
 The default selects every recipe in the manifest. Regenerate and check the
@@ -90,3 +108,69 @@ attributing the current checkout to those binaries.
 The result schema is versioned independently from recorder and evidence
 schemas. A changed field meaning requires a result-schema version bump and
 regeneration of all dependent tables/figures.
+
+## Slice 6: run-length and memory scaling
+
+`run_memory_experiment.py` drives one release-mode Rust process per trial so
+peak RSS is measured independently of Python/provider startup. The experimental
+`paper_memory_trial` example lives in the companion `glassvm-machines` checkout
+under `conformance/examples/`; the runner builds it with `--locked` before the
+matrix. GlassVM contract and recorder crates resolve through their published
+versions in the machine workspace lockfile.
+
+The fixed matrix uses the same artifact, configuration, and empty input
+schedule per machine at 600, 6,000, 60,000, and 600,000 requested frames. It
+compares disabled observation, selected normalized events to `NullSink`, those
+events plus hash frames and the declared visual capability to `NullSink`, and
+that same visual request through the segmented file recorder. Three
+repetitions are used through 60,000 frames and one at 600,000. Recorder output
+is measured in a fresh temporary directory and removed after its receipts and
+physical bytes are recorded.
+
+For the final paper run, check out the exact GlassVM and machine-repository
+commits intended for citation, and keep both checkouts clean. The runner records
+the full commit IDs, exact tags when present, Rust/Cargo versions, machine
+workspace lockfile digest, trial-binary digest, fixture digests, and host
+metadata. The output directory must be outside both checkouts so writing results
+does not make a source checkout dirty. Resolve the chosen refs to full commit
+IDs and pass them explicitly:
+
+```sh
+GLASSVM_REV=$(git -C . rev-parse HEAD)
+MACHINES_REV=$(git -C ../glassvm-machines rev-parse HEAD)
+uv run --python 3.14 --no-project python \
+  docs/paper/experiments/run_memory_experiment.py \
+  --paper-root docs/paper \
+  --machines-root ../glassvm-machines \
+  --output-dir ../glassvm-paper-results/memory-scaling \
+  --require-clean \
+  --expected-glassvm-revision "$GLASSVM_REV" \
+  --expected-machines-revision "$MACHINES_REV"
+```
+
+The runner builds the release example with Cargo's lockfile enforced. It refuses
+dirty checkouts, unexpected revisions, and output directories whose saved
+source/matrix metadata differs from the current invocation. An interrupted run
+can be resumed only against the identical source, binary, workload, and matrix;
+use a new output directory for any changed revision or settings. Do not reuse
+the current dirty-checkout measurements as final results.
+Regenerate validation, `SUMMARY.md`, `summary.json`, and both plots with:
+
+```sh
+uv run --python 3.14 --no-project --with matplotlib python \
+  docs/paper/experiments/summarize_memory_experiment.py \
+  --data-dir ../glassvm-paper-results/memory-scaling
+```
+
+The original three-machine matrix exposed CHIP-8 growth: disabled-observation
+RSS rose from 5.65 MiB at 600 frames to 113.64 MiB at 600,000. The core
+retained frame histories, metric samples, and native events. Those surfaces
+have since been removed; CHIP-8 now counts scalar event facts online, and
+frame-derived motifs are computed by its bounded bundle normalizer. The
+CHIP-8-only 40-trial follow-up is in
+[`measurements/chip8-retention-cleanup/`](measurements/chip8-retention-cleanup/):
+all modes measured about 5.0–6.1 MiB from 600 to 600,000 frames on this host.
+The full three-machine matrix still needs a same-source-coordinate rerun before
+we use it to support a cross-bundle memory claim. Peak RSS is Linux `VmHWM`,
+allocator high-water is unavailable, and the longest point has one repetition.
+Both datasets, manifests, summaries, and SVG plots are retained independently.

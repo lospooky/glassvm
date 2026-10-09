@@ -19,7 +19,6 @@ from pathlib import Path
 
 import tomllib
 
-
 RESULT_SCHEMA_VERSION = "1.0.0"
 OBSERVATION_SCHEMA_VERSION = {"major": 2, "minor": 1, "patch": 0}
 INPUT_SCHEDULE_SCHEMA = {
@@ -36,6 +35,12 @@ NATIVE_EXECUTION_SUMMARY = {
     "pico8": "pico8.execution_summary",
     "tic80": "tic80.execution_summary",
 }
+RECORDER_LIMITS = {
+    "max_block_logical_bytes": 1024 * 1024,
+    "max_segment_records": 256,
+    "max_segment_logical_bytes": 2 * 1024 * 1024,
+    "max_buffered_bytes_per_channel": 1024 * 1024,
+}
 
 
 def git_metadata(path: Path) -> dict[str, object]:
@@ -47,7 +52,10 @@ def git_metadata(path: Path) -> dict[str, object]:
         except (OSError, subprocess.CalledProcessError):
             return None
 
-    return {"revision": git("rev-parse", "HEAD"), "dirty": git("status", "--porcelain") != ""}
+    return {
+        "revision": git("rev-parse", "HEAD"),
+        "dirty": git("status", "--porcelain") != "",
+    }
 
 
 def package_version(name: str) -> str | None:
@@ -90,7 +98,9 @@ def observation_request(recipe: dict, workload: dict) -> dict:
     elif normalized == "all":
         events = "all"
     elif normalized == "workload":
-        events = {"kinds": [event_kind(item) for item in workload["normalized_event_kinds"]]}
+        events = {
+            "kinds": [event_kind(item) for item in workload["normalized_event_kinds"]]
+        }
     else:
         raise ValueError(f"unknown normalized-event recipe selector {normalized!r}")
 
@@ -103,7 +113,9 @@ def observation_request(recipe: dict, workload: dict) -> dict:
     )
     capabilities = []
     if recipe["capability"]:
-        capabilities.append({"id": workload["capability"], "required": True, "parameters": {}})
+        capabilities.append(
+            {"id": workload["capability"], "required": True, "parameters": {}}
+        )
 
     return {
         "schema_version": OBSERVATION_SCHEMA_VERSION,
@@ -114,7 +126,11 @@ def observation_request(recipe: dict, workload: dict) -> dict:
             "state_diffs": False,
         },
         "capabilities": capabilities,
-        "native_evidence": {"enabled": native_enabled, "all": False, "kinds": native_kinds},
+        "native_evidence": {
+            "enabled": native_enabled,
+            "all": False,
+            "kinds": native_kinds,
+        },
         "frames": {"capture": recipe["frames"]},
         "snapshots": {"capture": "none"},
         "input_value_evidence": {"enabled": False},
@@ -127,7 +143,11 @@ def machine_configuration(machine_id: str, values: dict) -> dict:
     return {
         "schema": {
             "id": CONFIGURATION_SCHEMAS[machine_id],
-            "version": {"major": 1 if machine_id != "chip8" else 2, "minor": 0, "patch": 0},
+            "version": {
+                "major": 1 if machine_id != "chip8" else 2,
+                "minor": 0,
+                "patch": 0,
+            },
         },
         "value": {"Map": {key: typed_value(value) for key, value in values.items()}},
     }
@@ -156,9 +176,16 @@ def run_trial(args: argparse.Namespace) -> dict:
     paper_root = Path(args.paper_root).resolve()
     machines_root = Path(args.machines_root).resolve()
     workload_data = tomllib.loads((paper_root / "PAPER_WORKLOADS.toml").read_text())
-    recipes_data = tomllib.loads((paper_root / "experiments/OBSERVATION_RECIPES.toml").read_text())
-    workload = next((row for row in workload_data["workload"] if row["machine_id"] == args.machine), None)
-    recipe = next((row for row in recipes_data["recipe"] if row["id"] == args.recipe), None)
+    recipes_data = tomllib.loads(
+        (paper_root / "experiments/OBSERVATION_RECIPES.toml").read_text()
+    )
+    workload = next(
+        (row for row in workload_data["workload"] if row["machine_id"] == args.machine),
+        None,
+    )
+    recipe = next(
+        (row for row in recipes_data["recipe"] if row["id"] == args.recipe), None
+    )
     if workload is None or recipe is None:
         raise ValueError("unknown machine workload or observation recipe")
     if args.machine not in recipes_data["machines"]:
@@ -167,7 +194,9 @@ def run_trial(args: argparse.Namespace) -> dict:
     artifact_path = machines_root / workload["artifact_path"]
     artifact, artifact_digest = bytes_from_artifact(artifact_path)
     if artifact_digest != workload["artifact_sha256"]:
-        raise ValueError(f"fixture hash mismatch for {artifact_path}: {artifact_digest}")
+        raise ValueError(
+            f"fixture hash mismatch for {artifact_path}: {artifact_digest}"
+        )
 
     started = datetime.now(timezone.utc).isoformat()
     process_start = time.perf_counter()
@@ -178,7 +207,9 @@ def run_trial(args: argparse.Namespace) -> dict:
     runtime = glassvm.Runtime.discover()
     providers = json.loads(runtime.bundles())
     discovery_seconds = time.perf_counter() - discovery_start
-    provider = next((item for item in providers if item["machine_id"] == args.machine), None)
+    provider = next(
+        (item for item in providers if item["machine_id"] == args.machine), None
+    )
     base = {
         "result_schema_version": RESULT_SCHEMA_VERSION,
         "kind": "run" if provider else "excluded",
@@ -189,7 +220,8 @@ def run_trial(args: argparse.Namespace) -> dict:
             "started_utc": started,
         },
         "source": {
-            "workspace_references": args.source_snapshot or {
+            "workspace_references": args.source_snapshot
+            or {
                 "glassvm_checkout": git_metadata(Path(args.glassvm_root)),
                 "machines_checkout": git_metadata(machines_root),
             },
@@ -218,7 +250,11 @@ def run_trial(args: argparse.Namespace) -> dict:
             "artifact_path": workload["artifact_path"],
             "configuration": workload["configuration"],
             "input_schedule": "empty",
-            "execution_controls": {"frame_limit": args.frame_limit, "step_limit": None, "bundle_limits": []},
+            "execution_controls": {
+                "frame_limit": args.frame_limit,
+                "step_limit": None,
+                "bundle_limits": [],
+            },
         },
         "request": {},
         "negotiation": {
@@ -234,13 +270,23 @@ def run_trial(args: argparse.Namespace) -> dict:
     if provider is None:
         base["exclusion_reason"] = "No installed entry-point provider for this machine."
         base["kind"] = "excluded"
-        base["timing"].update({"preparation_seconds": None, "execute_and_publish_seconds": None})
-        base["memory"] = {"peak_rss_bytes": None, "allocator_high_water_bytes": None, "allocator_note": "No portable allocator high-water API is exposed."}
+        base["timing"].update(
+            {"preparation_seconds": None, "execute_and_publish_seconds": None}
+        )
+        base["memory"] = {
+            "peak_rss_bytes": None,
+            "allocator_high_water_bytes": None,
+            "allocator_note": "No portable allocator high-water API is exposed.",
+        }
         return base
 
     request_observation = observation_request(recipe, workload)
     input_schedule = {"schema": INPUT_SCHEDULE_SCHEMA, "entries": []}
-    execution_controls = {"frame_limit": args.frame_limit, "step_limit": None, "bundle_limits": []}
+    execution_controls = {
+        "frame_limit": args.frame_limit,
+        "step_limit": None,
+        "bundle_limits": [],
+    }
     config = machine_configuration(args.machine, workload["configuration"])
     base["request"] = {
         "configuration": config,
@@ -258,51 +304,98 @@ def run_trial(args: argparse.Namespace) -> dict:
             execution_controls=execution_controls,
             observation=request_observation,
         )
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - preserve any preparation failure in the trial record.
         base["kind"] = "failed"
-        base["failure"] = {"phase": "preparation", "error_type": type(error).__name__, "message": str(error)}
-        base["timing"].update({"preparation_seconds": time.perf_counter() - prepare_start, "execute_and_publish_seconds": None})
-        base["outcomes"] = {"machine_execution": "not_started", "evidence_status": "not_started", "recorder_status": "not_started"}
-        base["memory"] = {"peak_rss_bytes": None, "allocator_high_water_bytes": None, "allocator_note": "No portable allocator high-water API is exposed."}
+        base["failure"] = {
+            "phase": "preparation",
+            "error_type": type(error).__name__,
+            "message": str(error),
+        }
+        base["timing"].update(
+            {
+                "preparation_seconds": time.perf_counter() - prepare_start,
+                "execute_and_publish_seconds": None,
+            }
+        )
+        base["outcomes"] = {
+            "machine_execution": "not_started",
+            "evidence_status": "not_started",
+            "recorder_status": "not_started",
+        }
+        base["memory"] = {
+            "peak_rss_bytes": None,
+            "allocator_high_water_bytes": None,
+            "allocator_note": "No portable allocator high-water API is exposed.",
+        }
         return base
     preparation_seconds = time.perf_counter() - prepare_start
 
-    with tempfile.TemporaryDirectory(prefix=f"glassvm-paper-{args.machine}-") as temporary:
+    with tempfile.TemporaryDirectory(
+        prefix=f"glassvm-paper-{args.machine}-"
+    ) as temporary:
         run_path = Path(temporary) / "published-run"
         execute_start = time.perf_counter()
         try:
             result = prepared.execute(str(run_path))
-        except Exception as error:
+        except Exception as error:  # noqa: BLE001 - preserve any run failure in the trial record.
             base["kind"] = "failed"
-            base["failure"] = {"phase": "execute_and_publish", "error_type": type(error).__name__, "message": str(error)}
-            base["timing"].update({
-                "preparation_seconds": preparation_seconds,
-                "execute_and_publish_seconds": time.perf_counter() - execute_start,
-                "process_lifecycle_seconds": time.perf_counter() - process_start,
-            })
-            base["outcomes"] = {"machine_execution": "unknown", "evidence_status": "unknown", "recorder_status": "unknown"}
-            base["memory"] = {"peak_rss_bytes": None, "allocator_high_water_bytes": None, "allocator_note": "Trial terminated before measurements were complete."}
+            base["failure"] = {
+                "phase": "execute_and_publish",
+                "error_type": type(error).__name__,
+                "message": str(error),
+            }
+            base["timing"].update(
+                {
+                    "preparation_seconds": preparation_seconds,
+                    "execute_and_publish_seconds": time.perf_counter() - execute_start,
+                    "process_lifecycle_seconds": time.perf_counter() - process_start,
+                }
+            )
+            base["outcomes"] = {
+                "machine_execution": "unknown",
+                "evidence_status": "unknown",
+                "recorder_status": "unknown",
+            }
+            base["memory"] = {
+                "peak_rss_bytes": None,
+                "allocator_high_water_bytes": None,
+                "allocator_note": "Trial terminated before measurements were complete.",
+            }
             return base
         execute_publish_seconds = time.perf_counter() - execute_start
         if not isinstance(result, dict):
-            raise TypeError("PreparedRun.execute must return a structured result mapping")
+            raise TypeError(
+                "PreparedRun.execute must return a structured result mapping"
+            )
         execution = result.get("execution")
         evidence = result.get("evidence_receipt")
         recorder = result.get("recorder_receipt")
         published = result.get("published_run")
-        if not all(isinstance(part, dict) for part in (execution, evidence, recorder, published)):
-            raise ValueError("provider result does not expose all four structured outcome domains")
+        if not all(
+            isinstance(part, dict)
+            for part in (execution, evidence, recorder, published)
+        ):
+            raise ValueError(
+                "provider result does not expose all four structured outcome domains"
+            )
 
-        manifest = json.loads((run_path / "manifest.json").read_text()) if (run_path / "manifest.json").exists() else {}
+        manifest = (
+            json.loads((run_path / "manifest.json").read_text())
+            if (run_path / "manifest.json").exists()
+            else {}
+        )
         prepared_id = manifest.get("prepared_observation_id")
         capability_receipts = evidence.get("capabilities", [])
-        base["negotiation"].update({
-            "prepared_observation_identity": prepared_id,
-            "optional_unavailable_capabilities": [
-                item for item in capability_receipts
-                if item.get("status") == "unavailable"
-            ],
-        })
+        base["negotiation"].update(
+            {
+                "prepared_observation_identity": prepared_id,
+                "optional_unavailable_capabilities": [
+                    item
+                    for item in capability_receipts
+                    if item.get("status") == "unavailable"
+                ],
+            }
+        )
         base["outcomes"] = {
             "machine_execution": execution.get("common"),
             "evidence_status": evidence.get("status"),
@@ -325,24 +418,34 @@ def run_trial(args: argparse.Namespace) -> dict:
             "segment_count": recorder.get("segment_count"),
             "file_count": recorder.get("file_count"),
             "channels": recorder.get("channels"),
+            "configured_limits": RECORDER_LIMITS,
+            "configured_limits_source": "bundle Python provider recorder_limits() in the machine checkout revision recorded under source.workspace_references",
         }
         base["publication"] = {
             "published": bool(published.get("published")),
-            "run_directory_bytes": directory_bytes(run_path) if run_path.exists() else None,
+            "run_directory_bytes": directory_bytes(run_path)
+            if run_path.exists()
+            else None,
             "run_reference_retained": False,
         }
-        base["timing"].update({
-            "preparation_seconds": preparation_seconds,
-            "execute_and_publish_seconds": execute_publish_seconds,
-            "process_lifecycle_seconds": time.perf_counter() - process_start,
-        })
+        base["timing"].update(
+            {
+                "preparation_seconds": preparation_seconds,
+                "execute_and_publish_seconds": execute_publish_seconds,
+                "process_lifecycle_seconds": time.perf_counter() - process_start,
+            }
+        )
 
     # ru_maxrss is KiB on Linux; byte conversion is recorded explicitly.
     peak_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     base["memory"] = {
-        "peak_rss_bytes": int(peak_rss * 1024) if platform.system() == "Linux" else None,
+        "peak_rss_bytes": int(peak_rss * 1024)
+        if platform.system() == "Linux"
+        else None,
         "peak_rss_native_value": peak_rss,
-        "peak_rss_native_unit": "KiB" if platform.system() == "Linux" else "platform-specific",
+        "peak_rss_native_unit": "KiB"
+        if platform.system() == "Linux"
+        else "platform-specific",
         "allocator_high_water_bytes": None,
         "allocator_note": "No allocator high-water API is exposed by the Python provider protocol.",
         "rss_before_native_value": rss_before,
