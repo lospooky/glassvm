@@ -309,9 +309,31 @@ evidence/storage cost and grows with emitted records.
 
 ### 7a. Rust sink-cost decomposition
 
-- [ ] Compare disabled observation, the same observation with NullSink, and the same observation with the bounded recorder.
-- [ ] Preserve the execution material and use explicit requests so differences isolate the intended costs.
-- [ ] Report absolute runtime, relative overhead, and the limits of the decomposition.
+Execution record: a three-repetition 60,000-frame exploratory matrix completed
+for all three machines. It compares disabled observation, one fixed visual/event
+request to `NullSink`, and that exact request to the bounded recorder. The
+mode-independent run ID, artifact, configuration, schedule, controls, execution
+outcome, and evidence receipt are validated across the NullSink/recorder pairs.
+The summarizer reports lifecycle medians, absolute and relative deltas, process
+wall times, and evidence/storage volumes. Current checkouts were dirty, so these
+are exploratory results; regenerate from clean pinned revisions before paper
+use. The initial run with mode-dependent run IDs is retained and marked
+invalidated rather than mixed into the corrected matrix.
+
+Observed lifecycle medians (disabled / NullSink / recorder) were CHIP-8
+0.072 / 6.219 / 16.504 s, PICO-8 33.087 / 34.598 / 38.432 s, and TIC-80
+10.606 / 15.080 / 19.959 s. The recorder-over-NullSink deltas were 10.285 s
+(165.4%), 3.834 s (11.1%), and 4.879 s (32.4%), respectively. CHIP-8's
+disabled baseline is very small, so its enormous relative percentages should
+be interpreted with the absolute deltas. This is an observed end-to-end
+lifecycle contrast, not a hardware-independent estimate of recorder encoding
+alone.
+
+- [x] Compare disabled observation, the same observation with `NullSink`, and the same observation with the bounded recorder.
+- [x] Preserve identical machine execution material; verify exact request and receipt equality for the NullSink/recorder pair.
+- [x] Report absolute runtime, relative overhead, and the limits of the decomposition.
+
+Results: [`experiments/measurements/sink-cost-rust-7a-corrected/SINK_COST_SUMMARY.md`](experiments/measurements/sink-cost-rust-7a-corrected/SINK_COST_SUMMARY.md).
 
 ### 7b. Resolve the Python-consumer experiment
 

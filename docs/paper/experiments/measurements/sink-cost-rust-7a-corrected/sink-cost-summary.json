@@ -1,0 +1,146 @@
+{
+  "schema": "glassvm.paper_sink_cost_summary",
+  "schema_version": "1.0.0",
+  "source": {
+    "glassvm": {
+      "revision": "d9377c65efcdea71e1c450eb7acd50596e4ba147",
+      "exact_tag": null,
+      "dirty": true
+    },
+    "machines": {
+      "revision": "1aca8f625f141adb72b959e413a11fb9e371cf3e",
+      "exact_tag": "v0.1.2",
+      "dirty": true
+    },
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "machines_cargo_lock_sha256": "f3298afae652640c2cc0a1fbd8936400b006af119dbe39249a36c8775e2aaf1e",
+    "trial_binary_sha256": "5f6cc1cc80afae23f772eae4ad20378fa23f0aa62ea4dc985371e45bc5d6cef0",
+    "host_system": "Linux-5.15.133.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "host_machine": "x86_64",
+    "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]"
+  },
+  "source_is_clean": false,
+  "machines": {
+    "chip8": {
+      "repetitions": 3,
+      "frame_limit": 60000,
+      "lifecycle_seconds": {
+        "recorder": {
+          "median": 16.504208814,
+          "min": 16.35828879,
+          "max": 17.136648672
+        },
+        "disabled": {
+          "median": 0.072002624,
+          "min": 0.07126588,
+          "max": 0.072806753
+        },
+        "normalizer_null": {
+          "median": 6.219264776,
+          "min": 6.20237701,
+          "max": 6.289118227
+        }
+      },
+      "process_wall_seconds_median": {
+        "recorder": 16.507177752000644,
+        "disabled": 0.07373875900157145,
+        "normalizer_null": 6.220974378999017
+      },
+      "relative_overhead_percent": {
+        "observation_pipeline_vs_disabled": 8537.55295362569,
+        "recorder_vs_same_request_null_sink": 165.3723455815768,
+        "recorder_vs_disabled": 22821.67687388726
+      },
+      "absolute_overhead_seconds": {
+        "observation_pipeline_vs_disabled": 6.147262152000001,
+        "recorder_vs_same_request_null_sink": 10.284944037999999,
+        "recorder_vs_disabled": 16.43220619
+      },
+      "evidence_logical_bytes_median": 178550823,
+      "recorder_encoded_bytes_median": 141937807,
+      "directory_bytes_median": 142647647,
+      "directory_measurement_seconds_median": 0.00120512
+    },
+    "pico8": {
+      "repetitions": 3,
+      "frame_limit": 60000,
+      "lifecycle_seconds": {
+        "recorder": {
+          "median": 38.432307823,
+          "min": 38.031015578,
+          "max": 38.616681868
+        },
+        "disabled": {
+          "median": 33.087324486,
+          "min": 32.83386801,
+          "max": 33.19431337
+        },
+        "normalizer_null": {
+          "median": 34.598146127,
+          "min": 33.794302906,
+          "max": 34.820261314
+        }
+      },
+      "process_wall_seconds_median": {
+        "recorder": 38.43492979599978,
+        "disabled": 33.08944631199938,
+        "normalizer_null": 34.60010188300021
+      },
+      "relative_overhead_percent": {
+        "observation_pipeline_vs_disabled": 4.566164428433206,
+        "recorder_vs_same_request_null_sink": 11.081985959380258,
+        "recorder_vs_disabled": 16.15417208865464
+      },
+      "absolute_overhead_seconds": {
+        "observation_pipeline_vs_disabled": 1.5108216409999997,
+        "recorder_vs_same_request_null_sink": 3.8341616960000025,
+        "recorder_vs_disabled": 5.344983337000002
+      },
+      "evidence_logical_bytes_median": 51687561,
+      "recorder_encoded_bytes_median": 40967151,
+      "directory_bytes_median": 41235770,
+      "directory_measurement_seconds_median": 0.000518828
+    },
+    "tic80": {
+      "repetitions": 3,
+      "frame_limit": 60000,
+      "lifecycle_seconds": {
+        "recorder": {
+          "median": 19.958883022,
+          "min": 19.839363472,
+          "max": 20.40853141
+        },
+        "disabled": {
+          "median": 10.606459575,
+          "min": 10.487744668,
+          "max": 10.611327433
+        },
+        "normalizer_null": {
+          "median": 15.080279125,
+          "min": 14.777939744,
+          "max": 15.148494723
+        }
+      },
+      "process_wall_seconds_median": {
+        "recorder": 19.96161232399936,
+        "disabled": 10.608166283999708,
+        "normalizer_null": 15.081974087000162
+      },
+      "relative_overhead_percent": {
+        "observation_pipeline_vs_disabled": 42.18014049235652,
+        "recorder_vs_same_request_null_sink": 32.35088592566087,
+        "recorder_vs_disabled": 88.17667555198312
+      },
+      "absolute_overhead_seconds": {
+        "observation_pipeline_vs_disabled": 4.47381955,
+        "recorder_vs_same_request_null_sink": 4.878603896999998,
+        "recorder_vs_disabled": 9.352423446999998
+      },
+      "evidence_logical_bytes_median": 77755275,
+      "recorder_encoded_bytes_median": 61427007,
+      "directory_bytes_median": 61829987,
+      "directory_measurement_seconds_median": 0.00077984
+    }
+  }
+}

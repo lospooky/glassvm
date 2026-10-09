@@ -174,3 +174,42 @@ The full three-machine matrix still needs a same-source-coordinate rerun before
 we use it to support a cross-bundle memory claim. Peak RSS is Linux `VmHWM`,
 allocator high-water is unavailable, and the longest point has one repetition.
 Both datasets, manifests, summaries, and SVG plots are retained independently.
+
+## Slice 7a: Rust sink-cost decomposition
+
+The focused run uses three repetitions at 60,000 frames for each of CHIP-8,
+PICO-8, and TIC-80, comparing observation disabled, the fixed visual/event
+request with `NullSink`, and that exact request with the segmented recorder.
+The trial uses one mode-independent run ID per machine/repetition so receipt
+accounting is comparable. The summarizer verifies matching artifact,
+configuration, schedule, execution controls, run identity, execution outcome,
+observation request, and `EvidenceReceipt` between NullSink and recorder.
+
+Build and generate new trials (the source coordinate is captured in the
+manifest; use a fresh directory for a changed checkout):
+
+```sh
+uv run --python 3.14 --no-project python \
+  docs/paper/experiments/run_memory_experiment.py \
+  --paper-root docs/paper \
+  --machines-root ../glassvm-machines \
+  --output-dir docs/paper/experiments/measurements/sink-cost-rust-7a \
+  --frames 60000 --repetitions 3 \
+  --mode disabled --mode normalizer_null --mode recorder
+uv run --python 3.14 --no-project python \
+  docs/paper/experiments/summarize_sink_cost.py \
+  --data-dir docs/paper/experiments/measurements/sink-cost-rust-7a
+```
+
+Lifecycle time measures execution plus its selected sink path; recorder time
+includes finalization/publication. Process-wall time is separate and includes
+startup/preparation and the post-publication directory-size measurement. The
+disabled-to-NullSink delta includes evidence production and normalization; it
+is not a sink-only cost. The NullSink-to-recorder delta is the incremental
+recorder lifecycle estimate. Treat these as workload/host-specific, and rerun
+from clean pinned source revisions before final paper use.
+
+The current exploratory matrix and generated table are in
+[`measurements/sink-cost-rust-7a-corrected/`](measurements/sink-cost-rust-7a-corrected/).
+The first pass is retained but explicitly invalidated because its mode-bearing
+run IDs skewed logical-byte accounting.

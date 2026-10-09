@@ -267,12 +267,20 @@ three-machine rerun remains the paper gate.
 
 ## 9. Sink-cost decomposition
 
-Measure the same prepared workload under:
+The Rust decomposition is complete for the current exploratory coordinate:
+three repetitions at 60,000 frames on CHIP-8, PICO-8, and TIC-80. The same
+artifact/configuration/schedule/controls were used; NullSink and recorder
+requests, run IDs, execution results, and evidence receipts match. Results are
+in [`experiments/measurements/sink-cost-rust-7a-corrected/SINK_COST_SUMMARY.md`](experiments/measurements/sink-cost-rust-7a-corrected/SINK_COST_SUMMARY.md).
+These dirty-checkout results must be regenerated from clean pinned revisions
+before paper use.
 
-- [ ] execution / observation disabled
-- [ ] observation + `NullSink`
+Remaining consumer comparison:
+
+- [x] execution / observation disabled
+- [x] observation + `NullSink`
 - [ ] observation + Python consumer
-- [ ] observation + bounded Rust recorder
+- [x] observation + bounded Rust recorder
 
 Purpose:
 
