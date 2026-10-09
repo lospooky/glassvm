@@ -200,22 +200,29 @@ FileEmissionSink
   -> atomically publish
 ```
 
-The result keeps four domains separately inspectable:
+The result keeps the execution and delivery domains separately inspectable:
 
 ```rust
 FileRunResult {
-    execution,
-    evidence,
-    recorder,
-    published,
+    machine_execution,
+    evidence_fulfillment,
+    python_sink_delivery,
+    recorder_finalization,
+    publication,
+    published, // optional handle; present only after the publication gate
 }
 ```
 
-The published handle exists only when the finalized `RecorderReceipt` passes
-the publication gate and staging is atomically renamed into place. Interrupted
-staging runs are inspectable and cleanable but are not resumed in the initial
-format. Recorder storage is not a replay package and is not read implicitly by
-core execution or query code.
+Machine execution interruption, evidence fulfillment, Python consumer
+delivery, recorder finalization, and publication are independent outcomes;
+they are not collapsed into one success flag. The Python sink outcome is
+`not_requested` when no Python consumers are attached. A published handle
+exists only when recorder finalization passes the existing publication gate
+and staging is atomically renamed into place. An execution or evidence-delivery
+interruption is reported by the shared run lifecycle, not by a Python-specific
+publication rule. Interrupted staging runs remain inspectable and cleanable
+but are not resumed in the initial format. Recorder storage is not a replay
+package and is not read implicitly by core execution or query code.
 
 ## Python distribution
 
@@ -249,6 +256,36 @@ prepared = runtime.prepare(
 )
 result = prepared.execute(output_path)
 ```
+
+Execution returns a structured mapping with separate outcome fields:
+
+```text
+machine_execution
+evidence_fulfillment
+python_sink_delivery
+recorder_finalization
+publication
+published_run  # null unless publication succeeded
+```
+
+When consumers are supplied, their Python-facing contract is batch-oriented:
+
+```python
+class EmissionSink(Protocol):
+    def emit_batch(self, emissions: Sequence[Emission]) -> None: ...
+    def record_capability_outputs(
+        self, outputs: Sequence[CapabilityOutput]
+    ) -> None: ...
+    def record_capability_receipts(
+        self, receipts: Sequence[CapabilityReceipt]
+    ) -> None: ...
+```
+
+The recorder crate owns the optional PyO3 bridge behind its `python` feature.
+The bridge will convert borrowed core emissions into owned typed records;
+batching is bounded and synchronous. `PythonSinkDeliveryOutcome` is separate
+from machine, evidence, recorder, and publication outcomes. The reference file
+recorder remains Rust-owned.
 
 Python dict/list ergonomics end at preparation. Providers immediately convert
 them into typed Rust contract values and generate canonical identity material

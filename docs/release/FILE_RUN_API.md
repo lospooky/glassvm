@@ -24,25 +24,34 @@ rebuild this lifecycle.
 
 ## Result separation
 
-The result exposes four independent domains:
+The result exposes independent execution, evidence-delivery, and publication
+domains, including partial outcomes:
 
 ```rust
 pub struct FileRunResult {
-    pub execution: RunResult,
-    pub evidence: EvidenceReceipt,
-    pub recorder: RecorderReceipt,
-    pub published: PublishedFileRun,
+    pub machine_execution: MachineExecutionOutcome,
+    pub evidence_fulfillment: EvidenceReceipt,
+    pub python_sink_delivery: PythonSinkDeliveryOutcome,
+    pub recorder_finalization: RecorderFinalizationOutcome,
+    pub publication: PublicationOutcome,
+    pub published: Option<PublishedFileRun>,
 }
 ```
 
-- `execution` describes machine execution;
-- `evidence` describes fulfillment of the requested observation;
-- `recorder` describes physical persistence and finalization; and
-- `published` identifies the atomically published run.
+- `machine_execution` distinguishes completion, machine failure, and
+  interruption caused by evidence delivery;
+- `evidence_fulfillment` is the retrospective observation receipt;
+- `python_sink_delivery` describes only Python consumer delivery, or is
+  `not_requested`;
+- `recorder_finalization` reports whether physical persistence finalized; and
+- `publication` reports the atomic publication outcome.
 
-The published reference exists only when the finalized recorder receipt passes
-the publication gate. Evidence failure does not redefine machine execution,
-and recorder failure does not become a successful publication.
+The published handle is present only after the finalized recorder receipt
+passes the publication gate. Partial execution results preserve whatever
+evidence receipt was accumulated, report recorder finalization as not
+attempted, and have no published handle. Evidence failure does not redefine
+machine execution, Python delivery failure is not recorder failure, and
+recorder failure does not become successful publication.
 
 The recorder receipt includes fixed-set, per-channel counters for persisted
 segments, records, blocks, logical bytes, and encoded block-payload bytes. Its

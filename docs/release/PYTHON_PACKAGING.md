@@ -106,16 +106,18 @@ serializable, durable, or replay material.
 The result is structured rather than a path or success flag:
 
 ```text
-execution
-evidence_receipt
-recorder_receipt
+machine_execution
+evidence_fulfillment
+python_sink_delivery
+recorder_finalization
+publication
 published_run
 ```
 
-The published reference exists only after recorder finalization succeeds and
-the atomic publication gate completes. Machine execution, evidence
-fulfillment, recorder finalization, and publication remain separately
-inspectable.
+The published reference is null unless recorder finalization and the existing
+atomic publication gate succeed. Machine execution, evidence fulfillment,
+Python sink delivery, recorder finalization, and publication remain separately
+inspectable, including partial outcomes.
 
 ## Installation verification
 

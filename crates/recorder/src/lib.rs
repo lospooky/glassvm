@@ -22,6 +22,13 @@ use glassvm_core::{
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+mod python_sink;
+
+pub use python_sink::{
+    OwnedEmission, PythonEmissionConsumer, PythonSinkCallbackKind, PythonSinkDeliveryOutcome,
+    PythonSinkDeliveryStatus, PythonSinkFailure, RunFinishedRecord, RunStartedRecord,
+};
+
 pub const REFERENCE_RUN_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 0, 0);
 pub const REFERENCE_SEGMENT_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 0, 0);
 pub const RECORDER_RECEIPT_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 1, 0);
@@ -971,12 +978,39 @@ pub struct FileEmissionSink {
     failure: Option<SinkError>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "status", content = "result", rename_all = "snake_case")]
+pub enum MachineExecutionOutcome {
+    Completed(glassvm_core::RunResult),
+    Failed { message: String },
+    InterruptedByEvidenceFailure { message: String },
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "status", content = "result", rename_all = "snake_case")]
+pub enum RecorderFinalizationOutcome {
+    Finalized(RecorderReceipt),
+    NotFinalized { reason: String },
+    Failed { message: String },
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "status", content = "details", rename_all = "snake_case")]
+pub enum PublicationOutcome {
+    Published,
+    NotPublished { reason: String },
+}
+
+#[derive(Debug, Serialize)]
 pub struct FileRunResult {
-    pub execution: glassvm_core::RunResult,
-    pub evidence: EvidenceReceipt,
-    pub recorder: RecorderReceipt,
-    pub published: PublishedFileRun,
+    pub machine_execution: MachineExecutionOutcome,
+    pub evidence_fulfillment: EvidenceReceipt,
+    pub python_sink_delivery: PythonSinkDeliveryOutcome,
+    pub recorder_finalization: RecorderFinalizationOutcome,
+    pub publication: PublicationOutcome,
+    /// A handle exists only after recorder finalization and atomic publication.
+    #[serde(skip)]
+    pub published: Option<PublishedFileRun>,
 }
 
 pub struct FileRunSession;
@@ -997,19 +1031,75 @@ impl FileRunSession {
             request.machine_id.clone(),
             machine_version,
         )?;
-        let execution = session
-            .execute(&mut sink)
-            .map_err(|error| SinkError::new(format!("machine execution failed: {error}")))?;
-        let evidence = sink.emit_receipt()?;
+        let execution = match session.execute(&mut sink) {
+            Ok(execution) => MachineExecutionOutcome::Completed(execution),
+            Err(message) => {
+                let evidence = sink.receipt();
+                let interrupted_by_evidence = evidence.failure.is_some();
+                return Ok(FileRunResult {
+                    machine_execution: if interrupted_by_evidence {
+                        MachineExecutionOutcome::InterruptedByEvidenceFailure { message }
+                    } else {
+                        MachineExecutionOutcome::Failed { message }
+                    },
+                    evidence_fulfillment: evidence,
+                    python_sink_delivery: PythonSinkDeliveryOutcome::not_requested(),
+                    recorder_finalization: RecorderFinalizationOutcome::NotFinalized {
+                        reason: "execution did not reach recorder finalization".into(),
+                    },
+                    publication: PublicationOutcome::NotPublished {
+                        reason: "recorder was not finalized".into(),
+                    },
+                    published: None,
+                });
+            }
+        };
+
+        let evidence = match sink.emit_receipt() {
+            Ok(evidence) => evidence,
+            Err(_error) => {
+                let evidence = sink.receipt();
+                return Ok(FileRunResult {
+                    machine_execution: execution,
+                    evidence_fulfillment: evidence,
+                    python_sink_delivery: PythonSinkDeliveryOutcome::not_requested(),
+                    recorder_finalization: RecorderFinalizationOutcome::NotFinalized {
+                        reason: "evidence receipt emission failed".into(),
+                    },
+                    publication: PublicationOutcome::NotPublished {
+                        reason: "recorder was not finalized".into(),
+                    },
+                    published: None,
+                });
+            }
+        };
+
         let file_sink = sink.into_inner();
-        let published = file_sink.finish()?;
-        let recorder = published.recorder_receipt().clone();
-        Ok(FileRunResult {
-            execution,
-            evidence,
-            recorder,
-            published,
-        })
+        match file_sink.finish() {
+            Ok(published) => {
+                let recorder = published.recorder_receipt().clone();
+                Ok(FileRunResult {
+                    machine_execution: execution,
+                    evidence_fulfillment: evidence,
+                    python_sink_delivery: PythonSinkDeliveryOutcome::not_requested(),
+                    recorder_finalization: RecorderFinalizationOutcome::Finalized(recorder),
+                    publication: PublicationOutcome::Published,
+                    published: Some(published),
+                })
+            }
+            Err(error) => Ok(FileRunResult {
+                machine_execution: execution,
+                evidence_fulfillment: evidence,
+                python_sink_delivery: PythonSinkDeliveryOutcome::not_requested(),
+                recorder_finalization: RecorderFinalizationOutcome::Failed {
+                    message: error.to_string(),
+                },
+                publication: PublicationOutcome::NotPublished {
+                    reason: "recorder finalization failed".into(),
+                },
+                published: None,
+            }),
+        }
     }
 }
 
@@ -1524,8 +1614,9 @@ mod tests {
 
     use super::*;
     use glassvm_core::{
-        BudgetReceipt, EmissionBudgets, EvidenceGuarantee, InputCoordinate, InputId, InputSource,
-        StructuredValue, TypedInputPayload,
+        BudgetReceipt, Emission, EmissionBudgets, EmulatorSession, EvidenceGuarantee,
+        ExecutionControls, ExecutionRequest, InputCoordinate, InputId, InputSchedule, InputSource,
+        MachineConfiguration, ObservationRequest, RunResult, StructuredValue, TypedInputPayload,
     };
 
     fn manifest(limits: RecorderLimits, channels: &[ReferenceChannel]) -> ReferenceRunManifest {
@@ -1568,6 +1659,142 @@ mod tests {
                 observed_logical_bytes: 0,
             },
             failure: None,
+        }
+    }
+
+    #[test]
+    fn python_execution_serializes_machine_evidence_sink_recorder_and_publication_separately() {
+        let manifest = manifest(limits(), &[]);
+        let result = FileRunResult {
+            machine_execution: MachineExecutionOutcome::Failed {
+                message: "machine stopped".into(),
+            },
+            evidence_fulfillment: evidence_receipt(&manifest, EvidenceStatus::Failed),
+            python_sink_delivery: PythonSinkDeliveryOutcome {
+                status: PythonSinkDeliveryStatus::Failed,
+                sink_count: 2,
+                batches_delivered: 3,
+                items_delivered: 11,
+                logical_bytes_delivered: 4096,
+                failure: Some(PythonSinkFailure {
+                    sink_index: 1,
+                    sink_identity: Some("consumer-b".into()),
+                    callback: PythonSinkCallbackKind::EmissionBatch,
+                    batch_size: 4,
+                    successfully_delivered_items: 2,
+                    exception_type: "RuntimeError".into(),
+                    exception_message: "consumer stopped".into(),
+                }),
+            },
+            recorder_finalization: RecorderFinalizationOutcome::NotFinalized {
+                reason: "execution did not reach recorder finalization".into(),
+            },
+            publication: PublicationOutcome::NotPublished {
+                reason: "recorder was not finalized".into(),
+            },
+            published: None,
+        };
+
+        let encoded = serde_json::to_value(result).expect("structured result serializes");
+        assert_eq!(encoded["machine_execution"]["status"], "failed");
+        assert_eq!(encoded["evidence_fulfillment"]["status"], "failed");
+        assert_eq!(encoded["python_sink_delivery"]["status"], "failed");
+        assert_eq!(encoded["python_sink_delivery"]["failure"]["sink_index"], 1);
+        assert_eq!(encoded["recorder_finalization"]["status"], "not_finalized");
+        assert_eq!(encoded["publication"]["status"], "not_published");
+        assert!(encoded.get("published").is_none());
+    }
+
+    #[test]
+    fn file_run_returns_separate_partial_outcomes_when_execution_fails() {
+        struct FailingSession {
+            request: ExecutionRequest,
+        }
+
+        impl EmulatorSession for FailingSession {
+            fn request(&self) -> &ExecutionRequest {
+                &self.request
+            }
+
+            fn execute(&mut self, sink: &mut dyn EmissionSink) -> Result<RunResult, String> {
+                sink.emit(Emission::RunStarted(&self.request))
+                    .map_err(|error| error.to_string())?;
+                Err("synthetic machine failure".into())
+            }
+
+            fn step_frame(&mut self) -> Result<(), String> {
+                unreachable!("test session is not stepped")
+            }
+
+            fn reset(&mut self) -> Result<(), String> {
+                unreachable!("test session is not reset")
+            }
+
+            fn snapshot(&self) -> Result<Vec<u8>, String> {
+                unreachable!("test session does not snapshot")
+            }
+
+            fn restore_snapshot(&mut self, _bytes: &[u8]) -> Result<(), String> {
+                unreachable!("test session does not restore")
+            }
+        }
+
+        let root = temporary_segment_path("partial-run-root");
+        let request = ExecutionRequest::new(
+            "partial-run",
+            "test.machine",
+            b"rom".to_vec(),
+            MachineConfiguration::new(
+                SchemaRef::new("test.configuration", SchemaVersion::V1),
+                StructuredValue::Map(BTreeMap::new()),
+            )
+            .unwrap(),
+            InputSchedule::empty(),
+            ObservationRequest::summary(),
+            ExecutionControls::default(),
+        )
+        .unwrap();
+        let started = RunStartedRecord::from(&request);
+        let started_value = serde_json::to_value(started).unwrap();
+        assert_eq!(started_value["artifact_length_bytes"], 3);
+        assert!(started_value.get("artifact").is_none());
+
+        let mut session = FailingSession {
+            request: request.clone(),
+        };
+        let result = FileRunSession::run(
+            &mut session,
+            &request,
+            &root,
+            VersionStamp::from("test-v1"),
+            limits(),
+        )
+        .expect("partial execution is returned as structured outcomes");
+
+        assert!(matches!(
+            result.machine_execution,
+            MachineExecutionOutcome::Failed { .. }
+        ));
+        assert_eq!(
+            result.evidence_fulfillment.status,
+            EvidenceStatus::Incomplete
+        );
+        assert!(matches!(
+            result.recorder_finalization,
+            RecorderFinalizationOutcome::NotFinalized { .. }
+        ));
+        assert!(matches!(
+            result.publication,
+            PublicationOutcome::NotPublished { .. }
+        ));
+        assert!(result.published.is_none());
+        assert_eq!(
+            result.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::NotRequested
+        );
+        assert!(!root.exists());
+        if let Some(parent) = root.parent() {
+            let _ = std::fs::remove_dir_all(parent);
         }
     }
 

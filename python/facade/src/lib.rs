@@ -247,6 +247,100 @@ fn json_argument(
         })
 }
 
+fn validate_execution_result(value: &Value) -> Result<(), String> {
+    let object = value
+        .as_object()
+        .ok_or_else(|| "bundle execution result must be an object".to_owned())?;
+    for field in [
+        "machine_execution",
+        "evidence_fulfillment",
+        "python_sink_delivery",
+        "recorder_finalization",
+        "publication",
+        "published_run",
+    ] {
+        if !object.contains_key(field) {
+            return Err(format!("bundle execution result is missing {field:?}"));
+        }
+    }
+    let status = |field: &str| -> Result<&str, String> {
+        object
+            .get(field)
+            .and_then(Value::as_object)
+            .and_then(|value| value.get("status"))
+            .and_then(Value::as_str)
+            .ok_or_else(|| format!("bundle execution result field {field:?} needs a string status"))
+    };
+    let machine_status = status("machine_execution")?;
+    if !matches!(
+        machine_status,
+        "completed" | "failed" | "interrupted_by_evidence_failure"
+    ) {
+        return Err(format!(
+            "bundle execution result has unsupported machine-execution status {machine_status:?}"
+        ));
+    }
+    let evidence_status = object
+        .get("evidence_fulfillment")
+        .and_then(Value::as_object)
+        .and_then(|receipt| receipt.get("status"))
+        .and_then(Value::as_str)
+        .ok_or_else(|| "evidence_fulfillment must contain a string status".to_owned())?;
+    if !matches!(evidence_status, "complete" | "incomplete" | "failed") {
+        return Err(format!(
+            "bundle execution result has unsupported evidence status {evidence_status:?}"
+        ));
+    }
+    let sink_status = status("python_sink_delivery")?;
+    if !matches!(sink_status, "not_requested" | "complete" | "failed") {
+        return Err(format!(
+            "bundle execution result has unsupported Python-sink status {sink_status:?}"
+        ));
+    }
+    let recorder_status = status("recorder_finalization")?;
+    if !matches!(recorder_status, "finalized" | "not_finalized" | "failed") {
+        return Err(format!(
+            "bundle execution result has unsupported recorder status {recorder_status:?}"
+        ));
+    }
+    let publication_status = status("publication")?;
+    let published_run = object
+        .get("published_run")
+        .ok_or_else(|| "bundle execution result is missing published_run".to_owned())?;
+    match publication_status {
+        "published" => {
+            if recorder_status != "finalized" {
+                return Err(
+                    "published run requires finalized recorder outcome and a run reference".into(),
+                );
+            }
+            let reference = published_run.as_object().ok_or_else(|| {
+                "published outcome requires an object published-run reference".to_owned()
+            })?;
+            if reference.get("published").and_then(Value::as_bool) != Some(true)
+                || reference
+                    .get("path")
+                    .and_then(Value::as_str)
+                    .is_none_or(str::is_empty)
+            {
+                return Err(
+                    "published-run reference needs a non-empty path and published=true".into(),
+                );
+            }
+        }
+        "not_published" if published_run.is_null() => {}
+        "not_published" => {
+            return Err("unpublished outcome cannot carry a published-run reference".into());
+        }
+        status => {
+            return Err(format!(
+                "bundle execution result has unsupported publication status {status:?}"
+            ));
+        }
+    }
+    Ok(())
+}
+
 #[pyclass]
 struct Runtime {
     providers: Vec<PythonBundleProvider>,
@@ -353,6 +447,13 @@ impl PreparedRun {
                 "bundle execute_prepared must return a structured mapping",
             ));
         }
+        let encoded = json_argument(py, Some(&result), "execution result")?;
+        let value: Value = serde_json::from_str(&encoded).map_err(|error| {
+            pyo3::exceptions::PyTypeError::new_err(format!(
+                "bundle execution result is not JSON-compatible: {error}"
+            ))
+        })?;
+        validate_execution_result(&value).map_err(pyo3::exceptions::PyTypeError::new_err)?;
         Ok(result.unbind())
     }
 }
@@ -371,7 +472,7 @@ mod tests {
 
     use super::{
         PYTHON_BUNDLE_PROTOCOL_VERSION, PYTHON_BUNDLE_PROVIDER_CONTRACT, parse_bundle_providers,
-        validate_bundle_provider,
+        validate_bundle_provider, validate_execution_result,
     };
 
     #[test]
@@ -456,5 +557,40 @@ mod tests {
         )
         .expect_err("missing execute operation must fail");
         assert!(error.contains("execute_function"));
+    }
+
+    #[test]
+    fn execution_result_keeps_all_outcome_domains_separate() {
+        let value = json!({
+            "machine_execution": {"status": "completed", "result": {"common": {"boot_success": true}}},
+            "evidence_fulfillment": {"status": "failed"},
+            "python_sink_delivery": {"status": "failed"},
+            "recorder_finalization": {"status": "finalized", "result": {"status": "complete"}},
+            "publication": {"status": "published"},
+            "published_run": {"path": "run", "published": true}
+        });
+        validate_execution_result(&value).expect("independent outcomes are valid");
+        assert_eq!(value["machine_execution"]["status"], "completed");
+        assert_eq!(value["evidence_fulfillment"]["status"], "failed");
+        assert_eq!(value["python_sink_delivery"]["status"], "failed");
+        assert_eq!(value["recorder_finalization"]["status"], "finalized");
+        assert_eq!(value["publication"]["status"], "published");
+    }
+
+    #[test]
+    fn execution_result_rejects_publication_without_finalized_recorder() {
+        let value = json!({
+            "machine_execution": {"status": "completed"},
+            "evidence_fulfillment": {"status": "complete"},
+            "python_sink_delivery": {"status": "not_requested"},
+            "recorder_finalization": {"status": "failed"},
+            "publication": {"status": "published"},
+            "published_run": {"path": "run", "published": true}
+        });
+        assert!(
+            validate_execution_result(&value)
+                .expect_err("publication gate is enforced")
+                .contains("requires finalized recorder")
+        );
     }
 }

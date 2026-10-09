@@ -367,16 +367,32 @@ def run_trial(args: argparse.Namespace) -> dict:
             raise TypeError(
                 "PreparedRun.execute must return a structured result mapping"
             )
-        execution = result.get("execution")
-        evidence = result.get("evidence_receipt")
-        recorder = result.get("recorder_receipt")
+        machine_outcome = result.get("machine_execution")
+        evidence = result.get("evidence_fulfillment")
+        sink_delivery = result.get("python_sink_delivery")
+        recorder_outcome = result.get("recorder_finalization")
+        publication_outcome = result.get("publication")
         published = result.get("published_run")
+        execution = (
+            machine_outcome.get("result")
+            if isinstance(machine_outcome, dict)
+            and machine_outcome.get("status") == "completed"
+            else None
+        )
+        recorder = (
+            recorder_outcome.get("result")
+            if isinstance(recorder_outcome, dict)
+            and recorder_outcome.get("status") == "finalized"
+            else None
+        )
         if not all(
             isinstance(part, dict)
             for part in (execution, evidence, recorder, published)
+        ) or not isinstance(sink_delivery, dict) or not isinstance(
+            publication_outcome, dict
         ):
             raise ValueError(
-                "provider result does not expose all four structured outcome domains"
+                "provider result does not expose the complete structured outcome set"
             )
 
         manifest = (
@@ -399,7 +415,9 @@ def run_trial(args: argparse.Namespace) -> dict:
         base["outcomes"] = {
             "machine_execution": execution.get("common"),
             "evidence_status": evidence.get("status"),
+            "python_sink_delivery": sink_delivery.get("status"),
             "recorder_status": recorder.get("status"),
+            "publication_status": publication_outcome.get("status"),
         }
         base["execution_result"] = execution
         base["evidence_receipt"] = evidence
