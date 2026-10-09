@@ -13,11 +13,12 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use glassvm_core::{
-    BudgetedSink, CapabilityId, CapabilityOutput, CapabilitySchema, ContentDigest,
-    EMISSION_SCHEMA_VERSION, Emission, EmissionSink, EventSelection, EvidenceReceipt,
-    EvidenceStatus, ExecutionEvent, FrameArtifact, FrameCapture, InputValueEvidence, MachineId,
-    NativeEvidenceEnvelope, ObservationRequest, RunId, SchemaRef, SchemaVersion, SinkError,
-    SnapshotArtifact, SnapshotCapture, VersionStamp, canonical_json_bytes,
+    BudgetedSink, CapabilityId, CapabilityOutput, CapabilityReceipt, CapabilitySchema,
+    ContentDigest, EMISSION_SCHEMA_VERSION, Emission, EmissionSink, EventSelection,
+    EvidenceReceipt, EvidenceStatus, ExecutionEvent, FrameArtifact, FrameCapture,
+    InputValueEvidence, MachineId, NativeEvidenceEnvelope, ObservationRequest, RunId, SchemaRef,
+    SchemaVersion, SinkError, SnapshotArtifact, SnapshotCapture, VersionStamp,
+    canonical_json_bytes,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -993,6 +994,7 @@ pub enum MachineExecutionOutcome {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "status", content = "result", rename_all = "snake_case")]
 pub enum RecorderFinalizationOutcome {
+    NotRequested,
     Finalized(RecorderReceipt),
     NotFinalized { reason: String },
     Failed { message: String },
@@ -1017,6 +1019,59 @@ pub struct FileRunResult {
     pub published: Option<PublishedFileRun>,
 }
 
+/// Selects the reference file recorder for one orchestration run. Omitting
+/// this value runs without durable file publication.
+#[derive(Debug, Clone)]
+pub struct FileRecorderRequest {
+    pub published_path: PathBuf,
+    pub limits: RecorderLimits,
+}
+
+struct RunEmissionSink {
+    file: Option<FileEmissionSink>,
+    python: PythonBatchingSink,
+}
+
+impl RunEmissionSink {
+    fn python_outcome(&self) -> PythonSinkDeliveryOutcome {
+        self.python.outcome()
+    }
+
+    fn finish_python(&mut self) -> Result<(), SinkError> {
+        self.python.finish()
+    }
+}
+
+impl EmissionSink for RunEmissionSink {
+    fn emit(&mut self, emission: Emission<'_>) -> Result<(), SinkError> {
+        let python_emission = match &emission {
+            Emission::RunStarted(request) => Emission::RunStarted(request),
+            Emission::Event(event) => Emission::Event(event),
+            Emission::NativeEvidence(evidence) => Emission::NativeEvidence(evidence),
+            Emission::InputValueEvidence(evidence) => Emission::InputValueEvidence(evidence),
+            Emission::Frame(frame) => Emission::Frame(frame),
+            Emission::Snapshot(snapshot) => Emission::Snapshot(snapshot),
+            Emission::EvidenceReceipt(receipt) => Emission::EvidenceReceipt(receipt),
+            Emission::RunFinished(result) => Emission::RunFinished(result),
+        };
+        if let Some(file) = &mut self.file {
+            file.emit(emission)?;
+        }
+        self.python.emit(python_emission)
+    }
+
+    fn record_capability_outputs(&mut self, outputs: &[CapabilityOutput]) {
+        if let Some(file) = &mut self.file {
+            file.record_capability_outputs(outputs);
+        }
+        self.python.record_capability_outputs(outputs);
+    }
+
+    fn record_capability_receipts(&mut self, receipts: &[CapabilityReceipt]) {
+        self.python.record_capability_receipts(receipts);
+    }
+}
+
 pub struct FileRunSession;
 
 impl FileRunSession {
@@ -1027,9 +1082,43 @@ impl FileRunSession {
         machine_version: VersionStamp,
         limits: RecorderLimits,
     ) -> Result<FileRunResult, SinkError> {
+        Self::run_with_sinks(
+            session,
+            request,
+            Some(FileRecorderRequest {
+                published_path: published_path.as_ref().to_path_buf(),
+                limits,
+            }),
+            machine_version,
+            Vec::new(),
+            PythonBatchPolicy::default(),
+        )
+    }
+
+    /// Run through the shared evidence budget with any combination of Python
+    /// consumers and the Rust reference file recorder.
+    pub fn run_with_sinks(
+        session: &mut dyn glassvm_core::EmulatorSession,
+        request: &glassvm_core::ExecutionRequest,
+        recorder: Option<FileRecorderRequest>,
+        machine_version: VersionStamp,
+        python_consumers: Vec<(Option<String>, Box<dyn PythonEmissionConsumer + Send>)>,
+        batch_policy: PythonBatchPolicy,
+    ) -> Result<FileRunResult, SinkError> {
         let observation = &request.observation;
+        let file = recorder.map(|recorder| {
+            FileEmissionSink::new(
+                recorder.published_path,
+                machine_version.clone(),
+                recorder.limits,
+            )
+        });
+        let inner = RunEmissionSink {
+            file,
+            python: PythonBatchingSink::new(python_consumers, batch_policy)?,
+        };
         let mut sink = BudgetedSink::new(
-            FileEmissionSink::new(&published_path, machine_version.clone(), limits),
+            inner,
             observation.clone(),
             request.run_id.clone(),
             request.machine_id.clone(),
@@ -1040,6 +1129,9 @@ impl FileRunSession {
             Err(message) => {
                 let evidence = sink.receipt();
                 let interrupted_by_evidence = evidence.failure.is_some();
+                let mut inner = sink.into_inner();
+                let _ = inner.finish_python();
+                let python_sink_delivery = inner.python_outcome();
                 return Ok(FileRunResult {
                     machine_execution: if interrupted_by_evidence {
                         MachineExecutionOutcome::InterruptedByEvidenceFailure { message }
@@ -1047,12 +1139,20 @@ impl FileRunSession {
                         MachineExecutionOutcome::Failed { message }
                     },
                     evidence_fulfillment: evidence,
-                    python_sink_delivery: PythonSinkDeliveryOutcome::not_requested(),
-                    recorder_finalization: RecorderFinalizationOutcome::NotFinalized {
-                        reason: "execution did not reach recorder finalization".into(),
+                    python_sink_delivery,
+                    recorder_finalization: if inner.file.is_some() {
+                        RecorderFinalizationOutcome::NotFinalized {
+                            reason: "execution did not reach recorder finalization".into(),
+                        }
+                    } else {
+                        RecorderFinalizationOutcome::NotRequested
                     },
                     publication: PublicationOutcome::NotPublished {
-                        reason: "recorder was not finalized".into(),
+                        reason: if inner.file.is_some() {
+                            "recorder was not finalized".into()
+                        } else {
+                            "file recorder was not requested".into()
+                        },
                     },
                     published: None,
                 });
@@ -1063,29 +1163,54 @@ impl FileRunSession {
             Ok(evidence) => evidence,
             Err(_error) => {
                 let evidence = sink.receipt();
+                let mut inner = sink.into_inner();
+                let _ = inner.finish_python();
+                let python_sink_delivery = inner.python_outcome();
                 return Ok(FileRunResult {
                     machine_execution: execution,
                     evidence_fulfillment: evidence,
-                    python_sink_delivery: PythonSinkDeliveryOutcome::not_requested(),
-                    recorder_finalization: RecorderFinalizationOutcome::NotFinalized {
-                        reason: "evidence receipt emission failed".into(),
+                    python_sink_delivery,
+                    recorder_finalization: if inner.file.is_some() {
+                        RecorderFinalizationOutcome::NotFinalized {
+                            reason: "evidence receipt emission failed".into(),
+                        }
+                    } else {
+                        RecorderFinalizationOutcome::NotRequested
                     },
                     publication: PublicationOutcome::NotPublished {
-                        reason: "recorder was not finalized".into(),
+                        reason: if inner.file.is_some() {
+                            "recorder was not finalized".into()
+                        } else {
+                            "file recorder was not requested".into()
+                        },
                     },
                     published: None,
                 });
             }
         };
 
-        let file_sink = sink.into_inner();
+        let mut inner = sink.into_inner();
+        let _ = inner.finish_python();
+        let python_sink_delivery = inner.python_outcome();
+        let Some(file_sink) = inner.file else {
+            return Ok(FileRunResult {
+                machine_execution: execution,
+                evidence_fulfillment: evidence,
+                python_sink_delivery,
+                recorder_finalization: RecorderFinalizationOutcome::NotRequested,
+                publication: PublicationOutcome::NotPublished {
+                    reason: "file recorder was not requested".into(),
+                },
+                published: None,
+            });
+        };
         match file_sink.finish() {
             Ok(published) => {
                 let recorder = published.recorder_receipt().clone();
                 Ok(FileRunResult {
                     machine_execution: execution,
                     evidence_fulfillment: evidence,
-                    python_sink_delivery: PythonSinkDeliveryOutcome::not_requested(),
+                    python_sink_delivery,
                     recorder_finalization: RecorderFinalizationOutcome::Finalized(recorder),
                     publication: PublicationOutcome::Published,
                     published: Some(published),
@@ -1094,7 +1219,7 @@ impl FileRunSession {
             Err(error) => Ok(FileRunResult {
                 machine_execution: execution,
                 evidence_fulfillment: evidence,
-                python_sink_delivery: PythonSinkDeliveryOutcome::not_requested(),
+                python_sink_delivery,
                 recorder_finalization: RecorderFinalizationOutcome::Failed {
                     message: error.to_string(),
                 },
@@ -1615,12 +1740,14 @@ fn sync_directory(path: &Path) -> Result<(), RecorderError> {
 #[cfg(test)]
 mod tests {
     use std::path::PathBuf;
+    use std::sync::Arc;
 
     use super::*;
     use glassvm_core::{
-        BudgetReceipt, Emission, EmissionBudgets, EmulatorSession, EvidenceGuarantee,
-        ExecutionControls, ExecutionRequest, InputCoordinate, InputId, InputSchedule, InputSource,
-        MachineConfiguration, ObservationRequest, RunResult, StructuredValue, TypedInputPayload,
+        BudgetReceipt, Emission, EmissionBudgets, EmulatorSession, EventContext, EventKind,
+        EventSelection, EvidenceGuarantee, ExecutionControls, ExecutionEvent, ExecutionRequest,
+        InputCoordinate, InputId, InputSchedule, InputSource, MachineConfiguration,
+        ObservationRequest, RunResult, StructuredValue, TypedInputPayload,
     };
 
     fn manifest(limits: RecorderLimits, channels: &[ReferenceChannel]) -> ReferenceRunManifest {
@@ -1864,6 +1991,239 @@ mod tests {
                 .unwrap()
                 .as_nanos()
         ))
+    }
+
+    #[derive(Clone)]
+    struct CapturePythonConsumer(Arc<std::sync::Mutex<Vec<OwnedEmission>>>);
+
+    impl PythonEmissionConsumer for CapturePythonConsumer {
+        fn emit_batch(&mut self, emissions: &[OwnedEmission]) -> Result<(), PythonSinkFailure> {
+            self.0.lock().unwrap().extend_from_slice(emissions);
+            Ok(())
+        }
+
+        fn record_capability_outputs(
+            &mut self,
+            _outputs: &[CapabilityOutput],
+        ) -> Result<(), PythonSinkFailure> {
+            Ok(())
+        }
+
+        fn record_capability_receipts(
+            &mut self,
+            _receipts: &[CapabilityReceipt],
+        ) -> Result<(), PythonSinkFailure> {
+            Ok(())
+        }
+    }
+
+    struct SuccessfulSession {
+        request: ExecutionRequest,
+    }
+
+    impl EmulatorSession for SuccessfulSession {
+        fn request(&self) -> &ExecutionRequest {
+            &self.request
+        }
+
+        fn execute(&mut self, sink: &mut dyn EmissionSink) -> Result<RunResult, String> {
+            sink.emit(Emission::RunStarted(&self.request))
+                .map_err(|error| error.to_string())?;
+            let event = ExecutionEvent::from_context(
+                &EventContext {
+                    arch: self.request.machine_id.clone(),
+                    machine_version: VersionStamp::from("test-v1"),
+                    run_id: self.request.run_id.clone(),
+                    sequence: 0,
+                    step: 0,
+                    cycle_or_tick: Some(0),
+                    frame: None,
+                    pc: None,
+                    instruction: None,
+                },
+                EventKind::StepStarted,
+            );
+            sink.emit(Emission::Event(&event))
+                .map_err(|error| error.to_string())?;
+            let result = RunResult {
+                common: glassvm_core::CommonMetrics {
+                    cycles: 1,
+                    frames: 0,
+                    termination: "test_complete".into(),
+                    boot_success: true,
+                },
+                capabilities: Vec::new(),
+            };
+            sink.emit(Emission::RunFinished(&result))
+                .map_err(|error| error.to_string())?;
+            Ok(result)
+        }
+
+        fn step_frame(&mut self) -> Result<(), String> {
+            unreachable!("test session is not stepped")
+        }
+
+        fn reset(&mut self) -> Result<(), String> {
+            unreachable!("test session is not reset")
+        }
+
+        fn snapshot(&self) -> Result<Vec<u8>, String> {
+            unreachable!("test session does not snapshot")
+        }
+
+        fn restore_snapshot(&mut self, _bytes: &[u8]) -> Result<(), String> {
+            unreachable!("test session does not restore")
+        }
+    }
+
+    fn successful_request(run_id: &str) -> ExecutionRequest {
+        let mut observation = ObservationRequest::summary();
+        observation.normalized_events.events = EventSelection::All;
+        ExecutionRequest::new(
+            run_id,
+            "test.machine",
+            b"artifact".to_vec(),
+            MachineConfiguration::new(
+                SchemaRef::new("test.configuration", SchemaVersion::V1),
+                StructuredValue::Map(BTreeMap::new()),
+            )
+            .unwrap(),
+            InputSchedule::empty(),
+            observation,
+            ExecutionControls::default(),
+        )
+        .unwrap()
+    }
+
+    fn successful_run_with_sinks(
+        run_id: &str,
+        recorder_requested: bool,
+        consumer_count: usize,
+    ) -> (
+        FileRunResult,
+        Vec<Arc<std::sync::Mutex<Vec<OwnedEmission>>>>,
+        Option<PathBuf>,
+    ) {
+        let request = successful_request(run_id);
+        let mut session = SuccessfulSession {
+            request: request.clone(),
+        };
+        let captures = (0..consumer_count)
+            .map(|_| Arc::new(std::sync::Mutex::new(Vec::new())))
+            .collect::<Vec<_>>();
+        let consumers = captures
+            .iter()
+            .enumerate()
+            .map(|(index, capture)| {
+                (
+                    Some(format!("consumer-{index}")),
+                    Box::new(CapturePythonConsumer(Arc::clone(capture)))
+                        as Box<dyn PythonEmissionConsumer + Send>,
+                )
+            })
+            .collect();
+        let recorder_path = recorder_requested.then(|| temporary_run_root(run_id));
+        let recorder = recorder_path
+            .as_ref()
+            .map(|published_path| FileRecorderRequest {
+                published_path: published_path.clone(),
+                limits: limits(),
+            });
+        let result = FileRunSession::run_with_sinks(
+            &mut session,
+            &request,
+            recorder,
+            VersionStamp::from("test-v1"),
+            consumers,
+            PythonBatchPolicy::default(),
+        )
+        .expect("run lifecycle returns structured outcomes");
+        (result, captures, recorder_path)
+    }
+
+    #[test]
+    fn python_and_reference_recorder_sinks_coexist_in_all_supported_modes() {
+        let (python_only, python_captures, _) = successful_run_with_sinks("python-only", false, 1);
+        assert!(matches!(
+            python_only.machine_execution,
+            MachineExecutionOutcome::Completed(_)
+        ));
+        assert_eq!(
+            python_only.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::Complete
+        );
+        assert!(matches!(
+            python_only.recorder_finalization,
+            RecorderFinalizationOutcome::NotRequested
+        ));
+        assert!(matches!(
+            python_only.publication,
+            PublicationOutcome::NotPublished { .. }
+        ));
+        assert_eq!(python_captures[0].lock().unwrap().len(), 4);
+
+        let (recorder_only, recorder_captures, recorder_path) =
+            successful_run_with_sinks("recorder-only", true, 0);
+        assert_eq!(
+            recorder_only.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::NotRequested
+        );
+        assert!(matches!(
+            recorder_only.recorder_finalization,
+            RecorderFinalizationOutcome::Finalized(_)
+        ));
+        let published = recorder_only
+            .published
+            .as_ref()
+            .expect("published run handle");
+        let mut reader = published
+            .open_segment(ReferenceChannel::NormalizedEvents, 0)
+            .expect("recorder channel remains readable");
+        assert!(matches!(
+            reader.next_record().unwrap(),
+            Some(RecordedRecord::NormalizedEvent(_))
+        ));
+        assert!(reader.next_record().unwrap().is_none());
+        assert!(recorder_captures.is_empty());
+        std::fs::remove_dir_all(recorder_path.unwrap()).unwrap();
+
+        let (both, both_captures, both_path) = successful_run_with_sinks("both", true, 1);
+        assert_eq!(both.python_sink_delivery.sink_count, 1);
+        assert_eq!(both.python_sink_delivery.items_delivered, 4);
+        assert!(matches!(
+            both.recorder_finalization,
+            RecorderFinalizationOutcome::Finalized(_)
+        ));
+        assert_eq!(both_captures[0].lock().unwrap().len(), 4);
+        let published = both.published.as_ref().expect("published run handle");
+        assert_eq!(
+            published.recorder_receipt().status,
+            RecorderStatus::Complete
+        );
+        std::fs::remove_dir_all(both_path.unwrap()).unwrap();
+
+        let (multiple, captures, multiple_path) = successful_run_with_sinks("multiple", true, 2);
+        assert_eq!(multiple.python_sink_delivery.sink_count, 2);
+        assert_eq!(multiple.python_sink_delivery.items_delivered, 8);
+        assert!(
+            captures
+                .iter()
+                .all(|capture| capture.lock().unwrap().len() == 4)
+        );
+        assert!(multiple.published.is_some());
+        std::fs::remove_dir_all(multiple_path.unwrap()).unwrap();
+
+        let (neither, neither_captures, _) = successful_run_with_sinks("neither", false, 0);
+        assert_eq!(
+            neither.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::NotRequested
+        );
+        assert!(matches!(
+            neither.recorder_finalization,
+            RecorderFinalizationOutcome::NotRequested
+        ));
+        assert!(neither.published.is_none());
+        assert!(neither_captures.is_empty());
     }
 
     fn capability_output(id: &str) -> RecordedRecord {

@@ -8,13 +8,13 @@ semantics.
 ## Lifecycle
 
 ```text
-FileRunSession::run
-  -> FileEmissionSink
+FileRunSession::run_with_sinks
+  -> optional FileEmissionSink + PythonBatchingSink
   -> BudgetedSink
   -> EmulatorSession::execute
   -> emit EvidenceReceipt
-  -> finalize recorder
-  -> atomic publication
+  -> optional recorder finalization
+  -> atomic publication when a recorder was requested
 ```
 
 The helper owns sink construction, budget accounting, execution, evidence
@@ -43,13 +43,15 @@ pub struct FileRunResult {
 - `evidence_fulfillment` is the retrospective observation receipt;
 - `python_sink_delivery` describes only Python consumer delivery, or is
   `not_requested`;
-- `recorder_finalization` reports whether physical persistence finalized; and
+- `recorder_finalization` is `not_requested` when no file recorder is selected,
+  otherwise it reports whether physical persistence finalized; and
 - `publication` reports the atomic publication outcome.
 
 The published handle is present only after the finalized recorder receipt
 passes the publication gate. Partial execution results preserve whatever
 evidence receipt was accumulated, report recorder finalization as not
-attempted, and have no published handle. Evidence failure does not redefine
+attempted (or `not_requested` when no recorder was selected), and have no
+published handle. Evidence failure does not redefine
 machine execution, Python delivery failure is not recorder failure, and
 recorder failure does not become successful publication.
 

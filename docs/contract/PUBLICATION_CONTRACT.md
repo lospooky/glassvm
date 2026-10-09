@@ -192,12 +192,12 @@ define their machine-specific extraction semantics.
 lifecycle, not the evidence model:
 
 ```text
-FileEmissionSink
+optional FileEmissionSink + PythonBatchingSink
   -> BudgetedSink
   -> session.execute()
   -> emit EvidenceReceipt
-  -> finalize recorder
-  -> atomically publish
+  -> optional recorder finalization
+  -> atomically publish when recorder was requested
 ```
 
 The result keeps the execution and delivery domains separately inspectable:

@@ -298,7 +298,10 @@ fn validate_execution_result(value: &Value) -> Result<(), String> {
         ));
     }
     let recorder_status = status("recorder_finalization")?;
-    if !matches!(recorder_status, "finalized" | "not_finalized" | "failed") {
+    if !matches!(
+        recorder_status,
+        "not_requested" | "finalized" | "not_finalized" | "failed"
+    ) {
         return Err(format!(
             "bundle execution result has unsupported recorder status {recorder_status:?}"
         ));
@@ -592,5 +595,18 @@ mod tests {
                 .expect_err("publication gate is enforced")
                 .contains("requires finalized recorder")
         );
+    }
+
+    #[test]
+    fn execution_result_accepts_runs_without_a_requested_file_recorder() {
+        let value = json!({
+            "machine_execution": {"status": "completed"},
+            "evidence_fulfillment": {"status": "complete"},
+            "python_sink_delivery": {"status": "complete"},
+            "recorder_finalization": {"status": "not_requested"},
+            "publication": {"status": "not_published"},
+            "published_run": null
+        });
+        validate_execution_result(&value).expect("Python-only execution has explicit outcomes");
     }
 }
