@@ -551,9 +551,16 @@ impl EmissionSink for PythonBatchingSink {
 
 #[cfg(test)]
 mod batching_tests {
+    use std::collections::BTreeMap;
     use std::sync::{Arc, Mutex};
 
-    use glassvm_core::{FrameArtifact, MachineId, SchemaRef, VersionStamp};
+    use glassvm_core::{
+        BudgetReceipt, CommonMetrics, Emission, EmissionBudgets, EventContext, EventKind,
+        EvidenceGuarantee, EvidenceStatus, ExecutionControls, ExecutionEvent, ExecutionRequest,
+        FrameArtifact, InputCoordinate, InputId, InputSchedule, InputSource, MachineConfiguration,
+        MachineId, NativeEvent, NativeEvidenceEnvelope, ObservationRequest, RunResult, SchemaRef,
+        SchemaVersion, SnapshotArtifact, StructuredValue, TypedInputPayload, VersionStamp,
+    };
 
     use super::*;
 
@@ -594,6 +601,107 @@ mod batching_tests {
         )
     }
 
+    fn execution_request() -> ExecutionRequest {
+        ExecutionRequest::new(
+            "run",
+            "test-machine",
+            vec![1, 2, 3],
+            MachineConfiguration::new(
+                SchemaRef::new("test.configuration", SchemaVersion::V1),
+                StructuredValue::Map(BTreeMap::new()),
+            )
+            .unwrap(),
+            InputSchedule::empty(),
+            ObservationRequest::summary(),
+            ExecutionControls::default(),
+        )
+        .unwrap()
+    }
+
+    fn evidence_receipt() -> EvidenceReceipt {
+        EvidenceReceipt {
+            schema_version: SchemaVersion::new(2, 1, 0),
+            run_id: RunId::from("run"),
+            machine_id: MachineId::from("test-machine"),
+            machine_version: VersionStamp::from("test.v1"),
+            requested_guarantee: EvidenceGuarantee::Summary,
+            fulfilled_guarantee: Some(EvidenceGuarantee::Summary),
+            status: EvidenceStatus::Complete,
+            channels: Vec::new(),
+            capabilities: Vec::new(),
+            budgets: BudgetReceipt {
+                configured: EmissionBudgets::default(),
+                exceeded: None,
+                observed_logical_bytes: 0,
+            },
+            failure: None,
+        }
+    }
+
+    fn execution_event() -> ExecutionEvent {
+        ExecutionEvent::from_context(
+            &EventContext {
+                arch: MachineId::from("test-machine"),
+                machine_version: VersionStamp::from("test.v1"),
+                run_id: RunId::from("run"),
+                sequence: 7,
+                step: 6,
+                cycle_or_tick: Some(12),
+                frame: Some(2),
+                pc: None,
+                instruction: None,
+            },
+            EventKind::FrameCompleted,
+        )
+    }
+
+    fn input_value_evidence() -> InputValueEvidence {
+        let schema = SchemaRef::new("test.input.key", SchemaVersion::V1);
+        InputValueEvidence::new(
+            InputId::new("test.key").unwrap(),
+            schema.clone(),
+            InputSource::Scheduled { ordinal: 3 },
+            InputCoordinate::frame(2),
+            TypedInputPayload::new(schema, StructuredValue::Bool(true)).unwrap(),
+        )
+    }
+
+    fn native_evidence() -> NativeEvidenceEnvelope {
+        NativeEvidenceEnvelope::new(
+            RunId::from("run"),
+            MachineId::from("test-machine"),
+            VersionStamp::from("test.v1"),
+            7,
+            6,
+            NativeEvent {
+                schema: SchemaRef::new("test.native_event", SchemaVersion::V1),
+                kind: "frame.done".into(),
+                payload: serde_json::json!({"frame": 2}),
+            },
+        )
+    }
+
+    fn capability_output() -> CapabilityOutput {
+        CapabilityOutput {
+            schema: glassvm_core::CapabilitySchema {
+                id: glassvm_core::CapabilityId::new("test.summary").unwrap(),
+                version: glassvm_core::NormalizerSchemaVersion::new(1, 0, 0),
+            },
+            value: serde_json::json!({"count": 4}),
+        }
+    }
+
+    #[cfg(feature = "python")]
+    fn capability_receipt() -> CapabilityReceipt {
+        CapabilityReceipt {
+            id: glassvm_core::CapabilityId::new("test.summary").unwrap(),
+            status: glassvm_core::CapabilityStatus::Fulfilled,
+            output_schema: Some(capability_output().schema),
+            logical_bytes: 12,
+            message: None,
+        }
+    }
+
     fn sink(
         calls: &Arc<Mutex<Vec<Vec<OwnedEmission>>>>,
         policy: PythonBatchPolicy,
@@ -606,6 +714,76 @@ mod batching_tests {
             policy,
         )
         .unwrap()
+    }
+
+    #[test]
+    fn every_core_emission_maps_to_its_typed_owned_record() {
+        let request = execution_request();
+        assert!(matches!(
+            OwnedEmission::from(Emission::RunStarted(&request)),
+            OwnedEmission::RunStarted(RunStartedRecord {
+                artifact_length_bytes: 3,
+                ..
+            })
+        ));
+
+        let event = execution_event();
+        assert!(matches!(
+            OwnedEmission::from(Emission::Event(&event)),
+            OwnedEmission::Event(ref owned) if owned == &event
+        ));
+
+        let native = native_evidence();
+        assert!(matches!(
+            OwnedEmission::from(Emission::NativeEvidence(&native)),
+            OwnedEmission::NativeEvidence(ref owned) if owned == &native
+        ));
+
+        let input_value = input_value_evidence();
+        assert!(matches!(
+            OwnedEmission::from(Emission::InputValueEvidence(&input_value)),
+            OwnedEmission::InputValueEvidence(ref owned) if owned == &input_value
+        ));
+
+        let frame = frame(2, 8);
+        assert!(matches!(
+            OwnedEmission::from(Emission::Frame(&frame)),
+            OwnedEmission::Frame(ref owned) if owned == &frame
+        ));
+
+        let snapshot = SnapshotArtifact::new(
+            RunId::from("run"),
+            MachineId::from("test-machine"),
+            VersionStamp::from("test.v1"),
+            7,
+            6,
+            vec![9, 8, 7],
+        );
+        assert!(matches!(
+            OwnedEmission::from(Emission::Snapshot(&snapshot)),
+            OwnedEmission::Snapshot(ref owned) if owned == &snapshot
+        ));
+
+        let receipt = evidence_receipt();
+        assert!(matches!(
+            OwnedEmission::from(Emission::EvidenceReceipt(&receipt)),
+            OwnedEmission::EvidenceReceipt(ref owned) if owned == &receipt
+        ));
+
+        let result = RunResult {
+            common: CommonMetrics {
+                cycles: 20,
+                frames: 2,
+                termination: "halted".into(),
+                boot_success: true,
+            },
+            capabilities: vec![capability_output()],
+        };
+        assert!(matches!(
+            OwnedEmission::from(Emission::RunFinished(&result)),
+            OwnedEmission::RunFinished(RunFinishedRecord { ref common })
+                if common == &result.common
+        ));
     }
 
     #[test]
@@ -768,6 +946,131 @@ mod batching_tests {
                 .unwrap();
             assert!(first_batch.is(&second_batch));
             assert_eq!(first_batch.len().unwrap(), 1);
+        });
+    }
+
+    #[cfg(feature = "python")]
+    #[test]
+    fn python_callbacks_keep_emissions_outputs_and_receipts_distinct() {
+        use std::ffi::CString;
+
+        use pyo3::types::PyModule;
+
+        Python::initialize();
+        Python::attach(|py| {
+            let code = CString::new(
+                "class Sink:\n    def __init__(self): self.calls = []\n    def emit_batch(self, values): self.calls.append(('emissions', values))\n    def record_capability_outputs(self, values): self.calls.append(('outputs', values))\n    def record_capability_receipts(self, values): self.calls.append(('receipts', values))\n",
+            )
+            .unwrap();
+            let module =
+                PyModule::from_code(py, code.as_c_str(), c"sink_surface.py", c"sink_surface")
+                    .unwrap();
+            let sink = module.getattr("Sink").unwrap().call0().unwrap().unbind();
+            let mut consumer = PythonCallbackConsumer::new(vec![(
+                Some("surface-test".into()),
+                sink.clone_ref(py),
+            )]);
+
+            let request = execution_request();
+            let event = execution_event();
+            let native = native_evidence();
+            let input_value = input_value_evidence();
+            let frame = frame(2, 8);
+            let snapshot = SnapshotArtifact::new(
+                RunId::from("run"),
+                MachineId::from("test-machine"),
+                VersionStamp::from("test.v1"),
+                7,
+                6,
+                vec![9, 8, 7],
+            );
+            let receipt = evidence_receipt();
+            let result = RunResult {
+                common: CommonMetrics {
+                    cycles: 20,
+                    frames: 2,
+                    termination: "halted".into(),
+                    boot_success: true,
+                },
+                capabilities: vec![capability_output()],
+            };
+            let emissions = vec![
+                OwnedEmission::from(Emission::RunStarted(&request)),
+                OwnedEmission::from(Emission::Event(&event)),
+                OwnedEmission::from(Emission::NativeEvidence(&native)),
+                OwnedEmission::from(Emission::InputValueEvidence(&input_value)),
+                OwnedEmission::from(Emission::Frame(&frame)),
+                OwnedEmission::from(Emission::Snapshot(&snapshot)),
+                OwnedEmission::from(Emission::EvidenceReceipt(&receipt)),
+                OwnedEmission::from(Emission::RunFinished(&result)),
+            ];
+            consumer.emit_batch(&emissions).unwrap();
+            consumer
+                .record_capability_outputs(&[capability_output()])
+                .unwrap();
+            consumer
+                .record_capability_receipts(&[capability_receipt()])
+                .unwrap();
+
+            let calls = sink.bind(py).getattr("calls").unwrap();
+            assert_eq!(calls.len().unwrap(), 3);
+            let emission_call = calls.get_item(0).unwrap();
+            assert_eq!(
+                emission_call
+                    .get_item(0)
+                    .unwrap()
+                    .extract::<String>()
+                    .unwrap(),
+                "emissions"
+            );
+            let expected_kinds = [
+                "run_started",
+                "event",
+                "native_evidence",
+                "input_value_evidence",
+                "frame",
+                "snapshot",
+                "evidence_receipt",
+                "run_finished",
+            ];
+            let records = emission_call.get_item(1).unwrap();
+            assert_eq!(records.len().unwrap(), expected_kinds.len());
+            for (index, expected_kind) in expected_kinds.iter().enumerate() {
+                assert_eq!(
+                    records
+                        .get_item(index)
+                        .unwrap()
+                        .get_item("kind")
+                        .unwrap()
+                        .extract::<String>()
+                        .unwrap(),
+                    *expected_kind
+                );
+            }
+            for (index, expected) in [(1, "outputs"), (2, "receipts")] {
+                let call = calls.get_item(index).unwrap();
+                assert_eq!(
+                    call.get_item(0).unwrap().extract::<String>().unwrap(),
+                    expected
+                );
+                assert_eq!(call.get_item(1).unwrap().len().unwrap(), 1);
+            }
+            let output_record = calls
+                .get_item(1)
+                .unwrap()
+                .get_item(1)
+                .unwrap()
+                .get_item(0)
+                .unwrap();
+            let receipt_record = calls
+                .get_item(2)
+                .unwrap()
+                .get_item(1)
+                .unwrap()
+                .get_item(0)
+                .unwrap();
+            assert!(output_record.get_item("schema").is_ok());
+            assert!(receipt_record.get_item("id").is_ok());
         });
     }
 }
