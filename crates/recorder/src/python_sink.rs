@@ -951,6 +951,53 @@ mod batching_tests {
 
     #[cfg(feature = "python")]
     #[test]
+    fn python_callback_exception_is_reported_with_identity_and_no_retry() {
+        use std::ffi::CString;
+
+        use pyo3::types::PyModule;
+
+        Python::initialize();
+        Python::attach(|py| {
+            let code = CString::new(
+                "class Sink:\n    def __init__(self): self.calls = 0\n    def emit_batch(self, batch):\n        self.calls += 1\n        raise RuntimeError('consumer rejected batch')\n    def record_capability_outputs(self, outputs): pass\n    def record_capability_receipts(self, receipts): pass\n",
+            )
+            .unwrap();
+            let module =
+                PyModule::from_code(py, code.as_c_str(), c"sink_failure.py", c"sink_failure")
+                    .unwrap();
+            let sink = module.getattr("Sink").unwrap().call0().unwrap().unbind();
+            let mut consumer = PythonCallbackConsumer::new(vec![(
+                Some("raising-consumer".into()),
+                sink.clone_ref(py),
+            )]);
+
+            let failure = consumer
+                .emit_batch(&[OwnedEmission::Frame(frame(0, 4))])
+                .expect_err("Python exception becomes a structured delivery failure");
+            assert_eq!(failure.sink_index, 0);
+            assert_eq!(failure.sink_identity.as_deref(), Some("raising-consumer"));
+            assert_eq!(failure.callback, PythonSinkCallbackKind::EmissionBatch);
+            assert_eq!(failure.batch_size, 1);
+            assert_eq!(failure.successfully_delivered_items, 0);
+            assert_eq!(failure.exception_type, "RuntimeError");
+            assert!(
+                failure
+                    .exception_message
+                    .contains("consumer rejected batch")
+            );
+            assert_eq!(
+                sink.bind(py)
+                    .getattr("calls")
+                    .unwrap()
+                    .extract::<usize>()
+                    .unwrap(),
+                1
+            );
+        });
+    }
+
+    #[cfg(feature = "python")]
+    #[test]
     fn python_callbacks_keep_emissions_outputs_and_receipts_distinct() {
         use std::ffi::CString;
 

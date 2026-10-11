@@ -55,6 +55,16 @@ published handle. Evidence failure does not redefine
 machine execution, Python delivery failure is not recorder failure, and
 recorder failure does not become successful publication.
 
+Python callback failures are reported with consumer index/identity, callback
+kind, batch size, successfully delivered item count, exception type, and
+exception message. Delivery is synchronous and fail-fast: callbacks are not
+retried, and the original Python exception is not swallowed. Under the current
+shared run orchestration, a downstream evidence-delivery interruption stops
+execution and leaves any requested recorder staging run unfinalized and
+inspectable. This is common evidence-sink interruption behavior, not a
+Python-specific publication rule; finalization and publication remain governed
+by the shared recorder receipt and atomic publication gate.
+
 The recorder receipt includes fixed-set, per-channel counters for persisted
 segments, records, blocks, logical bytes, and encoded block-payload bytes. Its
 channel list is in canonical channel order and is bounded by the recorder's six

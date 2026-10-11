@@ -1739,7 +1739,7 @@ fn sync_directory(path: &Path) -> Result<(), RecorderError> {
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
+    use std::path::{Path, PathBuf};
     use std::sync::Arc;
 
     use super::*;
@@ -1870,7 +1870,9 @@ mod tests {
             }
         }
 
-        let root = temporary_segment_path("partial-run-root");
+        let run_parent = temporary_run_root("partial-run-root");
+        std::fs::create_dir_all(&run_parent).unwrap();
+        let root = run_parent.join("published-run");
         let request = ExecutionRequest::new(
             "partial-run",
             "test.machine",
@@ -1924,9 +1926,7 @@ mod tests {
             PythonSinkDeliveryStatus::NotRequested
         );
         assert!(!root.exists());
-        if let Some(parent) = root.parent() {
-            let _ = std::fs::remove_dir_all(parent);
-        }
+        std::fs::remove_dir_all(run_parent).unwrap();
     }
 
     fn frame(manifest: &ReferenceRunManifest, sequence: u64, value: &str) -> RecordedRecord {
@@ -2095,6 +2095,164 @@ mod tests {
         .unwrap()
     }
 
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    enum ConsumerFailurePoint {
+        EventBatch,
+        CapabilityOutputs,
+        CapabilityReceipts,
+    }
+
+    struct FailingPythonConsumer {
+        fail_at: Option<ConsumerFailurePoint>,
+        calls: Arc<std::sync::Mutex<Vec<Vec<OwnedEmission>>>>,
+    }
+
+    impl FailingPythonConsumer {
+        fn failure(callback: PythonSinkCallbackKind, batch_size: usize) -> PythonSinkFailure {
+            PythonSinkFailure {
+                sink_index: 0,
+                sink_identity: None,
+                callback,
+                batch_size,
+                successfully_delivered_items: 0,
+                exception_type: "RuntimeError".into(),
+                exception_message: "synthetic Python callback failure".into(),
+            }
+        }
+    }
+
+    impl PythonEmissionConsumer for FailingPythonConsumer {
+        fn emit_batch(&mut self, emissions: &[OwnedEmission]) -> Result<(), PythonSinkFailure> {
+            self.calls.lock().unwrap().push(emissions.to_vec());
+            if self.fail_at == Some(ConsumerFailurePoint::EventBatch)
+                && emissions
+                    .iter()
+                    .any(|emission| matches!(emission, OwnedEmission::Event(_)))
+            {
+                return Err(Self::failure(
+                    PythonSinkCallbackKind::EmissionBatch,
+                    emissions.len(),
+                ));
+            }
+            Ok(())
+        }
+
+        fn record_capability_outputs(
+            &mut self,
+            outputs: &[CapabilityOutput],
+        ) -> Result<(), PythonSinkFailure> {
+            if self.fail_at == Some(ConsumerFailurePoint::CapabilityOutputs) {
+                return Err(Self::failure(
+                    PythonSinkCallbackKind::CapabilityOutputs,
+                    outputs.len(),
+                ));
+            }
+            Ok(())
+        }
+
+        fn record_capability_receipts(
+            &mut self,
+            receipts: &[CapabilityReceipt],
+        ) -> Result<(), PythonSinkFailure> {
+            if self.fail_at == Some(ConsumerFailurePoint::CapabilityReceipts) {
+                return Err(Self::failure(
+                    PythonSinkCallbackKind::CapabilityReceipts,
+                    receipts.len(),
+                ));
+            }
+            Ok(())
+        }
+    }
+
+    struct FailureSession {
+        request: ExecutionRequest,
+        failure_point: ConsumerFailurePoint,
+    }
+
+    impl EmulatorSession for FailureSession {
+        fn request(&self) -> &ExecutionRequest {
+            &self.request
+        }
+
+        fn execute(&mut self, sink: &mut dyn EmissionSink) -> Result<RunResult, String> {
+            sink.emit(Emission::RunStarted(&self.request))
+                .map_err(|error| error.to_string())?;
+            if self.failure_point == ConsumerFailurePoint::EventBatch {
+                let event = ExecutionEvent::from_context(
+                    &EventContext {
+                        arch: self.request.machine_id.clone(),
+                        machine_version: VersionStamp::from("test-v1"),
+                        run_id: self.request.run_id.clone(),
+                        sequence: 0,
+                        step: 0,
+                        cycle_or_tick: Some(0),
+                        frame: None,
+                        pc: None,
+                        instruction: None,
+                    },
+                    EventKind::StepStarted,
+                );
+                sink.emit(Emission::Event(&event))
+                    .map_err(|error| error.to_string())?;
+            } else {
+                let output = test_capability_output();
+                if self.failure_point == ConsumerFailurePoint::CapabilityOutputs {
+                    sink.record_capability_outputs(std::slice::from_ref(&output));
+                } else {
+                    sink.record_capability_receipts(std::slice::from_ref(
+                        &test_capability_receipt(&output),
+                    ));
+                }
+            }
+            let result = RunResult {
+                common: glassvm_core::CommonMetrics {
+                    cycles: 1,
+                    frames: 0,
+                    termination: "test_complete".into(),
+                    boot_success: true,
+                },
+                capabilities: Vec::new(),
+            };
+            sink.emit(Emission::RunFinished(&result))
+                .map_err(|error| error.to_string())?;
+            Ok(result)
+        }
+
+        fn step_frame(&mut self) -> Result<(), String> {
+            unreachable!("test session is not stepped")
+        }
+
+        fn reset(&mut self) -> Result<(), String> {
+            unreachable!("test session is not reset")
+        }
+
+        fn snapshot(&self) -> Result<Vec<u8>, String> {
+            unreachable!("test session does not snapshot")
+        }
+
+        fn restore_snapshot(&mut self, _bytes: &[u8]) -> Result<(), String> {
+            unreachable!("test session does not restore")
+        }
+    }
+
+    fn test_capability_output() -> CapabilityOutput {
+        let id = CapabilityId::new("test.summary").unwrap();
+        CapabilityOutput {
+            schema: id.schema(),
+            value: serde_json::json!({"count": 1}),
+        }
+    }
+
+    fn test_capability_receipt(output: &CapabilityOutput) -> CapabilityReceipt {
+        CapabilityReceipt {
+            id: output.schema.id.clone(),
+            status: glassvm_core::CapabilityStatus::Fulfilled,
+            output_schema: Some(output.schema.clone()),
+            logical_bytes: 10,
+            message: None,
+        }
+    }
+
     fn successful_run_with_sinks(
         run_id: &str,
         recorder_requested: bool,
@@ -2139,6 +2297,197 @@ mod tests {
         )
         .expect("run lifecycle returns structured outcomes");
         (result, captures, recorder_path)
+    }
+
+    fn run_with_failing_consumer(
+        run_id: &str,
+        failure_point: ConsumerFailurePoint,
+        fail_indices: &[usize],
+        recorder_requested: bool,
+    ) -> (
+        FileRunResult,
+        Vec<Arc<std::sync::Mutex<Vec<Vec<OwnedEmission>>>>>,
+        Option<PathBuf>,
+    ) {
+        let mut request = successful_request(run_id);
+        if failure_point == ConsumerFailurePoint::EventBatch {
+            request.observation.capabilities.clear();
+        } else {
+            request.observation.normalized_events.events = EventSelection::None;
+            request.observation.capabilities = vec![glassvm_core::CapabilityRequest::required(
+                CapabilityId::new("test.summary").unwrap(),
+            )];
+        }
+        let mut session = FailureSession {
+            request: request.clone(),
+            failure_point,
+        };
+        let consumer_count = fail_indices
+            .iter()
+            .copied()
+            .max()
+            .map_or(1, |last_index| last_index + 1);
+        let captures = (0..consumer_count)
+            .map(|_| Arc::new(std::sync::Mutex::new(Vec::new())))
+            .collect::<Vec<_>>();
+        let consumers = captures
+            .iter()
+            .enumerate()
+            .map(|(index, capture)| {
+                (
+                    Some(format!("consumer-{index}")),
+                    Box::new(FailingPythonConsumer {
+                        fail_at: fail_indices.contains(&index).then_some(failure_point),
+                        calls: Arc::clone(capture),
+                    }) as Box<dyn PythonEmissionConsumer + Send>,
+                )
+            })
+            .collect();
+
+        let run_parent =
+            recorder_requested.then(|| temporary_run_root(&format!("{run_id}-parent")));
+        let recorder_path = run_parent.as_ref().map(|parent| {
+            std::fs::create_dir_all(parent).unwrap();
+            parent.join("published-run")
+        });
+        let recorder = recorder_path
+            .as_ref()
+            .map(|published_path| FileRecorderRequest {
+                published_path: published_path.clone(),
+                limits: limits(),
+            });
+        let result = FileRunSession::run_with_sinks(
+            &mut session,
+            &request,
+            recorder,
+            VersionStamp::from("test-v1"),
+            consumers,
+            PythonBatchPolicy::default(),
+        )
+        .expect("callback failures remain structured run outcomes");
+        (result, captures, run_parent)
+    }
+
+    fn assert_interrupted_failure(
+        result: &FileRunResult,
+        callback: PythonSinkCallbackKind,
+        expected_sink_index: usize,
+        delivered_items: usize,
+        recorder_requested: bool,
+    ) {
+        assert!(matches!(
+            result.machine_execution,
+            MachineExecutionOutcome::InterruptedByEvidenceFailure { .. }
+        ));
+        assert_eq!(result.evidence_fulfillment.status, EvidenceStatus::Failed);
+        assert!(result.evidence_fulfillment.failure.is_some());
+        assert_eq!(
+            result.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::Failed
+        );
+        let failure = result
+            .python_sink_delivery
+            .failure
+            .as_ref()
+            .expect("structured consumer failure");
+        assert_eq!(failure.callback, callback);
+        assert_eq!(failure.sink_index, expected_sink_index);
+        assert_eq!(failure.successfully_delivered_items, delivered_items);
+        if recorder_requested {
+            assert!(matches!(
+                result.recorder_finalization,
+                RecorderFinalizationOutcome::NotFinalized { .. }
+            ));
+        } else {
+            assert!(matches!(
+                result.recorder_finalization,
+                RecorderFinalizationOutcome::NotRequested
+            ));
+        }
+        assert!(matches!(
+            result.publication,
+            PublicationOutcome::NotPublished { .. }
+        ));
+        assert!(result.published.is_none());
+    }
+
+    fn assert_inspectable_staging(parent: &Path) {
+        let staging_root = parent.join(".staging");
+        let staging_run = std::fs::read_dir(staging_root)
+            .unwrap()
+            .next()
+            .expect("failed run leaves one staging directory")
+            .unwrap()
+            .path();
+        assert!(staging_run.join("manifest.json").is_file());
+    }
+
+    #[test]
+    fn python_callback_failures_preserve_independent_outcomes_and_staging() {
+        let (first, _, _) = run_with_failing_consumer(
+            "first-callback-fails",
+            ConsumerFailurePoint::EventBatch,
+            &[0],
+            false,
+        );
+        assert_interrupted_failure(&first, PythonSinkCallbackKind::EmissionBatch, 0, 0, false);
+        assert!(matches!(
+            first.recorder_finalization,
+            RecorderFinalizationOutcome::NotRequested
+        ));
+
+        let (later, captures, parent) = run_with_failing_consumer(
+            "later-callback-fails",
+            ConsumerFailurePoint::EventBatch,
+            &[1],
+            true,
+        );
+        assert_interrupted_failure(&later, PythonSinkCallbackKind::EmissionBatch, 1, 1, true);
+        assert_eq!(
+            captures[0]
+                .lock()
+                .unwrap()
+                .iter()
+                .flatten()
+                .filter(|emission| matches!(emission, OwnedEmission::Event(_)))
+                .count(),
+            1,
+            "earlier consumer receives the batch before the failing later consumer"
+        );
+        assert_inspectable_staging(parent.as_ref().unwrap());
+        std::fs::remove_dir_all(parent.unwrap()).unwrap();
+
+        let (outputs, _, parent) = run_with_failing_consumer(
+            "capability-output-fails",
+            ConsumerFailurePoint::CapabilityOutputs,
+            &[0],
+            true,
+        );
+        assert_interrupted_failure(
+            &outputs,
+            PythonSinkCallbackKind::CapabilityOutputs,
+            0,
+            0,
+            true,
+        );
+        assert_inspectable_staging(parent.as_ref().unwrap());
+        std::fs::remove_dir_all(parent.unwrap()).unwrap();
+
+        let (receipts, _, parent) = run_with_failing_consumer(
+            "capability-receipt-fails",
+            ConsumerFailurePoint::CapabilityReceipts,
+            &[0],
+            true,
+        );
+        assert_interrupted_failure(
+            &receipts,
+            PythonSinkCallbackKind::CapabilityReceipts,
+            0,
+            0,
+            true,
+        );
+        assert_inspectable_staging(parent.as_ref().unwrap());
+        std::fs::remove_dir_all(parent.unwrap()).unwrap();
     }
 
     #[test]
