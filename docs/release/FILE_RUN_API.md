@@ -42,7 +42,8 @@ pub struct FileRunResult {
   interruption caused by evidence delivery;
 - `evidence_fulfillment` is the retrospective observation receipt;
 - `python_sink_delivery` describes only Python consumer delivery, or is
-  `not_requested`;
+  `not_requested`; it includes delivered counters and peak pending-batch item
+  and logical-byte occupancy;
 - `recorder_finalization` is `not_requested` when no file recorder is selected,
   otherwise it reports whether physical persistence finalized; and
 - `publication` reports the atomic publication outcome.

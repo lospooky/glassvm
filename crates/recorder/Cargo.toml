@@ -13,6 +13,11 @@ categories = ["data-structures", "development-tools"]
 default = []
 python = ["dep:pyo3"]
 
+[[bench]]
+name = "python_emission_consumer"
+harness = false
+required-features = ["python"]
+
 [dependencies]
 glassvm_core = { version = "0.1.2", path = "../core" }
 serde = { version = "1", features = ["derive"] }

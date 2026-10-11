@@ -1807,6 +1807,8 @@ mod tests {
                 batches_delivered: 3,
                 items_delivered: 11,
                 logical_bytes_delivered: 4096,
+                peak_batch_items: 4,
+                peak_batch_logical_bytes: 2048,
                 failure: Some(PythonSinkFailure {
                     sink_index: 1,
                     sink_identity: Some("consumer-b".into()),
@@ -2573,6 +2575,157 @@ mod tests {
         ));
         assert!(neither.published.is_none());
         assert!(neither_captures.is_empty());
+    }
+
+    #[cfg(feature = "python")]
+    #[test]
+    fn actual_python_consumer_coexists_with_published_reference_recorder() {
+        use pyo3::prelude::*;
+        use pyo3::types::PyModule;
+
+        Python::initialize();
+        let parent = temporary_run_root("python-recorder-conformance");
+        std::fs::create_dir_all(&parent).unwrap();
+        let published_path = parent.join("published-run");
+        let request = successful_request("python-recorder-conformance");
+        let mut session = SuccessfulSession {
+            request: request.clone(),
+        };
+        let (consumer, python_events) = Python::attach(|py| {
+            let module = PyModule::from_code(
+                py,
+                c"class Consumer:\n    def __init__(self): self.events = []\n    def emit_batch(self, batch): self.events.extend(batch)\n    def record_capability_outputs(self, values): pass\n    def record_capability_receipts(self, values): pass\n",
+                c"installed_consumer.py",
+                c"installed_consumer",
+            )
+            .unwrap();
+            let consumer = module
+                .getattr("Consumer")
+                .unwrap()
+                .call0()
+                .unwrap()
+                .unbind();
+            (consumer.clone_ref(py), consumer)
+        });
+        let consumer =
+            PythonCallbackConsumer::new(vec![(Some("external-consumer".into()), consumer)]);
+        let result = FileRunSession::run_with_sinks(
+            &mut session,
+            &request,
+            Some(FileRecorderRequest {
+                published_path,
+                limits: limits(),
+            }),
+            VersionStamp::from("test-v1"),
+            vec![(Some("external-consumer".into()), Box::new(consumer))],
+            PythonBatchPolicy {
+                max_items: 2,
+                max_logical_bytes: usize::MAX,
+            },
+        )
+        .unwrap();
+
+        assert_eq!(
+            result.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::Complete
+        );
+        assert!(result.python_sink_delivery.peak_batch_items <= 2);
+        assert!(matches!(
+            result.recorder_finalization,
+            RecorderFinalizationOutcome::Finalized(_)
+        ));
+        assert!(matches!(result.publication, PublicationOutcome::Published));
+        assert!(result.published.is_some());
+        Python::attach(|py| {
+            let events = python_events.bind(py).getattr("events").unwrap();
+            assert!(events.len().unwrap() >= 4);
+        });
+        std::fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[cfg(feature = "python")]
+    #[test]
+    fn actual_python_callback_failure_is_not_mislabeled_as_machine_or_recorder_failure() {
+        use pyo3::prelude::*;
+        use pyo3::types::PyModule;
+
+        Python::initialize();
+        let parent = temporary_run_root("python-callback-failure-conformance");
+        std::fs::create_dir_all(&parent).unwrap();
+        let published_path = parent.join("published-run");
+        let request = successful_request("python-callback-failure-conformance");
+        let mut session = SuccessfulSession {
+            request: request.clone(),
+        };
+        let (consumer, python_consumer) = Python::attach(|py| {
+            let module = PyModule::from_code(
+                py,
+                c"class Consumer:\n    def __init__(self): self.calls = 0\n    def emit_batch(self, batch):\n        self.calls += 1\n        if any(item['kind'] == 'event' for item in batch): raise RuntimeError('synthetic callback rejection')\n    def record_capability_outputs(self, values): pass\n    def record_capability_receipts(self, values): pass\n",
+                c"failing_consumer.py",
+                c"failing_consumer",
+            )
+            .unwrap();
+            let consumer = module
+                .getattr("Consumer")
+                .unwrap()
+                .call0()
+                .unwrap()
+                .unbind();
+            (consumer.clone_ref(py), consumer)
+        });
+        let consumer =
+            PythonCallbackConsumer::new(vec![(Some("failing-consumer".into()), consumer)]);
+        let result = FileRunSession::run_with_sinks(
+            &mut session,
+            &request,
+            Some(FileRecorderRequest {
+                published_path,
+                limits: limits(),
+            }),
+            VersionStamp::from("test-v1"),
+            vec![(Some("failing-consumer".into()), Box::new(consumer))],
+            PythonBatchPolicy::default(),
+        )
+        .unwrap();
+
+        assert!(matches!(
+            result.machine_execution,
+            MachineExecutionOutcome::InterruptedByEvidenceFailure { .. }
+        ));
+        assert_eq!(result.evidence_fulfillment.status, EvidenceStatus::Failed);
+        assert_eq!(
+            result.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::Failed
+        );
+        let failure = result.python_sink_delivery.failure.unwrap();
+        assert_eq!(failure.exception_type, "RuntimeError");
+        assert!(
+            failure
+                .exception_message
+                .contains("synthetic callback rejection")
+        );
+        assert!(matches!(
+            result.recorder_finalization,
+            RecorderFinalizationOutcome::NotFinalized { .. }
+        ));
+        assert!(matches!(
+            result.publication,
+            PublicationOutcome::NotPublished { .. }
+        ));
+        assert!(result.published.is_none());
+        Python::attach(|py| {
+            assert!(
+                python_consumer
+                    .bind(py)
+                    .getattr("calls")
+                    .unwrap()
+                    .extract::<usize>()
+                    .unwrap()
+                    >= 1
+            );
+        });
+        assert_inspectable_staging(&parent);
+        std::fs::remove_dir_all(parent).unwrap();
     }
 
     fn capability_output(id: &str) -> RecordedRecord {

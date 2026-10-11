@@ -139,6 +139,10 @@ pub struct PythonSinkDeliveryOutcome {
     pub batches_delivered: u64,
     pub items_delivered: u64,
     pub logical_bytes_delivered: u64,
+    /// Highest number of emissions retained in the bounded pending batch.
+    pub peak_batch_items: usize,
+    /// Highest logical size of the bounded pending emission batch.
+    pub peak_batch_logical_bytes: usize,
     pub failure: Option<PythonSinkFailure>,
 }
 
@@ -150,6 +154,8 @@ impl PythonSinkDeliveryOutcome {
             batches_delivered: 0,
             items_delivered: 0,
             logical_bytes_delivered: 0,
+            peak_batch_items: 0,
+            peak_batch_logical_bytes: 0,
             failure: None,
         }
     }
@@ -351,6 +357,8 @@ impl PythonBatchingSink {
                 batches_delivered: 0,
                 items_delivered: 0,
                 logical_bytes_delivered: 0,
+                peak_batch_items: 0,
+                peak_batch_logical_bytes: 0,
                 failure: None,
             },
             consumers,
@@ -434,6 +442,11 @@ impl PythonBatchingSink {
         }
         self.batch.logical_bytes = self.batch.logical_bytes.saturating_add(bytes);
         self.batch.records.push(record);
+        self.outcome.peak_batch_items = self.outcome.peak_batch_items.max(self.batch.records.len());
+        self.outcome.peak_batch_logical_bytes = self
+            .outcome
+            .peak_batch_logical_bytes
+            .max(self.batch.logical_bytes);
         if self.batch.records.len() >= self.policy.max_items
             || self.batch.logical_bytes >= self.policy.max_logical_bytes
             || bytes > self.policy.max_logical_bytes
@@ -801,6 +814,9 @@ mod batching_tests {
             sink.emit(Emission::Frame(&frame)).unwrap();
         }
         sink.finish().unwrap();
+        let outcome = sink.outcome();
+        assert_eq!(outcome.peak_batch_items, 2);
+        assert!(outcome.peak_batch_logical_bytes > 0);
 
         let calls = calls.lock().unwrap();
         assert_eq!(calls.iter().map(Vec::len).collect::<Vec<_>>(), [2, 1]);
@@ -885,6 +901,9 @@ mod batching_tests {
         sink.emit(Emission::Frame(&second)).unwrap();
         sink.emit(Emission::Frame(&oversized)).unwrap();
         sink.finish().unwrap();
+        let outcome = sink.outcome();
+        assert_eq!(outcome.peak_batch_items, 2);
+        assert!(outcome.peak_batch_logical_bytes > small_size * 2);
 
         let calls = calls.lock().unwrap();
         assert_eq!(calls.iter().map(Vec::len).collect::<Vec<_>>(), [2, 1]);
@@ -1118,6 +1137,135 @@ mod batching_tests {
                 .unwrap();
             assert!(output_record.get_item("schema").is_ok());
             assert!(receipt_record.get_item("id").is_ok());
+        });
+    }
+
+    #[cfg(feature = "python")]
+    #[test]
+    fn bounded_bridge_exposes_all_channels_to_a_third_party_style_consumer() {
+        Python::initialize();
+        Python::attach(|py| {
+            let module = PyModule::from_code(
+                py,
+                c"class Consumer:\n    def __init__(self): self.emissions = []; self.outputs = []; self.receipts = []; self.max_batch_items = 0\n    def emit_batch(self, batch):\n        self.max_batch_items = max(self.max_batch_items, len(batch))\n        self.emissions.extend(batch)\n    def record_capability_outputs(self, values): self.outputs.extend(values)\n    def record_capability_receipts(self, values): self.receipts.extend(values)\n",
+                c"third_party_consumer.py",
+                c"third_party_consumer",
+            )
+            .unwrap();
+            let consumer = module
+                .getattr("Consumer")
+                .unwrap()
+                .call0()
+                .unwrap()
+                .unbind();
+            let callback = PythonCallbackConsumer::new(vec![(
+                Some("third-party-consumer".into()),
+                consumer.clone_ref(py),
+            )]);
+            let mut bridge = PythonBatchingSink::new(
+                vec![(Some("third-party-consumer".into()), Box::new(callback))],
+                PythonBatchPolicy {
+                    max_items: 2,
+                    max_logical_bytes: usize::MAX,
+                },
+            )
+            .unwrap();
+
+            let request = execution_request();
+            let event = execution_event();
+            let native = native_evidence();
+            let input_value = input_value_evidence();
+            let frame = frame(2, 8);
+            let snapshot = SnapshotArtifact::new(
+                RunId::from("run"),
+                MachineId::from("test-machine"),
+                VersionStamp::from("test.v1"),
+                7,
+                6,
+                vec![9, 8, 7],
+            );
+            let receipt = evidence_receipt();
+            let result = RunResult {
+                common: CommonMetrics {
+                    cycles: 20,
+                    frames: 2,
+                    termination: "halted".into(),
+                    boot_success: true,
+                },
+                capabilities: vec![capability_output()],
+            };
+            for emission in [
+                Emission::RunStarted(&request),
+                Emission::Event(&event),
+                Emission::NativeEvidence(&native),
+                Emission::InputValueEvidence(&input_value),
+                Emission::Frame(&frame),
+                Emission::Snapshot(&snapshot),
+                Emission::EvidenceReceipt(&receipt),
+                Emission::RunFinished(&result),
+            ] {
+                bridge.emit(emission).unwrap();
+            }
+            bridge.record_capability_outputs(&[capability_output()]);
+            bridge.record_capability_receipts(&[capability_receipt()]);
+            bridge.finish().unwrap();
+
+            let outcome = bridge.outcome();
+            assert_eq!(outcome.status, PythonSinkDeliveryStatus::Complete);
+            assert_eq!(outcome.items_delivered, 10);
+            assert!(outcome.peak_batch_items <= 2);
+            assert!(outcome.peak_batch_logical_bytes > 0);
+
+            let emissions = consumer.bind(py).getattr("emissions").unwrap();
+            let kinds = (0..emissions.len().unwrap())
+                .map(|index| {
+                    emissions
+                        .get_item(index)
+                        .unwrap()
+                        .get_item("kind")
+                        .unwrap()
+                        .extract::<String>()
+                        .unwrap()
+                })
+                .collect::<std::collections::BTreeSet<_>>();
+            assert_eq!(
+                kinds,
+                [
+                    "run_started",
+                    "event",
+                    "native_evidence",
+                    "input_value_evidence",
+                    "frame",
+                    "snapshot",
+                    "evidence_receipt",
+                    "run_finished",
+                ]
+                .into_iter()
+                .map(str::to_owned)
+                .collect()
+            );
+            assert_eq!(
+                consumer.bind(py).getattr("outputs").unwrap().len().unwrap(),
+                1
+            );
+            assert_eq!(
+                consumer
+                    .bind(py)
+                    .getattr("receipts")
+                    .unwrap()
+                    .len()
+                    .unwrap(),
+                1
+            );
+            assert!(
+                consumer
+                    .bind(py)
+                    .getattr("max_batch_items")
+                    .unwrap()
+                    .extract::<usize>()
+                    .unwrap()
+                    <= 2
+            );
         });
     }
 }
