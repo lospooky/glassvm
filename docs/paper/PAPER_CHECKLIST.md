@@ -279,7 +279,8 @@ Remaining consumer comparison:
 
 - [x] execution / observation disabled
 - [x] observation + `NullSink`
-- [ ] observation + Python consumer
+- [ ] observation + Python consumer (bridge and three-provider smoke exist;
+  complete clean 60,000-frame paper matrix is pending; see Slice 7b)
 - [x] observation + bounded Rust recorder
 
 Purpose:

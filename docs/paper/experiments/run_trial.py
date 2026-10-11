@@ -336,7 +336,9 @@ def run_trial(args: argparse.Namespace) -> dict:
         run_path = Path(temporary) / "published-run"
         execute_start = time.perf_counter()
         try:
-            result = prepared.execute(str(run_path))
+            result = prepared.execute(
+                file_recorder=glassvm.FileRecorder(str(run_path))
+            )
         except Exception as error:  # noqa: BLE001 - preserve any run failure in the trial record.
             base["kind"] = "failed"
             base["failure"] = {

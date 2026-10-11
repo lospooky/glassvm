@@ -403,7 +403,9 @@ impl PythonBatchingSink {
             if let Err(mut failure) = self.consumers[index].emit_batch(&batch.records) {
                 if fanout_count == 1 {
                     failure.sink_index = sink_offset;
-                    failure.sink_identity = self.identities[index].clone();
+                    if let Some(identity) = &self.identities[index] {
+                        failure.sink_identity = Some(identity.clone());
+                    }
                 } else {
                     failure.sink_index += sink_offset;
                 }
@@ -473,7 +475,9 @@ impl PythonBatchingSink {
             if let Err(mut failure) = self.consumers[index].record_capability_outputs(outputs) {
                 if fanout_count == 1 {
                     failure.sink_index = sink_offset;
-                    failure.sink_identity = self.identities[index].clone();
+                    if let Some(identity) = &self.identities[index] {
+                        failure.sink_identity = Some(identity.clone());
+                    }
                 } else {
                     failure.sink_index += sink_offset;
                 }
@@ -508,7 +512,9 @@ impl PythonBatchingSink {
             if let Err(mut failure) = self.consumers[index].record_capability_receipts(receipts) {
                 if fanout_count == 1 {
                     failure.sink_index = sink_offset;
-                    failure.sink_identity = self.identities[index].clone();
+                    if let Some(identity) = &self.identities[index] {
+                        failure.sink_identity = Some(identity.clone());
+                    }
                 } else {
                     failure.sink_index += sink_offset;
                 }
@@ -1265,6 +1271,44 @@ mod batching_tests {
                     .extract::<usize>()
                     .unwrap()
                     <= 2
+            );
+        });
+    }
+
+    #[cfg(feature = "python")]
+    #[test]
+    fn batching_adapter_preserves_nested_python_sink_identity() {
+        use std::ffi::CString;
+
+        use pyo3::types::PyModule;
+
+        Python::initialize();
+        Python::attach(|py| {
+            let code = CString::new(
+                "class Sink:\n    def emit_batch(self, batch): raise RuntimeError('consumer stopped')\n    def record_capability_outputs(self, outputs): pass\n    def record_capability_receipts(self, receipts): pass\n",
+            )
+            .unwrap();
+            let module =
+                PyModule::from_code(py, code.as_c_str(), c"nested_sink.py", c"nested_sink")
+                    .unwrap();
+            let python_sink = module.getattr("Sink").unwrap().call0().unwrap().unbind();
+            let callback =
+                PythonCallbackConsumer::new(vec![(Some("caller-consumer".into()), python_sink)]);
+            let mut batching = PythonBatchingSink::new(
+                vec![(None, Box::new(callback))],
+                PythonBatchPolicy::default(),
+            )
+            .unwrap();
+            let frame = frame(0, 4);
+            batching.emit(Emission::Frame(&frame)).unwrap();
+            assert!(batching.finish().is_err());
+            assert_eq!(
+                batching
+                    .outcome()
+                    .failure
+                    .as_ref()
+                    .and_then(|failure| failure.sink_identity.as_deref()),
+                Some("caller-consumer")
             );
         });
     }

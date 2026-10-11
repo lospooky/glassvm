@@ -337,14 +337,36 @@ Results: [`experiments/measurements/sink-cost-rust-7a-corrected/SINK_COST_SUMMAR
 
 ### 7b. Resolve the Python-consumer experiment
 
-The current Python facade exposes preparation and file-backed execution. It
-does not expose a live Python emission-consumer API. Provider timing therefore
-measures Python orchestration and the shared recorder lifecycle, not an isolated
-Python sink cost.
+Decision: implement the bounded synchronous Python consumer bridge in the
+existing `glassvm_recorder` crate and expose it through the generic facade and
+the three release providers. The Rust emission contract remains borrowed and
+emission-at-a-time; Python receives owned bounded batches. `FileRunSession`
+remains the sole file-backed lifecycle owner.
 
-- [ ] Decide whether to defer the live Python-consumer row with a corresponding checklist/claim adjustment, or approve a separate narrowly scoped binding task.
-- [ ] If deferred, label any provider timing accurately and report the exclusion.
-- [ ] If a live consumer is required, implement and verify that boundary as a separate slice before measuring it; this plan does not silently authorize a new streaming subsystem.
+- [x] Add `PreparedRun.execute(sinks=..., file_recorder=...)` and the
+  `FileRecorder` request facade; allow consumer-only, recorder-only, combined,
+  and no-external-sink execution.
+- [x] Wire CHIP-8, PICO-8, and TIC-80 providers to the same bounded
+  `FileRunSession::run_with_sinks` path.
+- [x] Preserve separate machine execution, evidence fulfillment, Python sink,
+  recorder, and publication results; exercise structured Python callback
+  failure without reclassifying it as machine or recorder failure.
+- [x] Exercise all three providers with an installed-entry-point Python
+  consumer, and exercise consumer + Rust recorder publication.
+- [x] Add an isolated-process five-mode experiment harness recording batch
+  counts, logical bytes, peak bridge buffer, RSS high-water, receipts, and
+  source/package metadata. The short local smoke matrix is plumbing validation,
+  not paper evidence.
+- [ ] Publish the GlassVM recorder version that supplies the Python feature,
+  resolve the machine lockfile against that registry artifact, and repeat the
+  smoke test without local source overrides.
+- [ ] Run the registered three-machine, 60,000-frame, three-repetition matrix
+  from clean pinned builds; review the generated summary and retain the raw
+  trials. Keep the Python consumer cost claim unchecked until this closes.
+
+Reproduction harness: [`experiments/run_python_sink_cost.py`](experiments/run_python_sink_cost.py).
+The observed/no-external-sink case is not described as a direct Rust `NullSink`
+microbenchmark; Rust `NullSink` decomposition remains Slice 7a.
 
 ### 7c. Rust/Python semantic equivalence
 

@@ -91,7 +91,7 @@ prepared = runtime.prepare(
     execution_controls=execution_controls,
     observation=observation,
 )
-result = prepared.execute(output_path)
+result = prepared.execute(file_recorder=glassvm.FileRecorder(output_path))
 ```
 
 Python accepts ordinary bytes, dictionaries, and lists for caller ergonomics.

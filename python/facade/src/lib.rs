@@ -7,7 +7,7 @@
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyDict};
+use pyo3::types::{PyBytes, PyDict, PyList, PyTuple};
 use serde_json::Value;
 
 const PYTHON_BUNDLE_ENTRY_POINT_GROUP: &str = "glassvm.machine_bundles";
@@ -357,6 +357,29 @@ struct PreparedRun {
     prepared: Py<PyAny>,
 }
 
+/// Selects the Rust reference recorder for one execution. This is a small
+/// request value; the recorder implementation and publication lifecycle stay
+/// provider/Rust-owned.
+#[pyclass]
+struct FileRecorder {
+    path: String,
+}
+
+#[pymethods]
+impl FileRecorder {
+    #[new]
+    fn new(path: &str) -> PyResult<Self> {
+        if path.is_empty() {
+            return Err(pyo3::exceptions::PyValueError::new_err(
+                "file recorder path must not be empty",
+            ));
+        }
+        Ok(Self {
+            path: path.to_owned(),
+        })
+    }
+}
+
 static NEXT_PYTHON_RUN_ID: AtomicU64 = AtomicU64::new(1);
 
 #[pymethods]
@@ -440,11 +463,59 @@ impl Runtime {
 
 #[pymethods]
 impl PreparedRun {
-    #[pyo3(signature = (output_path))]
-    fn execute(&self, py: Python<'_>, output_path: &str) -> PyResult<Py<PyAny>> {
+    #[pyo3(signature = (sinks=None, file_recorder=None))]
+    fn execute(
+        &self,
+        py: Python<'_>,
+        sinks: Option<&Bound<'_, PyAny>>,
+        file_recorder: Option<&Bound<'_, PyAny>>,
+    ) -> PyResult<Py<PyAny>> {
+        let sinks = match sinks {
+            Some(sinks)
+                if sinks.is_instance_of::<PyList>() || sinks.is_instance_of::<PyTuple>() =>
+            {
+                for (index, sink) in sinks.try_iter()?.enumerate() {
+                    let sink = sink?;
+                    for callback in [
+                        "emit_batch",
+                        "record_capability_outputs",
+                        "record_capability_receipts",
+                    ] {
+                        let method = sink.getattr(callback).map_err(|_| {
+                            pyo3::exceptions::PyTypeError::new_err(format!(
+                                "sink at index {index} must define callable {callback}"
+                            ))
+                        })?;
+                        if !method.is_callable() {
+                            return Err(pyo3::exceptions::PyTypeError::new_err(format!(
+                                "sink at index {index} attribute {callback} must be callable"
+                            )));
+                        }
+                    }
+                }
+                sinks.clone().unbind()
+            }
+            Some(_) => {
+                return Err(pyo3::exceptions::PyTypeError::new_err(
+                    "sinks must be a list or tuple of emission consumers",
+                ));
+            }
+            None => PyList::empty(py).into_any().unbind(),
+        };
+        let output_path = match file_recorder {
+            Some(recorder) => {
+                let recorder = recorder.extract::<PyRef<'_, FileRecorder>>().map_err(|_| {
+                    pyo3::exceptions::PyTypeError::new_err(
+                        "file_recorder must be a glassvm.FileRecorder or None",
+                    )
+                })?;
+                Some(recorder.path.clone())
+            }
+            None => None,
+        };
         let module = py.import(&self.provider.module)?;
         let execute = module.getattr(&self.provider.execute_function)?;
-        let result = execute.call1((self.prepared.bind(py), output_path))?;
+        let result = execute.call1((self.prepared.bind(py), sinks.bind(py), output_path))?;
         if !result.is_instance_of::<PyDict>() {
             return Err(pyo3::exceptions::PyTypeError::new_err(
                 "bundle execute_prepared must return a structured mapping",
@@ -465,6 +536,7 @@ impl PreparedRun {
 fn glassvm(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Runtime>()?;
     m.add_class::<PreparedRun>()?;
+    m.add_class::<FileRecorder>()?;
     m.add_function(wrap_pyfunction!(discover_bundles, m)?)?;
     Ok(())
 }

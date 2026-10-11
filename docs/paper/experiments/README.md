@@ -8,7 +8,7 @@ only installed `glassvm.machine_bundles` providers through:
 ```python
 runtime = glassvm.Runtime.discover()
 prepared = runtime.prepare(...)
-result = prepared.execute(output_path)
+result = prepared.execute(file_recorder=glassvm.FileRecorder(output_path))
 ```
 
 The bundle validates and resolves the typed request during preparation. The
@@ -213,3 +213,39 @@ The current exploratory matrix and generated table are in
 [`measurements/sink-cost-rust-7a-corrected/`](measurements/sink-cost-rust-7a-corrected/).
 The first pass is retained but explicitly invalidated because its mode-bearing
 run IDs skewed logical-byte accounting.
+
+## Slice 7b: public Python consumer path
+
+The public Python API accepts synchronous consumer objects with
+`emit_batch`, `record_capability_outputs`, and `record_capability_receipts`.
+They can run without the reference recorder or alongside it. The bridge uses
+bounded batches and returns separate consumer-delivery accounting. See
+[`../../release/PYTHON_CONSUMERS.md`](../../release/PYTHON_CONSUMERS.md) for the
+consumer contract.
+
+After publishing the GlassVM recorder crate version required by the providers,
+install the facade and all three bundle wheels into a clean Python 3.12+
+environment. Then run:
+
+```sh
+uv run --no-project --python 3.14 python \
+  docs/paper/experiments/run_python_sink_cost.py \
+  --paper-root docs/paper \
+  --machines-root ../glassvm-machines \
+  --glassvm-root . \
+  --output-dir docs/paper/experiments/measurements/python-sink-7b \
+  --frames 60000 --repetitions 3
+```
+
+The five modes are observation-disabled, observed with no external consumer,
+Python consumer, Rust reference recorder, and Python consumer plus recorder.
+Each trial runs in an independent process. The harness validates matching
+execution semantics across modes, matching request/evidence receipts across
+observed modes, and prepared-observation/run identities where the selected
+consumer or recorder path exposes them. It reports the median execution
+lifecycle delta relative to observed/no-external-consumer. Recorder timing
+includes finalization and atomic publication. This contrast is workload- and
+host-specific and should not be renamed as a pure callback cost. The initial
+short local smoke matrix is only implementation validation; do not cite it as
+paper evidence. Keep generated measurements out of the paper branch until
+clean pinned builds are available and reviewed.

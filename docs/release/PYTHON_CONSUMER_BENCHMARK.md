@@ -66,3 +66,14 @@ a per-row attribution; compare it only across separate fresh process runs.
 The benchmark is a bridge/lifecycle microbenchmark, not a machine-emulator
 throughput claim. Its timings should not be used as paper results without a
 controlled runner, repeated runs, and the selected machine workloads.
+
+For the installed public facade/provider path and the CHIP-8, PICO-8, and
+TIC-80 paper workloads, use
+[`../paper/experiments/run_python_sink_cost.py`](../paper/experiments/run_python_sink_cost.py).
+That experiment compares observation-disabled, observed/no-external-consumer,
+Python consumer, reference recorder, and Python-plus-recorder modes in
+independent processes. It records actual consumer batch accounting and checks
+that machine outcomes and selected-observation evidence receipts stay equal
+across observed modes. The short implementation smoke run is not paper-grade;
+the checked-in 7b command uses repeated 60,000-frame trials from clean pinned
+builds.
