@@ -2,7 +2,16 @@
 set -euo pipefail
 
 source_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-proof_root="$(mktemp -d /tmp/glassvm-external-python.XXXXXX)"
+if [[ "${1:-}" == "--output-root" ]]; then
+  if [[ "$#" -ne 2 ]]; then
+    echo "usage: $0 [--output-root DIR]" >&2
+    exit 2
+  fi
+  proof_root="$2"
+  mkdir -p "$proof_root"
+else
+  proof_root="$(mktemp -d /tmp/glassvm-external-python.XXXXXX)"
+fi
 
 run_case() {
   local name="$1"
@@ -21,22 +30,23 @@ run_case() {
   cp -R "$source_dir" "$project_dir"
   (
     cd "$project_dir"
-    uv sync --locked --python 3.12
-    uv run --no-sync python prepare_fixtures.py
+    local project_env="$project_dir/.venv"
+    UV_PROJECT_ENVIRONMENT="$project_env" uv sync --project "$project_dir" --locked --python 3.12 --no-cache
+    UV_PROJECT_ENVIRONMENT="$project_env" uv run --project "$project_dir" --no-sync python prepare_fixtures.py
     if [[ "${#providers[@]}" -gt 0 ]]; then
-      uv pip install --python .venv/bin/python "${providers[@]}"
+      uv pip install --no-cache --python "$project_env/bin/python" "${providers[@]}"
     fi
-    uv run --no-sync python run_consumer.py \
+    UV_PROJECT_ENVIRONMENT="$project_env" uv run --project "$project_dir" --no-sync python run_consumer.py \
       --expect "${machines[@]}" \
       --output "output/$name"
   )
 }
 
 run_case base --
-run_case chip8 glassvm-chip8==0.2.0 -- chip8
-run_case pico8 glassvm-pico8==0.2.0 -- pico8
-run_case tic80 glassvm-tic80==0.2.0 -- tic80
-run_case all glassvm-chip8==0.2.0 glassvm-pico8==0.2.0 \
-  glassvm-tic80==0.2.0 -- chip8 pico8 tic80
+run_case chip8 glassvm-chip8==0.3.0 -- chip8
+run_case pico8 glassvm-pico8==0.3.0 -- pico8
+run_case tic80 glassvm-tic80==0.3.0 -- tic80
+run_case all glassvm-chip8==0.3.0 glassvm-pico8==0.3.0 \
+  glassvm-tic80==0.3.0 -- chip8 pico8 tic80
 
 printf 'External Python proof outputs: %s\n' "$proof_root"

@@ -1,251 +1,112 @@
-# Paper experiment harness
+# Paper artifact regeneration
 
-This directory holds the deterministic recipe manifest, raw single-trial
-schema, isolated-process runner, Slice 4 pilot, and repeated Slice 5
-selectable-observation measurements. The runner uses
-only installed `glassvm.machine_bundles` providers through:
+Use the paper runner as the single supported entry point. Each invocation
+creates a disposable environment from scratch: a locked Python 3.12 environment
+with uv caching disabled, plus an isolated Cargo home and build target. This
+prevents an existing project venv, user site package, Cargo registry cache, or
+old target directory from satisfying a missing dependency accidentally. The
+runner binds the paper matrix to published GlassVM `0.3.0` wheels and crates,
+checks the three pinned workload artifacts, and keeps generated measurements
+outside both source checkouts.
 
-```python
-runtime = glassvm.Runtime.discover()
-prepared = runtime.prepare(...)
-result = prepared.execute(file_recorder=glassvm.FileRecorder(output_path))
-```
+## Environment and source checkouts
 
-The bundle validates and resolves the typed request during preparation. The
-Rust `FileRunSession` remains responsible for sink assembly, budgets,
-execution, evidence receipt, recorder finalization, and publication. The
-measurement runner does not decode segment records or materialize event
-history. It reads only the bounded manifest/receipt metadata and stats the
-published directory before deleting the temporary run directory.
-
-Observation recipes are exact requests in
-[`OBSERVATION_RECIPES.toml`](OBSERVATION_RECIPES.toml). Workload-specific event
-kinds and capabilities resolve from [`../PAPER_WORKLOADS.toml`](../PAPER_WORKLOADS.toml).
-Missing provider/unsupported recipe cells are written as explicit exclusions;
-the runner never substitutes another request.
-
-## Environment and invocation
-
-Use Python 3.12 or newer with the base `glassvm` wheel and the selected
-`glassvm-chip8`, `glassvm-pico8`, and/or `glassvm-tic80` wheel installed. The
-machine fixture root is the `glassvm-machines` repository. For example:
+The experiment environment is locked in [`../pyproject.toml`](../pyproject.toml)
+and [`../uv.lock`](../uv.lock). Install `uv`, CPython 3.12+, and a Rust
+toolchain. From the GlassVM repository root, invoke the runner directly:
 
 ```sh
-uv run --python 3.14 --with glassvm==0.1.2 --with glassvm-chip8==0.1.2 \
-  --with glassvm-pico8==0.1.2 --with glassvm-tic80==0.1.2 \
-  python docs/paper/experiments/run_pilot.py \
-    --glassvm-root "$PWD" \
-    --machines-root ../glassvm-machines \
-    --output-dir docs/paper/experiments/pilot \
-    --repetitions 1 --frame-limit 600
+python3 docs/paper/run_paper.py check \
+  --machines-root ../glassvm-machines
 ```
 
-Each machine/recipe/repetition runs in a fresh Python subprocess. The 27-cell
-Slice 4 pilot is a harness/accounting check only. Slice 5 uses five
-independent repetitions at 600 frames and a seeded shuffled trial order, stored
-separately under `measurements/`; it is a fixed-workload observation-cost
-comparison, not bounded-memory evidence. Reproduce it with:
+The runner creates its Python environment, uv cache directory, Cargo home, and
+Cargo target under a temporary directory and removes them on exit. It uses the
+installed Rust toolchain (recorded in `paper-run.json` for a full run), while
+all Rust crates resolve from a fresh crates.io registry cache. Python wheel
+dependencies resolve from the locked package indexes without reusing uv cache.
+
+The companion machine checkout must be on its `paper-publication` branch: that
+branch contains the paper-only memory trial example; the release-facing
+machine implementation is synchronized from the `0.3.0` source release. The
+paper-run environment installs `glassvm==0.3.0` and all three provider bundles
+at `0.3.0` from PyPI. The runner verifies those exact installed versions and
+entry-point discovery before collecting results.
+
+## One-command regeneration
+
+After committing the paper runner and synchronizing both source checkouts, run
+the full regeneration from clean source trees:
 
 ```sh
-uv run --python 3.14 --with glassvm==0.1.2 --with glassvm-chip8==0.1.2 \
-  --with glassvm-pico8==0.1.2 --with glassvm-tic80==0.1.2 \
-  python docs/paper/experiments/run_pilot.py \
-    --glassvm-root "$PWD" \
-    --machines-root ../glassvm-machines \
-    --output-dir docs/paper/experiments/measurements \
-    --manifest-name measurement_manifest.json \
-    --repetitions 5 --frame-limit 600
-uv run --python 3.14 python docs/paper/experiments/generate_observation_summary.py \
-  --measurement-dir docs/paper/experiments/measurements
-```
-
-Run output directories are temporary; the raw trial retains the published flag
-and physical byte count, not a stale path to deleted files.
-The runner snapshots both checkout revisions and dirty states before writing
-trial files, so the pilot's own outputs cannot mark later trials as dirty.
-The default selects every recipe in the manifest. Regenerate and check the
-summary from saved raw results with:
-
-```sh
-python docs/paper/experiments/generate_pilot_summary.py \
-  --pilot-dir docs/paper/experiments/pilot
-python docs/paper/experiments/generate_pilot_summary.py \
-  --pilot-dir docs/paper/experiments/pilot --check
-```
-
-Preparation errors, worker crashes, and unavailable providers are retained as
-versioned `failed` or `excluded` rows rather than silently omitted.
-
-## Result accounting
-
-`result.schema.json` defines the raw-run envelope. Each trial retains the four
-outcome domains separately: machine execution result, evidence receipt,
-recorder receipt, and publication result. Channel receipts provide requested
-and fulfilled item/logical-byte counts; recorder receipts provide per-channel
-segment, record, block, logical-byte, and encoded-byte counters when the
-installed recorder implements that contract. Physical directory bytes are a
-separate filesystem measurement and include metadata/framing files.
-
-Timing is split into provider discovery, preparation, execute-and-publish,
-worker process, and lifecycle intervals. `execute_and_publish_seconds` is not
-presented as pure emulator time. Peak RSS is process high-water memory, not an
-allocation counter. Allocator high-water is explicitly null because the
-provider protocol exposes no portable allocator statistic.
-
-`PreparedRun` remains opaque; these experiments do not require an identity
-accessor. Reproducibility is recorded through the artifact digest, explicit
-configuration, input schedule, execution controls, provider/package metadata,
-exact observation request, and the `PreparedObservation` identity recovered
-from published manifest metadata when available. No identity is synthesized
-from raw Python objects.
-
-The raw record distinguishes checkout references from installed package
-provenance. The provider entry point and installed distribution versions are
-known, but the current wheel metadata does not embed a source commit, so the
-runner leaves `installed_distribution_source_revision` null rather than
-attributing the current checkout to those binaries.
-
-The result schema is versioned independently from recorder and evidence
-schemas. A changed field meaning requires a result-schema version bump and
-regeneration of all dependent tables/figures.
-
-## Slice 6: run-length and memory scaling
-
-`run_memory_experiment.py` drives one release-mode Rust process per trial so
-peak RSS is measured independently of Python/provider startup. The experimental
-`paper_memory_trial` example lives in the companion `glassvm-machines` checkout
-under `conformance/examples/`; the runner builds it with `--locked` before the
-matrix. GlassVM contract and recorder crates resolve through their published
-versions in the machine workspace lockfile.
-
-The fixed matrix uses the same artifact, configuration, and empty input
-schedule per machine at 600, 6,000, 60,000, and 600,000 requested frames. It
-compares disabled observation, selected normalized events to `NullSink`, those
-events plus hash frames and the declared visual capability to `NullSink`, and
-that same visual request through the segmented file recorder. Three
-repetitions are used through 60,000 frames and one at 600,000. Recorder output
-is measured in a fresh temporary directory and removed after its receipts and
-physical bytes are recorded.
-
-For the final paper run, check out the exact GlassVM and machine-repository
-commits intended for citation, and keep both checkouts clean. The runner records
-the full commit IDs, exact tags when present, Rust/Cargo versions, machine
-workspace lockfile digest, trial-binary digest, fixture digests, and host
-metadata. The output directory must be outside both checkouts so writing results
-does not make a source checkout dirty. Resolve the chosen refs to full commit
-IDs and pass them explicitly:
-
-```sh
-GLASSVM_REV=$(git -C . rev-parse HEAD)
-MACHINES_REV=$(git -C ../glassvm-machines rev-parse HEAD)
-uv run --python 3.14 --no-project python \
-  docs/paper/experiments/run_memory_experiment.py \
-  --paper-root docs/paper \
+python3 docs/paper/run_paper.py all \
   --machines-root ../glassvm-machines \
-  --output-dir ../glassvm-paper-results/memory-scaling \
-  --require-clean \
-  --expected-glassvm-revision "$GLASSVM_REV" \
-  --expected-machines-revision "$MACHINES_REV"
+  --results-root ../glassvm-paper-results/0.3.0-final
 ```
 
-The runner builds the release example with Cargo's lockfile enforced. It refuses
-dirty checkouts, unexpected revisions, and output directories whose saved
-source/matrix metadata differs from the current invocation. An interrupted run
-can be resumed only against the identical source, binary, workload, and matrix;
-use a new output directory for any changed revision or settings. Do not reuse
-the current dirty-checkout measurements as final results.
-Regenerate validation, `SUMMARY.md`, `summary.json`, and both plots with:
+The results root must be empty or absent. It is deliberately outside the two
+repositories so result writes cannot dirty the measured sources. The runner
+refuses dirty checkouts for the full pass, records both full source revisions
+in `paper-run.json`, and does not overwrite an existing result directory. Use
+a new results-root for a rerun or changed configuration.
 
-```sh
-uv run --python 3.14 --no-project --with matplotlib python \
-  docs/paper/experiments/summarize_memory_experiment.py \
-  --data-dir ../glassvm-paper-results/memory-scaling
+The ordered full pass is:
+
+1. preflight: locked package versions, installed providers, fixture digests,
+   a standalone Rust consumer linked only to published 0.3.0 crates.io crates,
+   paper harness tests, and generated heterogeneity-table freshness;
+2. Glass Garden SVG postcards and external-consumer clean-room installs;
+3. one-repetition harness pilot and five-repetition selectable-observation
+   matrix, with their reports;
+4. Python/Rust fan-out semantic-equivalence matrix;
+5. the three-machine memory-scaling matrix and Rust sink-cost slice;
+6. the Python consumer sink-cost matrix;
+7. source-linked heterogeneity tables and a top-level run manifest.
+
+The full pass is intentionally substantial. It includes the 600,000-frame
+memory endpoint, isolated package-install tests, and repeated sink matrices.
+It is not run as part of the `check` command.
+
+## Individual stages
+
+The same entry point can run one stage into its corresponding subdirectory of
+the results root:
+
+```text
+check                static/runtime/fixture/harness preflight
+pilot                one-repetition harness pilot
+observations         five-repetition selectable-observation matrix
+memory               run-length and evidence-volume matrix
+rust-sink            disabled / NullSink / recorder comparison
+python-sink          Python consumer / recorder sink-cost comparison
+equivalence          Python consumer vs Rust recorder projections
+garden               three bounded-consumer SVG postcards
+external-consumer    base-only and per-bundle clean-room installs
+all                  ordered complete pass above
 ```
 
-The original three-machine matrix exposed CHIP-8 growth: disabled-observation
-RSS rose from 5.65 MiB at 600 frames to 113.64 MiB at 600,000. The core
-retained frame histories, metric samples, and native events. Those surfaces
-have since been removed; CHIP-8 now counts scalar event facts online, and
-frame-derived motifs are computed by its bounded bundle normalizer. The
-CHIP-8-only 40-trial follow-up is in
-[`measurements/chip8-retention-cleanup/`](measurements/chip8-retention-cleanup/):
-all modes measured about 5.0–6.1 MiB from 600 to 600,000 frames on this host.
-The full three-machine matrix still needs a same-source-coordinate rerun before
-we use it to support a cross-bundle memory claim. Peak RSS is Linux `VmHWM`,
-allocator high-water is unavailable, and the longest point has one repetition.
-Both datasets, manifests, summaries, and SVG plots are retained independently.
+Every collection stage records its raw trial-level outcomes and keeps execution,
+evidence, recorder, consumer-delivery, and publication status distinct. The
+runner is orchestration only: the existing focused scripts remain the
+implementation of their experiment, and the reference recorder remains Rust
+owned. It does not read recorder storage to reconstruct evidence or introduce
+a global cross-channel order.
 
-## Slice 7a: Rust sink-cost decomposition
+## Interpretation and result handling
 
-The focused run uses three repetitions at 60,000 frames for each of CHIP-8,
-PICO-8, and TIC-80, comparing observation disabled, the fixed visual/event
-request with `NullSink`, and that exact request with the segmented recorder.
-The trial uses one mode-independent run ID per machine/repetition so receipt
-accounting is comparable. The summarizer verifies matching artifact,
-configuration, schedule, execution controls, run identity, execution outcome,
-observation request, and `EvidenceReceipt` between NullSink and recorder.
+`run_pilot.py` is a harness/accounting pilot; the repeated observation matrix
+is the observation-cost dataset. `run_memory_experiment.py` measures process
+RSS and receipt/storage volume separately. `run_python_sink_cost.py` measures
+the public bounded Python consumer alongside the Rust reference recorder.
+`run_semantic_equivalence.py` compares explicit finite channel projections,
+prepared-run and prepared-observation identities, capability outputs, and
+receipts; it does not compare recorder layout or infer a global channel order.
 
-Build and generate new trials (the source coordinate is captured in the
-manifest; use a fresh directory for a changed checkout):
+Treat all performance values as specific to the recorded host, fixtures,
+configuration, package releases, and source coordinates. The existing
+measurement directories in this branch document prior runs and are immutable
+historical records; the `0.3.0-final` run writes a new, independent result set.
 
-```sh
-uv run --python 3.14 --no-project python \
-  docs/paper/experiments/run_memory_experiment.py \
-  --paper-root docs/paper \
-  --machines-root ../glassvm-machines \
-  --output-dir docs/paper/experiments/measurements/sink-cost-rust-7a \
-  --frames 60000 --repetitions 3 \
-  --mode disabled --mode normalizer_null --mode recorder
-uv run --python 3.14 --no-project python \
-  docs/paper/experiments/summarize_sink_cost.py \
-  --data-dir docs/paper/experiments/measurements/sink-cost-rust-7a
-```
-
-Lifecycle time measures execution plus its selected sink path; recorder time
-includes finalization/publication. Process-wall time is separate and includes
-startup/preparation and the post-publication directory-size measurement. The
-disabled-to-NullSink delta includes evidence production and normalization; it
-is not a sink-only cost. The NullSink-to-recorder delta is the incremental
-recorder lifecycle estimate. Treat these as workload/host-specific, and rerun
-from clean pinned source revisions before final paper use.
-
-The current exploratory matrix and generated table are in
-[`measurements/sink-cost-rust-7a-corrected/`](measurements/sink-cost-rust-7a-corrected/).
-The first pass is retained but explicitly invalidated because its mode-bearing
-run IDs skewed logical-byte accounting.
-
-## Slice 7b: public Python consumer path
-
-The public Python API accepts synchronous consumer objects with
-`emit_batch`, `record_capability_outputs`, and `record_capability_receipts`.
-They can run without the reference recorder or alongside it. The bridge uses
-bounded batches and returns separate consumer-delivery accounting. See
-[`../../release/PYTHON_CONSUMERS.md`](../../release/PYTHON_CONSUMERS.md) for the
-consumer contract.
-
-After publishing the GlassVM recorder crate version required by the providers,
-install the facade and all three bundle wheels into a clean Python 3.12+
-environment. Then run:
-
-```sh
-uv run --no-project --python 3.14 python \
-  docs/paper/experiments/run_python_sink_cost.py \
-  --paper-root docs/paper \
-  --machines-root ../glassvm-machines \
-  --glassvm-root . \
-  --output-dir docs/paper/experiments/measurements/python-sink-7b \
-  --frames 60000 --repetitions 3
-```
-
-The five modes are observation-disabled, observed with no external consumer,
-Python consumer, Rust reference recorder, and Python consumer plus recorder.
-Each trial runs in an independent process. The harness validates matching
-execution semantics across modes, matching request/evidence receipts across
-observed modes, and prepared-observation/run identities where the selected
-consumer or recorder path exposes them. It reports the median execution
-lifecycle delta relative to observed/no-external-consumer. Recorder timing
-includes finalization and atomic publication. This contrast is workload- and
-host-specific and should not be renamed as a pure callback cost. The initial
-short local smoke matrix is only implementation validation; do not cite it as
-paper evidence. Keep generated measurements out of the paper branch until
-clean pinned builds are available and reviewed.
+For claim scope, release-machine roles, and limitations, see
+[`../CLAIM_EVIDENCE_MAP.md`](../CLAIM_EVIDENCE_MAP.md) and
+[`../PAPER_CHECKLIST.md`](../PAPER_CHECKLIST.md).

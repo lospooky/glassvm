@@ -61,7 +61,7 @@ def validate(data: dict) -> None:
 
 def markdown_cell(cell: dict, source_numbers: dict[str, int], sources: dict, revisions: dict) -> str:
     citations = " ".join(
-        f"[\[{source_numbers[source_id]}\]]({source_url(sources[source_id], revisions)})"
+        rf"[\[{source_numbers[source_id]}\]]({source_url(sources[source_id], revisions)})"
         for source_id in cell["sources"]
     )
     return f"{cell['text']} {citations}"

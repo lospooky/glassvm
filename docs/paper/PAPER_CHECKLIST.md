@@ -480,6 +480,9 @@ paper/
 
 Verify:
 
+- [x] Provide one documented runner that creates a disposable locked Python 3.12 environment, disables uv cache reuse, and isolates Cargo registry state and build targets; pin the published facade and machine distributions to 0.3.0.
+- [x] Verify all three workloads rebuild byte-for-byte, run the harness tests and generated-table freshness check, and build a standalone Rust consumer using only the five published crates.io 0.3.0 crates from a fresh Cargo home.
+- [x] Re-run the base-only / individual provider / all-provider Python consumer matrix using separate fresh Python 3.12 environments and no uv cache.
 - [ ] every quantitative manuscript claim maps to a versioned result file
 - [ ] every figure is generated from checked-in/public raw data
 - [ ] every table is generated rather than manually transcribed
@@ -489,6 +492,14 @@ Verify:
 
 Output:
 - one command that regenerates all paper artifacts
+
+Status (2026-10-12): `experiments/README.md` documents the unified
+[`run_paper.py`](run_paper.py) entry point and its `all` pipeline. Preflight
+passed from a newly-created Python environment and empty Cargo home/target;
+the standalone Rust consumer resolved all five 0.3.0 crates from crates.io,
+and all five Python install selections passed in isolated environments. The
+full clean 0.3.0 measurement regeneration has not been run; result sealing and
+claim reconciliation remain open.
 
 ## 15. Final ship gate
 

@@ -40,22 +40,22 @@ features are not automatic next slices.
 
 ## Planning snapshot
 
-The following records the state observed during the checklist review. Refresh
-these facts when executing the relevant slice; these are not final artifact
-coordinates.
+The following records the current source/release state after the `0.3.0` wave.
+The final measured-artifact coordinates are produced by the Slice 9 runner and
+recorded separately in `PAPER_ARTIFACT.md` after regeneration.
 
 | Area | Refreshed state (2026-10-12) |
 | --- | --- |
 | Public repositories | Both `lospooky/glassvm` and `lospooky/glassvm-machines` are public. |
-| GlassVM source/release | `main` is `cf81c408f4e8a8a6b508f7689caa9c74fc0d8a50`; release tag `v0.2.0` resolves to `33161d1e7ed9617ee46727a9c88d2054193bc2e1`. The five contract crates and generic Python facade `glassvm==0.2.0` are published. |
-| Machine source/release | `main` and release tag `v0.2.0` resolve to `0aefbb950c451b4d54de85e8c13c25345065ae92`; the source checkout is clean. |
-| Paper-branch product sync | GlassVM `paper-publication` incorporates product-sync commit `a7dd37498d681cd9c97679ac30c6a22a7acb311e`, which passed [CI 38252407335](https://github.com/lospooky/glassvm/actions/runs/38252407335); machines incorporates `3edb0ae31a4a3887a1f385d9d7b9aa50f7a9b026`, which passed [CI 38252506914](https://github.com/lospooky/glassvm-machines/actions/runs/38252506914). Both retain paper experiment assets on their publication branches. |
-| Published CI | GlassVM release run [38247046904](https://github.com/lospooky/glassvm/actions/runs/38247046904) passed. Machine release run [38250729717](https://github.com/lospooky/glassvm-machines/actions/runs/38250729717) and tag CI [38250729742](https://github.com/lospooky/glassvm-machines/actions/runs/38250729742) passed, including Rust/conformance and CPython 3.12, 3.13, 3.14. |
-| Python package indexes | `glassvm`, `glassvm-chip8`, `glassvm-pico8`, `glassvm-tic80`, and `glassvm-machines` are published at `0.2.0`. Each provider has an sdist and CPython 3.12/3.13/3.14 wheel; the selector has an sdist and pure-Python wheel. The five GlassVM contract crates are published at `0.2.0`; machine-specific Rust crates remain unpublished. |
-| Package-index smoke | Fresh Python 3.12 environments passed for facade-only, each provider individually, and `glassvm-machines[all]`; the separate zero-checkout caller also passed using upstream-downloaded, hash-checked fixtures. See [Slice 8](PAPER_RELEASE_SLICE_08.md). |
-| Source archive audit | Release CI built bundle sdists and wheels on a clean runner and rebuilt/tested wheel installs for CPython 3.12/3.13/3.14. A minimal external Rust consumer resolved all five published crates with `--locked` and no local paths; see [Slice 8](PAPER_RELEASE_SLICE_08.md). |
-| Paper tooling | Experiment drivers, versioned results, generators, and paper documents are retained on `paper-publication`; see the current checklist for outstanding measurements. |
-| Documentation | Release sequencing, checklist, and claim/evidence map are being refreshed against the published `0.2.0` coordinates; paper artifacts remain confined to this branch. |
+| GlassVM source/release | `v0.3.0` resolves to `2cf6db6fc4a8547eb5fbdaf545ceb0847b8c91a6`; all five contract crates and the generic Python facade are published at `0.3.0`. |
+| Machine source/release | `v0.3.0` resolves to `f4059b7a3657d785d73cccdb60d9755d3757d7d7`; the three provider distributions and selector distribution are published at `0.3.0`. |
+| Paper-branch product sync | GlassVM `paper-publication` locally merges `main` at `b0c29bc`; machines locally merges `main` at `4ea3d25`. These preserve paper-only scripts, records, and the memory-trial example on the publication branches. The machine memory-trial example compiles with `--locked` against GlassVM crates `0.3.0`. |
+| Published CI | GlassVM release run [38303283758](https://github.com/lospooky/glassvm/actions/runs/38303283758) passed. Machine release run [38304322861](https://github.com/lospooky/glassvm-machines/actions/runs/38304322861) and tag CI [38304322766](https://github.com/lospooky/glassvm-machines/actions/runs/38304322766) passed, including Rust/conformance and CPython 3.12, 3.13, 3.14. |
+| Python package indexes | `glassvm`, `glassvm-chip8`, `glassvm-pico8`, `glassvm-tic80`, and `glassvm-machines` are published at `0.3.0`. Each provider has an sdist and CPython 3.12/3.13/3.14 wheels; the selector has an sdist and pure-Python wheel. The five GlassVM contract crates are published at `0.3.0`; machine-specific Rust crates remain unpublished. |
+| Package-index smoke | Fresh, cache-disabled Python 3.12 environments passed for facade-only, each provider individually, and all providers; the separate zero-checkout caller also passed using upstream-downloaded, hash-checked fixtures. The unified runner pins the new 0.3.0 wave. |
+| Source archive audit | Release CI built bundle sdists and wheels on a clean runner and rebuilt/tested wheel installs for CPython 3.12/3.13/3.14. A minimal external Rust consumer resolved all five published crates with `--locked` and no local paths; the runner now repeats this with an empty Cargo home and target. See [Slice 8](PAPER_RELEASE_SLICE_08.md) for the historical 0.2.0 release record. |
+| Paper tooling | [`run_paper.py`](run_paper.py) creates a disposable locked Python 3.12 environment with uv cache disabled and isolated Cargo home/target; all published Python packages and contract crates are pinned to `0.3.0`. Fixture rebuilds, 23 harness tests, the standalone published-crate consumer, and table freshness checks pass. Full final measurement regeneration remains pending. |
+| Documentation | The execution plan and claim/evidence map are being reconciled with the 0.3.0 release. Existing experiment results remain historical; final 0.3.0 measurements will be written to a new external results directory. |
 
 The Slice 1 source and clean-room matrix are now validated at the public
 coordinates above. The paper checklist/plan and workload manifest remain
@@ -157,7 +157,7 @@ Resolved release choices: publish the five machine-neutral GlassVM contract
 crates only; keep machine-specific Rust crates `publish = false`; advertise a
 Python minimum of 3.12; test CPython 3.12, 3.13, and 3.14. The tested platform
 claim remains Ubuntu 24.04 x86_64 only. On 2026-10-12 the five crates and all
-five Python distributions were published at `0.2.0`; package-index smoke and
+five Python distributions were published at `0.3.0`; package-index smoke and
 clean-runner release builds are recorded in [Slice 8](PAPER_RELEASE_SLICE_08.md).
 
 ## Slice 3: generate the heterogeneity table
@@ -489,7 +489,7 @@ selected specimens, and measured conditions.
 
 ## Immediate next work
 
-Publication of the `0.2.0` product packages, the clean 60,000-frame
+Publication of the `0.3.0` product packages, the clean 60,000-frame
 Python-consumer matrix (Slice 7b), semantic-equivalence check (Slice 7c),
 Glass Garden downstream demo (Slice 7d), and Slice 8 independent-installation
 proofs are complete. Slice 6's clean three-machine bounded-memory rerun is also

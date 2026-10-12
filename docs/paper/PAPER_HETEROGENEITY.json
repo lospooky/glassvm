@@ -2,8 +2,8 @@
   "schema_version": 1,
   "title": "Three publication specimens, one caller contract",
   "evaluated_revisions": {
-    "glassvm": "ba5637a72d5484ac170069021fbcbc28ee25f61e",
-    "glassvm-machines": "7cf884861e3cc22d6f15badc7265c969af032e0a"
+    "glassvm": "2cf6db6fc4a8547eb5fbdaf545ceb0847b8c91a6",
+    "glassvm-machines": "f4059b7a3657d785d73cccdb60d9755d3757d7d7"
   },
   "machine_order": ["chip8", "pico8", "tic80"],
   "machine_labels": {

@@ -22,10 +22,10 @@ The provider installs are intentionally separate from the generic facade
 dependency:
 
 ```sh
-glassvm==0.2.0
-glassvm-chip8==0.2.0
-glassvm-pico8==0.2.0
-glassvm-tic80==0.2.0
+glassvm==0.3.0
+glassvm-chip8==0.3.0
+glassvm-pico8==0.3.0
+glassvm-tic80==0.3.0
 ```
 
 Each successful provider run prepares typed configuration and an empty typed
@@ -38,9 +38,9 @@ title-only normalization is applied before its expected hash is checked.
 
 ## Rust consumer
 
-The isolated Cargo project names the five published GlassVM crate versions
-exactly, uses no path or Git dependencies, and includes a lockfile generated
-outside the GlassVM Cargo workspace:
+The isolated Cargo project names the five published GlassVM `0.3.0` crate
+versions exactly, uses no path or Git dependencies, and includes a lockfile
+generated outside the GlassVM Cargo workspace:
 
 ```sh
 proof_root="$(mktemp -d)"
@@ -49,6 +49,10 @@ cd "$proof_root/rust"
 cargo check --locked
 cargo run --locked
 ```
+
+The paper runner's preflight runs this project with its disposable `CARGO_HOME`
+and `CARGO_TARGET_DIR`, so both registry downloads and compiled artifacts start
+empty for each run.
 
 The executable references public types from all five crates: core,
 normalizer-contract, query, recorder, and registry.

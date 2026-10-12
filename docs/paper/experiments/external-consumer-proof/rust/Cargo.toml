@@ -7,8 +7,8 @@ publish = false
 [workspace]
 
 [dependencies]
-glassvm_core = "=0.2.0"
-glassvm_normalizer_contract = "=0.2.0"
-glassvm_query = "=0.2.0"
-glassvm_recorder = "=0.2.0"
-glassvm_registry = "=0.2.0"
+glassvm_core = "=0.3.0"
+glassvm_normalizer_contract = "=0.3.0"
+glassvm_query = "=0.3.0"
+glassvm_recorder = "=0.3.0"
+glassvm_registry = "=0.3.0"
