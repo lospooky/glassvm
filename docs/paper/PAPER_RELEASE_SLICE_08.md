@@ -15,6 +15,15 @@ Machine `v0.2.0` completed successfully in [release workflow 38250729717](https:
 
 Each provider has an sdist and CPython 3.12, 3.13, and 3.14 wheels. The metadata-only selector has an sdist and universal wheel. The machine lockfile resolves GlassVM crates from crates.io; machine-specific Rust crates remain unpublished.
 
+After publication, released product changes were synchronized into both
+`paper-publication` branches without moving paper artifacts to `main`. GlassVM
+branch commit `a7dd37498d681cd9c97679ac30c6a22a7acb311e` passed
+[CI 38252407335](https://github.com/lospooky/glassvm/actions/runs/38252407335);
+machines branch commit `3edb0ae31a4a3887a1f385d9d7b9aa50f7a9b026` passed
+[CI 38252506914](https://github.com/lospooky/glassvm-machines/actions/runs/38252506914).
+The experiment results/generators and `conformance/examples/paper_memory_trial.rs`
+remain tracked on their respective paper branches.
+
 The first tag attempt exposed a workflow issue: publisher jobs did not check out the repository containing the retry-safe PyPI file-selection helper. All upload steps failed before publishing. After confirming that all four machine distributions still returned 404 for `0.2.0`, commit `0aefbb9` added source checkout to both publisher jobs. The `v0.2.0` tag was then moved to that fix commit and the full release succeeded. No partial files from the failed attempt needed recovery.
 
 ## Package-index smoke
