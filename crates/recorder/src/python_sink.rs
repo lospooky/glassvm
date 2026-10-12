@@ -12,14 +12,13 @@ use glassvm_core::{
     EvidenceReceipt, ExecutionControls, ExecutionEvent, ExecutionRequest, FrameArtifact,
     InputSchedule, InputValueEvidence, MachineConfiguration, MachineId, NativeEvidenceEnvelope,
     ObservationRequest, RunId, RunResult, SchemaVersion, SinkError, SnapshotArtifact,
-    canonical_json_bytes,
 };
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "python")]
 use pyo3::prelude::*;
 #[cfg(feature = "python")]
-use pyo3::types::PyModule;
+use pyo3::types::{PyBytes, PyModule};
 
 /// Metadata visible at run start. Artifact bytes are intentionally not copied
 /// into the consumer record.
@@ -169,6 +168,17 @@ pub trait PythonEmissionConsumer {
 
     fn emit_batch(&mut self, emissions: &[OwnedEmission]) -> Result<(), PythonSinkFailure>;
 
+    /// Deliver emissions using the JSON encoding already produced for batch
+    /// accounting. Implementations that do not consume the Python bridge may
+    /// ignore it and use the owned records as usual.
+    fn emit_batch_encoded(
+        &mut self,
+        emissions: &[OwnedEmission],
+        _json_batch: &[u8],
+    ) -> Result<(), PythonSinkFailure> {
+        self.emit_batch(emissions)
+    }
+
     fn record_capability_outputs(
         &mut self,
         outputs: &[CapabilityOutput],
@@ -197,11 +207,12 @@ impl PythonCallbackConsumer {
         Self { consumers }
     }
 
-    fn decode_batch<T: Serialize>(py: Python<'_>, values: &[T]) -> PyResult<Py<PyAny>> {
-        let json = serde_json::to_string(values)
-            .map_err(|error| pyo3::exceptions::PyValueError::new_err(error.to_string()))?;
+    fn decode_encoded_batch(py: Python<'_>, json: &[u8]) -> PyResult<Py<PyAny>> {
         let json_module = PyModule::import(py, "json")?;
-        Ok(json_module.getattr("loads")?.call1((json,))?.unbind())
+        Ok(json_module
+            .getattr("loads")?
+            .call1((PyBytes::new(py, json),))?
+            .unbind())
     }
 
     fn call<T: Serialize>(
@@ -210,22 +221,41 @@ impl PythonCallbackConsumer {
         values: &[T],
         callback: PythonSinkCallbackKind,
     ) -> Result<(), PythonSinkFailure> {
+        let json = serde_json::to_vec(values).map_err(|error| PythonSinkFailure {
+            sink_index: 0,
+            sink_identity: None,
+            callback,
+            batch_size: values.len(),
+            successfully_delivered_items: 0,
+            exception_type: "SerializationError".into(),
+            exception_message: error.to_string(),
+        })?;
+        self.call_encoded(method, &json, values.len(), callback)
+    }
+
+    fn call_encoded(
+        &mut self,
+        method: &str,
+        json: &[u8],
+        item_count: usize,
+        callback: PythonSinkCallbackKind,
+    ) -> Result<(), PythonSinkFailure> {
         Python::attach(|py| {
-            let batch = Self::decode_batch(py, values)
-                .map_err(|error| Self::failure(callback, error, values.len(), 0, None, 0))?;
+            let batch = Self::decode_encoded_batch(py, json)
+                .map_err(|error| Self::failure(callback, error, item_count, 0, None, 0))?;
             let mut delivered = 0;
             for (index, (identity, consumer)) in self.consumers.iter().enumerate() {
                 if let Err(error) = consumer.bind(py).call_method1(method, (batch.bind(py),)) {
                     return Err(Self::failure(
                         callback,
                         error,
-                        values.len(),
+                        item_count,
                         index,
                         identity.clone(),
                         delivered,
                     ));
                 }
-                delivered += values.len();
+                delivered += item_count;
             }
             Ok(())
         })
@@ -265,6 +295,19 @@ impl PythonEmissionConsumer for PythonCallbackConsumer {
         self.call(
             "emit_batch",
             emissions,
+            PythonSinkCallbackKind::EmissionBatch,
+        )
+    }
+
+    fn emit_batch_encoded(
+        &mut self,
+        emissions: &[OwnedEmission],
+        json_batch: &[u8],
+    ) -> Result<(), PythonSinkFailure> {
+        self.call_encoded(
+            "emit_batch",
+            json_batch,
+            emissions.len(),
             PythonSinkCallbackKind::EmissionBatch,
         )
     }
@@ -316,6 +359,7 @@ impl Default for PythonBatchPolicy {
 #[derive(Default)]
 struct PendingBatch {
     records: Vec<OwnedEmission>,
+    json_records: Vec<Vec<u8>>,
     logical_bytes: usize,
 }
 
@@ -379,9 +423,14 @@ impl PythonBatchingSink {
         self.flush_batch()
     }
 
+    fn encode_record(record: &OwnedEmission) -> Result<Vec<u8>, SinkError> {
+        serde_json::to_vec(record)
+            .map_err(|error| SinkError::new(format!("cannot encode Python sink record: {error}")))
+    }
+
+    #[cfg(test)]
     fn record_size(record: &OwnedEmission) -> Result<usize, SinkError> {
-        let bytes = canonical_json_bytes(record).map_err(SinkError::new)?;
-        Ok(bytes.len())
+        Ok(Self::encode_record(record)?.len())
     }
 
     fn flush_batch(&mut self) -> Result<(), SinkError> {
@@ -396,11 +445,27 @@ impl PythonBatchingSink {
         }
         let batch = mem::take(&mut self.batch);
         let batch_size = batch.records.len();
+        let mut json_batch = Vec::with_capacity(
+            batch
+                .logical_bytes
+                .saturating_add(batch_size)
+                .saturating_add(1),
+        );
+        json_batch.push(b'[');
+        for (index, record) in batch.json_records.iter().enumerate() {
+            if index != 0 {
+                json_batch.push(b',');
+            }
+            json_batch.extend_from_slice(record);
+        }
+        json_batch.push(b']');
         let mut sink_offset = 0;
         let mut delivered_items = 0;
         for index in 0..self.consumers.len() {
             let fanout_count = self.consumers[index].consumer_count();
-            if let Err(mut failure) = self.consumers[index].emit_batch(&batch.records) {
+            if let Err(mut failure) =
+                self.consumers[index].emit_batch_encoded(&batch.records, &json_batch)
+            {
                 if fanout_count == 1 {
                     failure.sink_index = sink_offset;
                     if let Some(identity) = &self.identities[index] {
@@ -435,7 +500,8 @@ impl PythonBatchingSink {
 
     fn append(&mut self, emission: Emission<'_>) -> Result<(), SinkError> {
         let record = OwnedEmission::from(emission);
-        let bytes = Self::record_size(&record)?;
+        let json_record = Self::encode_record(&record)?;
+        let bytes = json_record.len();
         if !self.batch.records.is_empty()
             && (self.batch.records.len() >= self.policy.max_items
                 || self.batch.logical_bytes.saturating_add(bytes) > self.policy.max_logical_bytes)
@@ -444,6 +510,7 @@ impl PythonBatchingSink {
         }
         self.batch.logical_bytes = self.batch.logical_bytes.saturating_add(bytes);
         self.batch.records.push(record);
+        self.batch.json_records.push(json_record);
         self.outcome.peak_batch_items = self.outcome.peak_batch_items.max(self.batch.records.len());
         self.outcome.peak_batch_logical_bytes = self
             .outcome
@@ -465,7 +532,7 @@ impl PythonBatchingSink {
         }
         let logical_bytes = outputs
             .iter()
-            .filter_map(|output| canonical_json_bytes(output).ok())
+            .filter_map(|output| serde_json::to_vec(output).ok())
             .map(|bytes| bytes.len() as u64)
             .sum::<u64>();
         let mut sink_offset = 0;
@@ -502,7 +569,7 @@ impl PythonBatchingSink {
         }
         let logical_bytes = receipts
             .iter()
-            .filter_map(|receipt| canonical_json_bytes(receipt).ok())
+            .filter_map(|receipt| serde_json::to_vec(receipt).ok())
             .map(|bytes| bytes.len() as u64)
             .sum::<u64>();
         let mut sink_offset = 0;
