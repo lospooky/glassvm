@@ -288,17 +288,19 @@ synchronous bridge is implemented in `glassvm_recorder`, wired through the
 CHIP-8/PICO-8/TIC-80 providers, and smoke-tested with both consumer-only and
 consumer-plus-recorder runs. The bridge reuses each compact JSON record
 encoding for byte accounting and Python decoding; this is transport plumbing,
-not a performance result. The implementation and documentation update are
-committed on the GlassVM `paper-publication` branch. The required recorder
-release is still a blocker: `glassvm_recorder 0.1.3` is not yet published on
-crates.io, so machine lockfile resolution against that registry artifact and
-the no-local-source-override smoke test remain incomplete.
+not a performance result. GlassVM `0.2.0`, including the recorder Python
+feature, and all three provider wheels are now published. Machine lockfiles
+resolve the published GlassVM crates, and a fresh Python 3.12 environment
+installed and exercised the published facade, individual providers, and
+`glassvm-machines[all]`; see [Slice 8](PAPER_RELEASE_SLICE_08.md). This smoke
+validates packaging and lifecycle wiring, not consumer performance.
 
 Remaining Slice 7b gates:
 
-- [ ] Publish the recorder crate version containing the Python feature.
-- [ ] Resolve and verify machine lockfiles against the published registry crate;
-  repeat provider smoke tests without local source overrides.
+- [x] Publish the recorder crate version containing the Python feature as part
+  of GlassVM `0.2.0`.
+- [x] Resolve machine lockfiles against published registry crates and exercise
+  published provider wheels without local package/source overrides.
 - [ ] Run the clean pinned three-machine, 60,000-frame, three-repetition
   Python-consumer matrix; retain raw trials and review the generated summary.
 
@@ -334,16 +336,15 @@ Output:
 
 ## 11. Package-index-only install proof
 
-Package-index Python execution in a fresh `uv` environment was exercised by the
-135 Slice 5 trials using
-`uv run --with glassvm==0.1.2 --with glassvm-chip8==0.1.2 --with
-glassvm-pico8==0.1.2 --with glassvm-tic80==0.1.2`; the raw trials record the
-installed distribution versions and entry-point provider metadata. The cartridge
-bytes were read from the documented fixture checkout and passed as caller-owned
-artifact data; no bundle implementation was loaded from that checkout. This is
-not yet the separate zero-checkout consumer-project proof: the runner and
-fixture manifest came from the GlassVM checkout. The Rust external-consumer
-build and fully checkout-free packaging proof below remain open.
+Package-index Python execution was first exercised by the 135 Slice 5 trials
+using `0.1.2`. After the `0.2.0` release, fresh Python 3.12 environments
+installed the facade, each provider individually, and `glassvm-machines[all]`
+from PyPI, then discovered providers by entry point and published smoke runs
+with separate receipts. The fixture bytes and conformance caller came from the
+machine checkout; no bundle implementation or local package override was
+imported. This is not yet the separate zero-checkout consumer-project proof.
+The Rust external-consumer build and fully checkout-free packaging proof remain
+open.
 
 Package-index Python execution (evidenced by Slice 5):
 

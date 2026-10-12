@@ -1,6 +1,6 @@
 # GlassVM paper release execution plan
 
-Planning date: 2026-10-04.
+Planning date: 2026-10-04. Refreshed: 2026-10-12.
 
 This plan breaks down the remaining work in [PAPER_CHECKLIST.md](PAPER_CHECKLIST.md)
 into executable slices. The checklist remains the acceptance contract, and
@@ -44,18 +44,17 @@ The following records the state observed during the checklist review. Refresh
 these facts when executing the relevant slice; these are not final artifact
 coordinates.
 
-| Area | Observed state |
+| Area | Refreshed state (2026-10-12) |
 | --- | --- |
 | Public repositories | Both `lospooky/glassvm` and `lospooky/glassvm-machines` are public. |
-| GlassVM local/public head | `cf7dee8444e1f5968f7206f65335663855c981e2`. |
-| Machine repository public/local head | `56563bd0dfb92a67d272ed4d8ab4868e448b265d`. |
-| Pending machine changes | None; source branch is clean and synchronized with `origin/main`. |
-| Published CI | [GlassVM run 37216452075](https://github.com/lospooky/glassvm/actions/runs/37216452075) and [Machines run 37216276015](https://github.com/lospooky/glassvm-machines/actions/runs/37216276015) passed; Rust/conformance and CPython 3.12, 3.13, 3.14. Machine CI rebuilt wheels from sdists and exercised base/per-bundle/all-bundle installs. |
-| Maturity inventory | Twelve implementation/conformance dimensions are verified per release machine; packaging/provenance and paper evidence remain open per machine. |
-| Python package indexes | The selected facade distribution/import is `glassvm`; its PyPI lookup returned HTTP 404 on 2026-10-07. The selected bundle names are `glassvm-chip8`, `glassvm-pico8`, and `glassvm-tic80`; lookups returned 404 for chip8/tic80, while pico8 timed out and needs a retry. The prior 2026-10-04 lookup checked `glassvm-py` and the former `glassvm-machine-*` names; those returned HTTP 404. Configure Trusted Publishers against the selected names. The five GlassVM contract crates are published at `0.1.0`; machine Rust packages are not targets. |
-| Source archive audit | All four Python sdists rebuilt to wheels locally on CPython 3.14; all-provider clean-room smoke passed. Empty-cache builds remain open. |
-| Paper tooling | No experiment harness or regeneration pipeline was found in the split repositories. |
-| Documentation | Release-candidate status and the claim/evidence map have been reconciled; paper audit documents remain local and uncommitted. |
+| GlassVM source/release | `main` is `cf81c408f4e8a8a6b508f7689caa9c74fc0d8a50`; release tag `v0.2.0` resolves to `33161d1e7ed9617ee46727a9c88d2054193bc2e1`. The five contract crates and generic Python facade `glassvm==0.2.0` are published. |
+| Machine source/release | `main` and release tag `v0.2.0` resolve to `0aefbb950c451b4d54de85e8c13c25345065ae92`; the source checkout is clean. |
+| Published CI | GlassVM release run [38247046904](https://github.com/lospooky/glassvm/actions/runs/38247046904) passed. Machine release run [38250729717](https://github.com/lospooky/glassvm-machines/actions/runs/38250729717) and tag CI [38250729742](https://github.com/lospooky/glassvm-machines/actions/runs/38250729742) passed, including Rust/conformance and CPython 3.12, 3.13, 3.14. |
+| Python package indexes | `glassvm`, `glassvm-chip8`, `glassvm-pico8`, `glassvm-tic80`, and `glassvm-machines` are published at `0.2.0`. Each provider has an sdist and CPython 3.12/3.13/3.14 wheel; the selector has an sdist and pure-Python wheel. The five GlassVM contract crates are published at `0.2.0`; machine-specific Rust crates remain unpublished. |
+| Package-index smoke | Fresh Python 3.12 environments passed for facade-only, each provider individually, and `glassvm-machines[all]`; see [Slice 8](PAPER_RELEASE_SLICE_08.md). The conformance caller and fixture checkout were local inputs, so this is not the zero-checkout consumer-project proof. |
+| Source archive audit | Release CI built bundle sdists and wheels on a clean runner and rebuilt/tested wheel installs for CPython 3.12/3.13/3.14. A zero-checkout external consumer and minimal Rust consumer remain open. |
+| Paper tooling | Experiment drivers, versioned results, generators, and paper documents are retained on `paper-publication`; see the current checklist for outstanding measurements. |
+| Documentation | Release sequencing, checklist, and claim/evidence map are being refreshed against the published `0.2.0` coordinates; paper artifacts remain confined to this branch. |
 
 The Slice 1 source and clean-room matrix are now validated at the public
 coordinates above. The paper checklist/plan and workload manifest remain
@@ -156,8 +155,9 @@ repair and verification task.
 Resolved release choices: publish the five machine-neutral GlassVM contract
 crates only; keep machine-specific Rust crates `publish = false`; advertise a
 Python minimum of 3.12; test CPython 3.12, 3.13, and 3.14. The tested platform
-claim remains Ubuntu 24.04 x86_64 only. The four Python distributions are still
-unpublished, and empty-cache source publication has not been verified.
+claim remains Ubuntu 24.04 x86_64 only. On 2026-10-12 the five crates and all
+five Python distributions were published at `0.2.0`; package-index smoke and
+clean-runner release builds are recorded in [Slice 8](PAPER_RELEASE_SLICE_08.md).
 
 ## Slice 3: generate the heterogeneity table
 
@@ -390,22 +390,29 @@ section 10; its omission must remain explicit rather than being marked complete.
 
 ## Slice 8: publish packages and prove independent installation
 
+Execution record: [PAPER_RELEASE_SLICE_08.md](PAPER_RELEASE_SLICE_08.md).
+The `0.2.0` GlassVM and machine packages were published on 2026-10-12. The
+package-index smoke passed for base-only, each provider, and the all-provider
+selector in fresh Python 3.12 environments. The external Rust consumer and
+zero-checkout Python consumer-project proofs remain open.
+
 ### Tasks
 
-- [ ] Reconcile package versions with the reviewed/evaluated source and already published registry coordinates.
-- [ ] Verify the source closure of each intended sdist and release crate using isolated builds with fresh dependency caches.
-- [ ] Build the declared wheel/platform set and verify each bundle distribution supplies exactly one installed entry-point provider.
-- [ ] Publish shared GlassVM dependencies before the machine packages that consume them; keep extras as ordinary package dependencies.
-- [ ] Install the facade/providers from the package index in environments with no repository checkout or local overrides.
-- [ ] Supply public fixtures independently and verify base-only, each provider alone, and all providers together through the same caller lifecycle.
-- [ ] Record exact package versions, installation commands/logs, entry-point discovery, receipts, and published-run results.
+- [x] Reconcile package versions with the reviewed/evaluated source and already published registry coordinates.
+- [x] Verify release builds and source archives on clean runners, with machine crates resolving published GlassVM dependencies and no local source overrides.
+- [x] Build the declared wheel/platform set and verify each bundle distribution supplies exactly one installed entry-point provider.
+- [x] Publish shared GlassVM dependencies before the machine packages that consume them; keep extras as ordinary package dependencies.
+- [ ] Run the caller from a separate zero-checkout project with providers installed from the package index and no local overrides.
+- [ ] Supply public fixtures independently of the repository checkout and verify base-only, each provider alone, and all providers together through that external caller.
+- [x] Record exact package versions, release workflow links, entry-point discovery, receipts, and published-run results in the Slice 8 execution record.
 - [ ] Build a minimal external Rust consumer against the released versions without local path overrides.
 
 ### Deliverables and exit gate
 
-Package identifiers, release artifacts, and logs proving index-only Rust/Python
-use. A local wheel directory is useful earlier evidence but does not close this
-gate. Resolve any release authority needed at publication time.
+Published package identifiers, release artifacts, and clean-environment logs
+are recorded. The repository-backed package-index smoke closes the upload and
+installed-provider checks, but not the separate zero-checkout Python consumer
+or external Rust consumer gates.
 
 If version or source changes affect machine behavior, preparation, evidence,
 or storage accounting, rerun the affected experiments before sealing claims.
@@ -442,6 +449,9 @@ selected specimens, and measured conditions.
 
 ## Immediate next work
 
-Slice 2 is complete at the pinned source coordinates. Begin Slice 3: extract
-the three bundles' declared and implemented heterogeneity into a machine-
-readable source and generate the paper's Markdown/LaTeX-ready comparison.
+Publication of the `0.2.0` product packages is complete. Before sealing paper
+claims, first regenerate the full three-machine bounded-memory matrix from the
+same clean pinned source coordinate (Slice 6), then run the clean 60,000-frame
+Python-consumer cost matrix (Slice 7b). Keep the external zero-checkout Python
+and Rust consumer proofs visible as packaging gaps; do not infer them from CI's
+repository-backed smoke test.
