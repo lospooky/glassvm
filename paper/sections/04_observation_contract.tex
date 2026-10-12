@@ -1,0 +1,53 @@
+\section{Observation Contract}
+
+An observation request is prospective: it states which evidence and derived
+capabilities a caller needs before execution. Preparation resolves this
+request against the bundle's catalog, checks required prerequisites, and
+records any permitted optional downgrade. An \texttt{EvidenceReceipt} is
+retrospective: it records which requested channels and capabilities were
+fulfilled, incomplete, or failed after the run. These objects answer
+different questions and are intentionally separate.
+
+The emission model preserves channel distinctions:
+
+\begin{description}[leftmargin=!,labelwidth=0.25\linewidth]
+  \item[Normalized events] Machine-independent temporal and control facts
+        selected for the run.
+  \item[Native evidence] Typed machine-specific records whose schema and
+        interpretation remain bundle-owned.
+  \item[Frame artifacts] Requested raw frame data or a requested fingerprint
+        of frame content.
+  \item[Snapshots] Machine-state artifacts exposed at negotiated snapshot
+        points; a snapshot is not itself a replay package.
+  \item[Input-value evidence] Values of selected scheduled or live inputs,
+        with their declared application coordinates.
+  \item[Capability outputs] Derived interpretations produced by a bundle's
+        normalizer from declared evidence dependencies.
+  \item[Capability receipts] Per-capability accounting for availability and
+        fulfillment.
+  \item[Run lifecycle] Events that delimit preparation, execution, and run
+        completion or termination.
+  \item[Evidence receipt] Aggregate retrospective accounting for requested
+        evidence and capabilities.
+\end{description}
+
+The distinction between event and artifact is important. \texttt{FrameCompleted}
+is a temporal and control fact that a frame boundary was reached.
+\texttt{FrameArtifact} is raw or fingerprinted frame evidence requested by
+the caller. A capability output is a derived interpretation of evidence, not
+the primary evidence from which it was derived. Receipts account for
+fulfillment and persistence; they are not substitutes for evidence records.
+
+Normalizers operate as streaming reducers: \texttt{begin}, zero or more calls
+to \texttt{observe(emission)}, and \texttt{finalize} with the optional
+negotiated final state. Each reducer retains the state required by its declared
+capability and selected inputs. GlassVM does not silently retain all emissions
+on behalf of a reducer, and does not construct a canonical whole-run trace.
+The selected channels and budgets define what is delivered; the consumer
+decides whether to retain it beyond the synchronous callback.
+
+Evidence budgets, where configured, constrain selected channels during
+production. Their fulfillment is visible in the receipt and remains separate
+from machine termination. Persistence has a second accounting boundary in
+the recorder receipt: evidence emitted and evidence stored are related but
+not identical quantities.

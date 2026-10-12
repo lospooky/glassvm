@@ -1,0 +1,17 @@
+\section{Conclusion}
+
+GlassVM separates machine semantics from experimental orchestration and
+makes observation a negotiated, caller-owned contract. Typed synchronous
+emissions, streaming normalizers, and separate evidence and recorder
+accounting provide a common execution path while leaving machine-specific
+behavior with each bundle. The reference recorder supplies one durable
+publication path without requiring downstream consumers to read it or
+construct a canonical whole-run trace.
+
+The three-machine implementation and the planned sealed evaluation provide
+a concrete setting for assessing this design. Final claims about memory,
+observation cost, storage, Python sink overhead, and semantic equivalence
+remain unresolved until their sealed receipts are incorporated. The results
+will determine the empirical scope of the paper; the interface design alone
+does not establish universal performance, constant memory, or
+substrate-independent computation.

@@ -1,0 +1,61 @@
+\section{Introduction}
+
+Experimental systems need more than an emulator. A run also has an input
+schedule, a stopping policy, a choice of observations, a way to deliver those
+observations, and a policy for retaining results. When a machine backend
+implements all of these concerns together, downstream tools inherit its
+telemetry conventions and storage assumptions. Changing what is observed can
+then require changes to the execution engine, while comparing two machines
+can require translating between unrelated result formats.
+
+This coupling becomes more costly across heterogeneous virtual machines.
+Different machines expose different artifacts, configuration fields, input
+coordinates, state, and native evidence. A shared experiment still needs to
+control runs consistently, but a common interface must not erase these
+machine-specific semantics or imply that all machines expose the same
+observations. It must make the common parts explicit and leave the rest with
+the bundle that understands the machine.
+
+GlassVM provides that separation. A machine bundle declares its identity and
+contract, accepts a caller-owned execution request, and supplies an emulator
+backend. Preparation validates artifact, configuration, inputs, controls,
+and requested observations before execution. The resulting observation
+contract selects typed evidence channels and capability dependencies.
+Execution emits the selected evidence synchronously to caller-owned sinks.
+Normalizers derive requested capability outputs with bounded streaming state,
+and receipts account for evidence fulfillment, sink delivery, recorder
+finalization, and publication as distinct outcomes.
+
+The design keeps downstream policy outside the emulator. A caller may consume
+emissions directly, persist them through the reference recorder, or do both.
+GlassVM does not assemble a canonical whole-run trace or require every
+consumer to retain a run. The recorder is one explicit consumer with its own
+bounded buffering and publication protocol; its output is not the only form
+of evidence available to an experiment.
+
+We study this contract across CHIP-8, PICO-8, and TIC-80. CHIP-8 supplies a
+bytecode virtual-machine baseline. PICO-8 and TIC-80 are independent
+compatibility implementations with bounded Lua runtimes and documented
+subsets. They provide materially different execution and observation paths,
+while their fidelity limits remain visible in the corresponding machine
+contracts.
+
+This paper makes four contributions:
+
+\begin{itemize}[leftmargin=*]
+  \item A machine-neutral execution and preparation contract that separates
+        bundle-specific semantics from experiment orchestration.
+  \item An explicit observation model in which evidence requirements are
+        negotiated before execution and fulfilled through typed bounded
+        emissions.
+  \item A reference durable recorder with separate evidence, recorder, and
+        publication accounting.
+  \item A three-machine evaluation spanning CHIP-8, PICO-8, and TIC-80,
+        including clean-room package consumption, Python sink delivery,
+        semantic equivalence, bounded-memory measurements, and a small
+        downstream consumer.
+\end{itemize}
+
+The empirical magnitudes and exact source coordinates remain unresolved in
+this draft. They will be supplied only from sealed evidence and source
+receipts; no intermediate experiment summary is treated as final evidence.

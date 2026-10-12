@@ -1,0 +1,25 @@
+\section{Limitations}
+
+The evaluation covers only CHIP-8, PICO-8, and TIC-80. Three bundles provide
+a heterogeneous design test but do not establish generality across all
+virtual machines. PICO-8 and TIC-80 are bounded compatibility runtimes over
+documented subsets; neither implementation claims exact upstream semantics.
+
+Performance measurements, when sealed, will describe the tested hosts,
+workloads, source revisions, package builds, and observation modes. They do
+not establish universal performance, population-scale throughput, or
+cross-host guarantees. The memory evidence is empirical for the tested
+configurations and is not a proof of universally constant resident memory.
+Persisted evidence can grow with run length even when reducer and recorder
+buffers are bounded.
+
+Python sink delivery is synchronous. This makes callback backpressure
+explicit, but a slow consumer can affect execution time. Asynchronous or
+buffered sink semantics are outside the current contract. Consumers that
+retain values beyond a callback remain responsible for their own memory and
+storage policies.
+
+The work evaluates a machine-neutral execution and evidence interface; it
+does not demonstrate substrate-independent computation. The common
+orchestration contract does not imply common machine semantics, a complete
+trace for every run, or a universal observation vocabulary.

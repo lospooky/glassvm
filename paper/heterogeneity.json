@@ -1,0 +1,21 @@
+{
+  "caption": "Machine implementations included in the shared orchestration path.",
+  "columns": ["Machine", "Implementation role", "Execution and fidelity boundary"],
+  "rows": [
+    [
+      "CHIP-8",
+      "Baseline reference bytecode virtual machine.",
+      "Native bytecode execution with machine-specific variants and configuration."
+    ],
+    [
+      "PICO-8",
+      "Independent compatibility implementation.",
+      "Bounded Lua runtime implementing a documented headless subset; not a claim of exact upstream semantics."
+    ],
+    [
+      "TIC-80",
+      "Independent compatibility implementation.",
+      "Bounded Lua runtime implementing a documented subset; non-Lua runtimes and unsupported upstream behavior remain outside its fidelity claim."
+    ]
+  ]
+}

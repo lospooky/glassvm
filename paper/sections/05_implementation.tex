@@ -1,0 +1,29 @@
+\section{Implementation}
+
+GlassVM's shared crates define requests, preparation, event and evidence
+types, normalizer contracts, the reference recorder, and the Python facade.
+Each machine bundle implements the machine-specific descriptor, admission
+rules, backend, session, and evidence adapters. Provider discovery in Python
+uses installed entry points; the facade does not embed machine IDs or
+emulator implementations.
+
+The evaluation denominator contains three machine bundles. CHIP-8 is the
+baseline reference bytecode virtual machine. PICO-8 and TIC-80 are independent
+compatibility implementations with bounded Lua runtimes and documented
+subsets. They do not claim exact upstream semantics. Table~\ref{tab:machines}
+is generated from the checked-in qualitative machine manifest so that this
+description does not duplicate machine-specific configuration details.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Qualitative machine heterogeneity and implementation boundaries.}
+  \label{tab:machines}
+  \input{generated/heterogeneity_table.tex}
+\end{table}
+
+The machine implementations share orchestration, preparation, evidence
+delivery, and receipt contracts while retaining their own artifact, timing,
+input, and runtime semantics. The evaluation uses that common boundary to
+compare experimental procedures; it does not treat the three emulators as
+semantically interchangeable machines.
