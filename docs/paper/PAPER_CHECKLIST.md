@@ -142,7 +142,7 @@ For each claim, classify:
 
 ### C3: practical selectable observation
 - [x] Mark architectural mechanism as complete.
-- [ ] Keep empirical performance/boundedness claim open until measurements exist.
+- [x] Measure selectable-observation costs and run-length peak RSS across the three release specimens; keep claims scoped to measured workloads, source pins, and host.
 
 Output:
 - updated claim-evidence table
@@ -255,15 +255,21 @@ Check:
 - [x] Remove the legacy `chip8.interestingness` and `chip8.trajectory_identity` native capability outputs; keep frame hashes as a capture mode and visual motifs as a derived capability. Version the changed `chip8.execution_summary` schema.
 - [x] Repeat all four CHIP-8 observation/sink paths at the four run lengths (40 trials). RSS remained about 5.0–6.1 MiB across the matrix; recorder bytes are still reported separately and grow with persisted evidence.
 - [x] Prepare the clean-versioned regeneration path: require exact clean checkout revisions, build the locked release example, record source/tag/lockfile/binary digests, and reject stale or mismatched resume data. Validate equality of frame/cycle totals, boot outcome, and termination.
-- [ ] Repeat the full 120-trial, three-machine matrix against one clean source coordinate before making a cross-bundle bounded-memory claim.
+- [x] Repeat the full 120-trial, three-machine matrix from clean checkouts at one common source coordinate. All 120 runs and evidence receipts completed; all 30 recorder runs finalized and published; observation-mode execution outcomes matched per machine and frame limit.
 
 Original baseline data remains under
 [`experiments/measurements/memory-scaling/`](experiments/measurements/memory-scaling/).
 The CHIP-8 cleanup follow-up, raw trials, manifest, generated summary, and plots
 are under
 [`experiments/measurements/chip8-retention-cleanup/`](experiments/measurements/chip8-retention-cleanup/).
-The cleanup result is positive for CHIP-8 and this host/workload; the matching
-three-machine rerun remains the paper gate.
+The clean three-machine rerun, raw trials, manifest, generated summary, and
+plots are under
+[`experiments/measurements/memory-scaling-three-machine-a7dd374-3edb0ae/`](experiments/measurements/memory-scaling-three-machine-a7dd374-3edb0ae/)
+and documented in [Slice 6](PAPER_RELEASE_SLICE_06.md). Across all three
+machines and four modes, endpoint median peak RSS stayed within 1.5× from 600
+to 600,000 frames on the recorded WSL2 host. This is workload- and host-bounded
+evidence, not a universal memory guarantee; durable encoded evidence grew with
+run length, as expected.
 
 ## 9. Sink-cost decomposition
 

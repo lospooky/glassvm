@@ -290,7 +290,7 @@ Do not infer bounded memory from these fixed-length comparisons.
 - [x] Clean the CHIP-8 path: remove frame-hash histories, the exact unique-frame set, unbounded per-transition metric samples, and retained whole-run native events. Keep scalar event counters; derive visual motifs in the bounded normalizer from selected frame artifacts. Remove the legacy native interestingness/trajectory-identity outputs and version the execution-summary schema.
 - [x] Repeat the four-mode/four-length CHIP-8 matrix (40 trials); the observed peak RSS range is approximately 5.0–6.1 MiB from 600 through 600,000 frames on this host.
 - [x] Prepare a clean-versioned regeneration command that builds with `--locked`, records exact checkout/tag/lockfile/binary coordinates, requires clean pinned revisions, validates complete execution-outcome equivalence, and refuses source/matrix-mismatched resume data. Results are directed outside the source checkouts.
-- [ ] Repeat all three machines together at the same source coordinate before closing the cross-bundle bounded-memory claim.
+- [x] Repeat all three machines together from clean checkouts at one common source coordinate (120/120 trials completed; zero failures; 30/30 recorder trials finalized and published).
 
 ### Deliverables and exit gate
 
@@ -299,12 +299,15 @@ The original three-machine matrix and its generated plots are retained under
 The CHIP-8 cleanup follow-up, 40 raw trials, manifest, summary, and plots are
 under
 [`experiments/measurements/chip8-retention-cleanup/`](experiments/measurements/chip8-retention-cleanup/).
-The new CHIP-8 sweep observed approximately flat RSS across the tested modes
-and lengths. Because it was run separately from the PICO-8/TIC-80 baseline,
-repeat the complete matrix against one source coordinate before closing the
-cross-bundle gate. The runner and command are ready, but the final clean-versioned
-matrix has not been launched. Recorder encoded volume remains a separate
-evidence/storage cost and grows with emitted records.
+The clean three-machine rerun, all raw trials, manifest, generated summary, and
+plots are retained under
+[`experiments/measurements/memory-scaling-three-machine-a7dd374-3edb0ae/`](experiments/measurements/memory-scaling-three-machine-a7dd374-3edb0ae/);
+the execution record is [PAPER_RELEASE_SLICE_06.md](PAPER_RELEASE_SLICE_06.md).
+On the recorded WSL2 host, endpoint median peak RSS stayed within 1.5× across
+all tested machine/mode combinations from 600 to 600,000 frames. This supports
+only a workload-, revision-, and host-specific observed-RSS claim, not a
+universal bound. Recorder encoded volume remains a separate persistence cost
+and grows with emitted records.
 
 ## Slice 7: consumer costs, equivalence, and downstream use
 
@@ -487,12 +490,9 @@ selected specimens, and measured conditions.
 ## Immediate next work
 
 Publication of the `0.2.0` product packages, the clean 60,000-frame
-Python-consumer matrix (Slice 7b), semantic-equivalence check (Slice 7c), and
-Glass Garden downstream demo (Slice 7d) are complete. The next evidence gate is
-the full three-machine bounded-memory matrix: rerun all 120 trials from one
-clean pinned source coordinate and review the regenerated results before making
-a cross-bundle bounded-memory claim.
-
-Slice 8's independent-installation proofs are complete. The next gate remains
-the full three-machine bounded-memory matrix in Slice 6. Once it is reviewed,
-proceed to Slice 9's manuscript-wide regeneration and immutable artifact seal.
+Python-consumer matrix (Slice 7b), semantic-equivalence check (Slice 7c),
+Glass Garden downstream demo (Slice 7d), and Slice 8 independent-installation
+proofs are complete. Slice 6's clean three-machine bounded-memory rerun is also
+complete and reviewed; its results are recorded in
+[`PAPER_RELEASE_SLICE_06.md`](PAPER_RELEASE_SLICE_06.md). The next gate is
+Slice 9: manuscript-wide regeneration and immutable artifact sealing.
