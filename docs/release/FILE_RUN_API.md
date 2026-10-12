@@ -8,13 +8,13 @@ semantics.
 ## Lifecycle
 
 ```text
-FileRunSession::run
-  -> FileEmissionSink
+FileRunSession::run_with_sinks
+  -> optional FileEmissionSink + PythonBatchingSink
   -> BudgetedSink
   -> EmulatorSession::execute
   -> emit EvidenceReceipt
-  -> finalize recorder
-  -> atomic publication
+  -> optional recorder finalization
+  -> atomic publication when a recorder was requested
 ```
 
 The helper owns sink construction, budget accounting, execution, evidence
@@ -24,25 +24,47 @@ rebuild this lifecycle.
 
 ## Result separation
 
-The result exposes four independent domains:
+The result exposes independent execution, evidence-delivery, and publication
+domains, including partial outcomes:
 
 ```rust
 pub struct FileRunResult {
-    pub execution: RunResult,
-    pub evidence: EvidenceReceipt,
-    pub recorder: RecorderReceipt,
-    pub published: PublishedFileRun,
+    pub machine_execution: MachineExecutionOutcome,
+    pub evidence_fulfillment: EvidenceReceipt,
+    pub python_sink_delivery: PythonSinkDeliveryOutcome,
+    pub recorder_finalization: RecorderFinalizationOutcome,
+    pub publication: PublicationOutcome,
+    pub published: Option<PublishedFileRun>,
 }
 ```
 
-- `execution` describes machine execution;
-- `evidence` describes fulfillment of the requested observation;
-- `recorder` describes physical persistence and finalization; and
-- `published` identifies the atomically published run.
+- `machine_execution` distinguishes completion, machine failure, and
+  interruption caused by evidence delivery;
+- `evidence_fulfillment` is the retrospective observation receipt;
+- `python_sink_delivery` describes only Python consumer delivery, or is
+  `not_requested`; it includes delivered counters and peak pending-batch item
+  and logical-byte occupancy;
+- `recorder_finalization` is `not_requested` when no file recorder is selected,
+  otherwise it reports whether physical persistence finalized; and
+- `publication` reports the atomic publication outcome.
 
-The published reference exists only when the finalized recorder receipt passes
-the publication gate. Evidence failure does not redefine machine execution,
-and recorder failure does not become a successful publication.
+The published handle is present only after the finalized recorder receipt
+passes the publication gate. Partial execution results preserve whatever
+evidence receipt was accumulated, report recorder finalization as not
+attempted (or `not_requested` when no recorder was selected), and have no
+published handle. Evidence failure does not redefine
+machine execution, Python delivery failure is not recorder failure, and
+recorder failure does not become successful publication.
+
+Python callback failures are reported with consumer index/identity, callback
+kind, batch size, successfully delivered item count, exception type, and
+exception message. Delivery is synchronous and fail-fast: callbacks are not
+retried, and the original Python exception is not swallowed. Under the current
+shared run orchestration, a downstream evidence-delivery interruption stops
+execution and leaves any requested recorder staging run unfinalized and
+inspectable. This is common evidence-sink interruption behavior, not a
+Python-specific publication rule; finalization and publication remain governed
+by the shared recorder receipt and atomic publication gate.
 
 The recorder receipt includes fixed-set, per-channel counters for persisted
 segments, records, blocks, logical bytes, and encoded block-payload bytes. Its

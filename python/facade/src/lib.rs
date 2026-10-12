@@ -7,13 +7,13 @@
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyDict};
+use pyo3::types::{PyBytes, PyDict, PyList, PyTuple};
 use serde_json::Value;
 
 const PYTHON_BUNDLE_ENTRY_POINT_GROUP: &str = "glassvm.machine_bundles";
 const PYTHON_BUNDLE_PROVIDER_CONTRACT: &str = "glassvm.python_bundle";
 const PYTHON_BUNDLE_PROTOCOL_VERSION: ProtocolVersion = ProtocolVersion {
-    major: 1,
+    major: 2,
     minor: 0,
     patch: 0,
 };
@@ -247,6 +247,103 @@ fn json_argument(
         })
 }
 
+fn validate_execution_result(value: &Value) -> Result<(), String> {
+    let object = value
+        .as_object()
+        .ok_or_else(|| "bundle execution result must be an object".to_owned())?;
+    for field in [
+        "machine_execution",
+        "evidence_fulfillment",
+        "python_sink_delivery",
+        "recorder_finalization",
+        "publication",
+        "published_run",
+    ] {
+        if !object.contains_key(field) {
+            return Err(format!("bundle execution result is missing {field:?}"));
+        }
+    }
+    let status = |field: &str| -> Result<&str, String> {
+        object
+            .get(field)
+            .and_then(Value::as_object)
+            .and_then(|value| value.get("status"))
+            .and_then(Value::as_str)
+            .ok_or_else(|| format!("bundle execution result field {field:?} needs a string status"))
+    };
+    let machine_status = status("machine_execution")?;
+    if !matches!(
+        machine_status,
+        "completed" | "failed" | "interrupted_by_evidence_failure"
+    ) {
+        return Err(format!(
+            "bundle execution result has unsupported machine-execution status {machine_status:?}"
+        ));
+    }
+    let evidence_status = object
+        .get("evidence_fulfillment")
+        .and_then(Value::as_object)
+        .and_then(|receipt| receipt.get("status"))
+        .and_then(Value::as_str)
+        .ok_or_else(|| "evidence_fulfillment must contain a string status".to_owned())?;
+    if !matches!(evidence_status, "complete" | "incomplete" | "failed") {
+        return Err(format!(
+            "bundle execution result has unsupported evidence status {evidence_status:?}"
+        ));
+    }
+    let sink_status = status("python_sink_delivery")?;
+    if !matches!(sink_status, "not_requested" | "complete" | "failed") {
+        return Err(format!(
+            "bundle execution result has unsupported Python-sink status {sink_status:?}"
+        ));
+    }
+    let recorder_status = status("recorder_finalization")?;
+    if !matches!(
+        recorder_status,
+        "not_requested" | "finalized" | "not_finalized" | "failed"
+    ) {
+        return Err(format!(
+            "bundle execution result has unsupported recorder status {recorder_status:?}"
+        ));
+    }
+    let publication_status = status("publication")?;
+    let published_run = object
+        .get("published_run")
+        .ok_or_else(|| "bundle execution result is missing published_run".to_owned())?;
+    match publication_status {
+        "published" => {
+            if recorder_status != "finalized" {
+                return Err(
+                    "published run requires finalized recorder outcome and a run reference".into(),
+                );
+            }
+            let reference = published_run.as_object().ok_or_else(|| {
+                "published outcome requires an object published-run reference".to_owned()
+            })?;
+            if reference.get("published").and_then(Value::as_bool) != Some(true)
+                || reference
+                    .get("path")
+                    .and_then(Value::as_str)
+                    .is_none_or(str::is_empty)
+            {
+                return Err(
+                    "published-run reference needs a non-empty path and published=true".into(),
+                );
+            }
+        }
+        "not_published" if published_run.is_null() => {}
+        "not_published" => {
+            return Err("unpublished outcome cannot carry a published-run reference".into());
+        }
+        status => {
+            return Err(format!(
+                "bundle execution result has unsupported publication status {status:?}"
+            ));
+        }
+    }
+    Ok(())
+}
+
 #[pyclass]
 struct Runtime {
     providers: Vec<PythonBundleProvider>,
@@ -258,6 +355,29 @@ struct PreparedRun {
     /// Provider-owned preparation state. This is deliberately an in-process
     /// Python object, not a serialization, persistence, or replay format.
     prepared: Py<PyAny>,
+}
+
+/// Selects the Rust reference recorder for one execution. This is a small
+/// request value; the recorder implementation and publication lifecycle stay
+/// provider/Rust-owned.
+#[pyclass]
+struct FileRecorder {
+    path: String,
+}
+
+#[pymethods]
+impl FileRecorder {
+    #[new]
+    fn new(path: &str) -> PyResult<Self> {
+        if path.is_empty() {
+            return Err(pyo3::exceptions::PyValueError::new_err(
+                "file recorder path must not be empty",
+            ));
+        }
+        Ok(Self {
+            path: path.to_owned(),
+        })
+    }
 }
 
 static NEXT_PYTHON_RUN_ID: AtomicU64 = AtomicU64::new(1);
@@ -316,7 +436,7 @@ impl Runtime {
             .cloned()
             .ok_or_else(|| {
                 pyo3::exceptions::PyLookupError::new_err(format!(
-                    "machine bundle {machine_id:?} is not installed; install with `uv add \"glassvm[{machine_id}]\"`"
+                    "machine bundle {machine_id:?} is not installed; install `glassvm` and `glassvm-{machine_id}`, or use `glassvm-machines[{machine_id}]`"
                 ))
             })?;
         let module = py.import(&provider.module)?;
@@ -343,16 +463,71 @@ impl Runtime {
 
 #[pymethods]
 impl PreparedRun {
-    #[pyo3(signature = (output_path))]
-    fn execute(&self, py: Python<'_>, output_path: &str) -> PyResult<Py<PyAny>> {
+    #[pyo3(signature = (sinks=None, file_recorder=None))]
+    fn execute(
+        &self,
+        py: Python<'_>,
+        sinks: Option<&Bound<'_, PyAny>>,
+        file_recorder: Option<&Bound<'_, PyAny>>,
+    ) -> PyResult<Py<PyAny>> {
+        let sinks = match sinks {
+            Some(sinks)
+                if sinks.is_instance_of::<PyList>() || sinks.is_instance_of::<PyTuple>() =>
+            {
+                for (index, sink) in sinks.try_iter()?.enumerate() {
+                    let sink = sink?;
+                    for callback in [
+                        "emit_batch",
+                        "record_capability_outputs",
+                        "record_capability_receipts",
+                    ] {
+                        let method = sink.getattr(callback).map_err(|_| {
+                            pyo3::exceptions::PyTypeError::new_err(format!(
+                                "sink at index {index} must define callable {callback}"
+                            ))
+                        })?;
+                        if !method.is_callable() {
+                            return Err(pyo3::exceptions::PyTypeError::new_err(format!(
+                                "sink at index {index} attribute {callback} must be callable"
+                            )));
+                        }
+                    }
+                }
+                sinks.clone().unbind()
+            }
+            Some(_) => {
+                return Err(pyo3::exceptions::PyTypeError::new_err(
+                    "sinks must be a list or tuple of emission consumers",
+                ));
+            }
+            None => PyList::empty(py).into_any().unbind(),
+        };
+        let output_path = match file_recorder {
+            Some(recorder) => {
+                let recorder = recorder.extract::<PyRef<'_, FileRecorder>>().map_err(|_| {
+                    pyo3::exceptions::PyTypeError::new_err(
+                        "file_recorder must be a glassvm.FileRecorder or None",
+                    )
+                })?;
+                Some(recorder.path.clone())
+            }
+            None => None,
+        };
         let module = py.import(&self.provider.module)?;
         let execute = module.getattr(&self.provider.execute_function)?;
-        let result = execute.call1((self.prepared.bind(py), output_path))?;
+        let result = execute.call1((self.prepared.bind(py), sinks.bind(py), output_path))?;
         if !result.is_instance_of::<PyDict>() {
             return Err(pyo3::exceptions::PyTypeError::new_err(
                 "bundle execute_prepared must return a structured mapping",
             ));
         }
+        let encoded = json_argument(py, Some(&result), "execution result")?;
+        let value: Value = serde_json::from_str(&encoded).map_err(|error| {
+            pyo3::exceptions::PyTypeError::new_err(format!(
+                "bundle execution result is not JSON-compatible: {error}"
+            ))
+        })?;
+        validate_execution_result(&value).map_err(pyo3::exceptions::PyTypeError::new_err)?;
         Ok(result.unbind())
     }
 }
@@ -361,6 +536,7 @@ impl PreparedRun {
 fn glassvm(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Runtime>()?;
     m.add_class::<PreparedRun>()?;
+    m.add_class::<FileRecorder>()?;
     m.add_function(wrap_pyfunction!(discover_bundles, m)?)?;
     Ok(())
 }
@@ -371,7 +547,7 @@ mod tests {
 
     use super::{
         PYTHON_BUNDLE_PROTOCOL_VERSION, PYTHON_BUNDLE_PROVIDER_CONTRACT, parse_bundle_providers,
-        validate_bundle_provider,
+        validate_bundle_provider, validate_execution_result,
     };
 
     #[test]
@@ -379,13 +555,13 @@ mod tests {
         let (_, provider) = validate_bundle_provider(
             json!({
                 "protocol": "glassvm.python_bundle",
-                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-chip8",
                 "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
-                "bundle_version": "0.1.0"
+                "bundle_version": "0.2.0"
             }),
             "chip8",
         )
@@ -407,13 +583,13 @@ mod tests {
         let error = validate_bundle_provider(
             json!({
                 "protocol": "glassvm.python_bundle",
-                "protocol_version": {"major": 2, "minor": 0, "patch": 0},
+                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-chip8",
                 "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
-                "bundle_version": "0.1.0"
+                "bundle_version": "0.2.0"
             }),
             "chip8",
         )
@@ -426,13 +602,13 @@ mod tests {
         let error = validate_bundle_provider(
             json!({
                 "protocol": format!("{PYTHON_BUNDLE_PROVIDER_CONTRACT}.v1"),
-                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-chip8",
                 "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
-                "bundle_version": "0.1.0"
+                "bundle_version": "0.2.0"
             }),
             "chip8",
         )
@@ -445,16 +621,64 @@ mod tests {
         let error = validate_bundle_provider(
             json!({
                 "protocol": "glassvm.python_bundle",
-                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-chip8",
                 "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
-                "bundle_version": "0.1.0"
+                "bundle_version": "0.2.0"
             }),
             "chip8",
         )
         .expect_err("missing execute operation must fail");
         assert!(error.contains("execute_function"));
+    }
+
+    #[test]
+    fn execution_result_keeps_all_outcome_domains_separate() {
+        let value = json!({
+            "machine_execution": {"status": "completed", "result": {"common": {"boot_success": true}}},
+            "evidence_fulfillment": {"status": "failed"},
+            "python_sink_delivery": {"status": "failed"},
+            "recorder_finalization": {"status": "finalized", "result": {"status": "complete"}},
+            "publication": {"status": "published"},
+            "published_run": {"path": "run", "published": true}
+        });
+        validate_execution_result(&value).expect("independent outcomes are valid");
+        assert_eq!(value["machine_execution"]["status"], "completed");
+        assert_eq!(value["evidence_fulfillment"]["status"], "failed");
+        assert_eq!(value["python_sink_delivery"]["status"], "failed");
+        assert_eq!(value["recorder_finalization"]["status"], "finalized");
+        assert_eq!(value["publication"]["status"], "published");
+    }
+
+    #[test]
+    fn execution_result_rejects_publication_without_finalized_recorder() {
+        let value = json!({
+            "machine_execution": {"status": "completed"},
+            "evidence_fulfillment": {"status": "complete"},
+            "python_sink_delivery": {"status": "not_requested"},
+            "recorder_finalization": {"status": "failed"},
+            "publication": {"status": "published"},
+            "published_run": {"path": "run", "published": true}
+        });
+        assert!(
+            validate_execution_result(&value)
+                .expect_err("publication gate is enforced")
+                .contains("requires finalized recorder")
+        );
+    }
+
+    #[test]
+    fn execution_result_accepts_runs_without_a_requested_file_recorder() {
+        let value = json!({
+            "machine_execution": {"status": "completed"},
+            "evidence_fulfillment": {"status": "complete"},
+            "python_sink_delivery": {"status": "complete"},
+            "recorder_finalization": {"status": "not_requested"},
+            "publication": {"status": "not_published"},
+            "published_run": null
+        });
+        validate_execution_result(&value).expect("Python-only execution has explicit outcomes");
     }
 }
