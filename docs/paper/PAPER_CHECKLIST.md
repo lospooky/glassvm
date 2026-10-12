@@ -283,6 +283,25 @@ Remaining consumer comparison:
   complete clean 60,000-frame paper matrix is pending; see Slice 7b)
 - [x] observation + bounded Rust recorder
 
+Python-consumer implementation status (checked 2026-10-12): the bounded
+synchronous bridge is implemented in `glassvm_recorder`, wired through the
+CHIP-8/PICO-8/TIC-80 providers, and smoke-tested with both consumer-only and
+consumer-plus-recorder runs. The bridge reuses each compact JSON record
+encoding for byte accounting and Python decoding; this is transport plumbing,
+not a performance result. The implementation and documentation update are
+committed on the GlassVM `paper-publication` branch. The required recorder
+release is still a blocker: `glassvm_recorder 0.1.3` is not yet published on
+crates.io, so machine lockfile resolution against that registry artifact and
+the no-local-source-override smoke test remain incomplete.
+
+Remaining Slice 7b gates:
+
+- [ ] Publish the recorder crate version containing the Python feature.
+- [ ] Resolve and verify machine lockfiles against the published registry crate;
+  repeat provider smoke tests without local source overrides.
+- [ ] Run the clean pinned three-machine, 60,000-frame, three-repetition
+  Python-consumer matrix; retain raw trials and review the generated summary.
+
 Purpose:
 
 separate
