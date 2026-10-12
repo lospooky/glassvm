@@ -157,6 +157,18 @@ jobs:
           publish_and_wait() {
             package="$1"
             crate="${package//_/-}"
+            url="https://crates.io/api/v1/crates/$crate/$version"
+            status="$(curl --silent --show-error \
+              --user-agent "glassvm-release/1.0 (lospooky)" \
+              --output /dev/null --write-out '%{http_code}' "$url")"
+            if [[ "$status" == "200" ]]; then
+              echo "$crate $version is already published; skipping"
+              return 0
+            fi
+            if [[ "$status" != "404" ]]; then
+              echo "Unexpected crates.io response $status while checking $crate $version" >&2
+              return 1
+            fi
             cargo publish --locked --package "$package"
             wait_for_index "$crate"
           }
@@ -193,5 +205,19 @@ jobs:
           name: glassvm-facade-dist
           path: dist/
 
-      - name: Publish facade with PyPI Trusted Publishing
-        run: uv publish dist/* --trusted-publishing always
+      - name: Publish missing facade files with PyPI Trusted Publishing
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          version="${RELEASE_VERSION#v}"
+          missing="$(python scripts/publish_missing_pypi_files.py glassvm "$version" dist/*)" || exit
+          files=()
+          if [[ -n "$missing" ]]; then
+            mapfile -t files <<< "$missing"
+          fi
+          if ((${#files[@]} == 0)); then
+            echo "All glassvm $version files are already published"
+            exit 0
+          fi
+          uv publish "${files[@]}" --trusted-publishing always
