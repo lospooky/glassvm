@@ -1,7 +1,7 @@
 # Independent GlassVM and machine releases
 
-Status: approved and implemented in release workflows; first independent release
-is in progress.
+Status: approved and implemented. GlassVM 0.2.0 is published; machine release
+preparation is in progress.
 
 This decision replaces the coordinated publication scheme in which GlassVM
 waits for matching machine package versions before publishing its Python facade.
