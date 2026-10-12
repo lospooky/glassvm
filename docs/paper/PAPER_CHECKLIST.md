@@ -419,18 +419,32 @@ Output:
 
 ## 13. Downstream machine-independent consumer demo
 
-Keep this deliberately small.
+Completed 2026-10-12 as Glass Garden. One generic Python sink consumer requests
+frame hashes and normalized events only, then produces three SVG postcards and
+one summary table. It uses a previous fingerprint, 20 fixed frame-coordinate
+buckets, bounded event-kind counts, and the final `EvidenceReceipt`; it does
+not read recorder files or retain a run's events or frames.
 
-- [ ] create one generic caller consuming selected normalized projections and/or capability outputs
-- [ ] run it against all three release machines without bundle-specific orchestration branches
-- [ ] demonstrate useful analysis without whole-run GlassVM materialization
-- [ ] do not reopen Refinery architecture
-- [ ] do not add new GlassVM abstractions for this demo
+The same caller ran through the installed CHIP-8, PICO-8, and TIC-80 providers
+with complete evidence receipts. The postcards report only changed adjacent
+fingerprint pairs by bucket and top normalized event-kind counts. They make no
+performance, complexity, or behavioral-equivalence claim.
+
+- [x] create one generic caller consuming selected normalized event kinds and frame hashes
+- [x] run it against all three release machines without bundle-specific orchestration branches
+- [x] demonstrate bounded incremental analysis without whole-run GlassVM materialization
+- [x] do not reopen Refinery architecture
+- [x] do not add new GlassVM abstractions for this demo
+
+Artifacts: [`experiments/glass_garden.py`](experiments/glass_garden.py),
+[`experiments/test_glass_garden.py`](experiments/test_glass_garden.py), and
+[`experiments/measurements/glass-garden-0.2.0/SUMMARY.md`](experiments/measurements/glass-garden-0.2.0/SUMMARY.md),
+which links the three generated postcards.
 
 Output:
-- small reproducible script
-- one result table/figure
-- short description of what the generic downstream consumer obtains
+- [x] small reproducible script
+- [x] result table and three postcards
+- [x] short description of the generic downstream projection
 
 ## 14. Paper regeneration
 

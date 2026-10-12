@@ -399,15 +399,31 @@ and reproduction harness
 
 ### 7d. Generic downstream demonstration
 
-- [ ] Implement a small caller consuming selected normalized evidence or capability outputs through the shared interface.
-- [ ] Run the same orchestration against all three release bundles.
-- [ ] Use incremental analysis or an explicitly finite selected projection and generate one useful result table or figure.
+- [x] Implement one generic Python consumer over frame hashes and normalized event kinds only.
+- [x] Run the identical caller path through installed CHIP-8, PICO-8, and TIC-80 providers, without machine-specific orchestration or visualization branches.
+- [x] Keep bounded state: previous fingerprint, 20 fixed frame-coordinate buckets, at most 128 event-kind counters, and one `EvidenceReceipt`.
+- [x] Generate three SVG postcards and one Markdown summary table without recorder reading, trace collection, native-evidence interpretation, or cross-channel ordering.
+
+Execution record: Glass Garden ran in CPython 3.14.3 using the package-index
+`glassvm`, `glassvm-chip8`, `glassvm-pico8`, and `glassvm-tic80` wheels, all at
+`0.2.0`. It used the three public fixture paths in `PAPER_WORKLOADS.toml`, each
+bundle's declared default configuration, an empty input schedule, and a shared
+600-frame limit. The observation selected all normalized events and hash-only
+frames; native evidence, capabilities, snapshots, and input values were not
+requested. All three evidence receipts were complete. The postcards literally
+show adjacent fingerprint changes by frame-coordinate bucket and top event-kind
+counts; they make no performance, complexity, or behavioral-equivalence claim.
+
+Artifacts: [`glass_garden.py`](experiments/glass_garden.py),
+[`test_glass_garden.py`](experiments/test_glass_garden.py), and the generated
+[`SUMMARY.md`](experiments/measurements/glass-garden-0.2.0/SUMMARY.md) with
+three linked SVG postcards.
 
 ### Deliverables and exit gate
 
-A cost table with an honest Python boundary, an equivalence report, and a
-reproducible downstream demo. The equivalence check is recommended by checklist
-section 10; its omission must remain explicit rather than being marked complete.
+The cost table, equivalence report, and reproducible downstream demo are
+complete. The equivalence check is documented in checklist section 10; Glass
+Garden is documented in section 13.
 
 ## Slice 8: publish packages and prove independent installation
 
