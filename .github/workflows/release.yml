@@ -37,7 +37,7 @@ jobs:
       - name: Require release tag and package versions to agree
         shell: bash
         run: |
-          python - "$GITHUB_REF_NAME" <<'PY'
+          python3 - "$GITHUB_REF_NAME" <<'PY'
           import re
           import sys
           import tomllib
@@ -211,7 +211,7 @@ jobs:
         shell: bash
         run: |
           version="${RELEASE_VERSION#v}"
-          missing="$(python scripts/publish_missing_pypi_files.py glassvm "$version" dist/*)" || exit
+          missing="$(python3 scripts/publish_missing_pypi_files.py glassvm "$version" dist/*)" || exit
           files=()
           if [[ -n "$missing" ]]; then
             mapfile -t files <<< "$missing"
