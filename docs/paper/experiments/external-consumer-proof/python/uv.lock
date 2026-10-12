@@ -1,0 +1,25 @@
+version = 1
+revision = 3
+requires-python = ">=3.12"
+
+[[package]]
+name = "glassvm"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/05/a7dcb94a7ea33900337051c66789f45c25dc7f549096ba9fb64b766b0cf0/glassvm-0.2.0.tar.gz", hash = "sha256:0580a2526e2f795a7252b6ccdee6cba5b0b089e8205fb1b5b603cda63f5c1134", size = 10061, upload-time = "2026-10-12T12:09:47.367Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/29/9a/891a94ab439612d40b41124ff0d2679c7027fd8e8bb40a19b77aaf7f0cc8/glassvm-0.2.0-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:247d1e700acd34fa46773c3dd2659d1814556418ff74c0dcc0b79872edb9b4bf", size = 310432, upload-time = "2026-10-12T12:09:44.077Z" },
+    { url = "https://files.pythonhosted.org/packages/42/60/bdba77a78e7de6e290bf0472e3b182059a2c0a5272a0826fc9ff786eb3cb/glassvm-0.2.0-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:a91d17212af7a16273bc27c1c294c90e70ac5b53cc6bfbc391d38212e2d7a7c8", size = 310030, upload-time = "2026-10-12T12:09:45.077Z" },
+    { url = "https://files.pythonhosted.org/packages/f9/b9/5e04d302e4257799d9c7adcb5ac5201a0502e1ad6e5b20caef5e823d657d/glassvm-0.2.0-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:38ff1500a58fad1de3af8f64f8d523007dc2fc04c44fc1830806ec401ad2657e", size = 310288, upload-time = "2026-10-12T12:09:46.231Z" },
+]
+
+[[package]]
+name = "glassvm-external-consumer-proof"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "glassvm" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "glassvm", specifier = "==0.2.0" }]

@@ -365,14 +365,14 @@ Output:
 ## 11. Package-index-only install proof
 
 Package-index Python execution was first exercised by the 135 Slice 5 trials
-using `0.1.2`. After the `0.2.0` release, fresh Python 3.12 environments
-installed the facade, each provider individually, and `glassvm-machines[all]`
-from PyPI, then discovered providers by entry point and published smoke runs
-with separate receipts. The fixture bytes and conformance caller came from the
-machine checkout; no bundle implementation or local package override was
-imported. This is not yet the separate zero-checkout consumer-project proof.
-The Rust external-consumer build and fully checkout-free packaging proof remain
-open.
+using `0.1.2`. After the `0.2.0` release, package-index installation was
+verified first with repository-backed conformance fixtures, then independently
+with the no-checkout consumer project documented in
+[`PAPER_RELEASE_SLICE_08.md`](PAPER_RELEASE_SLICE_08.md). The latter downloads
+the pinned public workloads directly from upstream, verifies the expected
+hashes, and runs using only installed wheels. Its base-only, each-provider, and
+all-provider environments passed. A minimal external Rust consumer also built
+and ran against the five published crates with no local path dependencies.
 
 Package-index Python execution (evidenced by Slice 5):
 
@@ -389,10 +389,21 @@ Repeat independently for:
 - [x] TIC-80
 - [x] all three installed together
 
+External consumer project:
+
+- [x] Run from a fresh temporary project with no GlassVM or machine checkout on its import path.
+- [x] Download pinned public workload fixtures independently and verify their expected SHA-256 values.
+- [x] Verify facade-only, each provider individually, and all provider wheels through the external caller.
+
 For Rust:
 
-- [ ] verify released crates resolve without local path overrides
-- [ ] verify minimal external consumer project builds against published versions
+- [x] verify released crates resolve without local path overrides
+- [x] verify minimal external consumer project builds against published versions
+
+External proof sources and lockfiles:
+[`experiments/external-consumer-proof/`](experiments/external-consumer-proof/).
+See [Slice 8](PAPER_RELEASE_SLICE_08.md) for exact versions, environment, and
+results.
 
 Output:
 - commands

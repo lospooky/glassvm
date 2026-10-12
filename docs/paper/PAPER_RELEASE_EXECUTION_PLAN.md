@@ -52,8 +52,8 @@ coordinates.
 | Paper-branch product sync | GlassVM `paper-publication` incorporates product-sync commit `a7dd37498d681cd9c97679ac30c6a22a7acb311e`, which passed [CI 38252407335](https://github.com/lospooky/glassvm/actions/runs/38252407335); machines incorporates `3edb0ae31a4a3887a1f385d9d7b9aa50f7a9b026`, which passed [CI 38252506914](https://github.com/lospooky/glassvm-machines/actions/runs/38252506914). Both retain paper experiment assets on their publication branches. |
 | Published CI | GlassVM release run [38247046904](https://github.com/lospooky/glassvm/actions/runs/38247046904) passed. Machine release run [38250729717](https://github.com/lospooky/glassvm-machines/actions/runs/38250729717) and tag CI [38250729742](https://github.com/lospooky/glassvm-machines/actions/runs/38250729742) passed, including Rust/conformance and CPython 3.12, 3.13, 3.14. |
 | Python package indexes | `glassvm`, `glassvm-chip8`, `glassvm-pico8`, `glassvm-tic80`, and `glassvm-machines` are published at `0.2.0`. Each provider has an sdist and CPython 3.12/3.13/3.14 wheel; the selector has an sdist and pure-Python wheel. The five GlassVM contract crates are published at `0.2.0`; machine-specific Rust crates remain unpublished. |
-| Package-index smoke | Fresh Python 3.12 environments passed for facade-only, each provider individually, and `glassvm-machines[all]`; see [Slice 8](PAPER_RELEASE_SLICE_08.md). The conformance caller and fixture checkout were local inputs, so this is not the zero-checkout consumer-project proof. |
-| Source archive audit | Release CI built bundle sdists and wheels on a clean runner and rebuilt/tested wheel installs for CPython 3.12/3.13/3.14. A zero-checkout external consumer and minimal Rust consumer remain open. |
+| Package-index smoke | Fresh Python 3.12 environments passed for facade-only, each provider individually, and `glassvm-machines[all]`; the separate zero-checkout caller also passed using upstream-downloaded, hash-checked fixtures. See [Slice 8](PAPER_RELEASE_SLICE_08.md). |
+| Source archive audit | Release CI built bundle sdists and wheels on a clean runner and rebuilt/tested wheel installs for CPython 3.12/3.13/3.14. A minimal external Rust consumer resolved all five published crates with `--locked` and no local paths; see [Slice 8](PAPER_RELEASE_SLICE_08.md). |
 | Paper tooling | Experiment drivers, versioned results, generators, and paper documents are retained on `paper-publication`; see the current checklist for outstanding measurements. |
 | Documentation | Release sequencing, checklist, and claim/evidence map are being refreshed against the published `0.2.0` coordinates; paper artifacts remain confined to this branch. |
 
@@ -429,9 +429,9 @@ Garden is documented in section 13.
 
 Execution record: [PAPER_RELEASE_SLICE_08.md](PAPER_RELEASE_SLICE_08.md).
 The `0.2.0` GlassVM and machine packages were published on 2026-10-12. The
-package-index smoke passed for base-only, each provider, and the all-provider
-selector in fresh Python 3.12 environments. The external Rust consumer and
-zero-checkout Python consumer-project proofs remain open.
+package-index smoke and the no-checkout Python consumer passed for base-only,
+each provider individually, and all providers together in fresh Python 3.12
+environments. A no-path Rust consumer built against all five released crates.
 
 ### Tasks
 
@@ -439,17 +439,17 @@ zero-checkout Python consumer-project proofs remain open.
 - [x] Verify release builds and source archives on clean runners, with machine crates resolving published GlassVM dependencies and no local source overrides.
 - [x] Build the declared wheel/platform set and verify each bundle distribution supplies exactly one installed entry-point provider.
 - [x] Publish shared GlassVM dependencies before the machine packages that consume them; keep extras as ordinary package dependencies.
-- [ ] Run the caller from a separate zero-checkout project with providers installed from the package index and no local overrides.
-- [ ] Supply public fixtures independently of the repository checkout and verify base-only, each provider alone, and all providers together through that external caller.
+- [x] Run the caller from a separate zero-checkout project with providers installed from the package index and no local overrides.
+- [x] Supply public fixtures independently of the repository checkout and verify base-only, each provider alone, and all providers together through that external caller.
 - [x] Record exact package versions, release workflow links, entry-point discovery, receipts, and published-run results in the Slice 8 execution record.
-- [ ] Build a minimal external Rust consumer against the released versions without local path overrides.
+- [x] Build a minimal external Rust consumer against the released versions without local path overrides.
 
 ### Deliverables and exit gate
 
-Published package identifiers, release artifacts, and clean-environment logs
-are recorded. The repository-backed package-index smoke closes the upload and
-installed-provider checks, but not the separate zero-checkout Python consumer
-or external Rust consumer gates.
+Published package identifiers, release artifacts, clean-environment results,
+and rerunnable external consumer projects are recorded. Python fixtures are
+downloaded from pinned public upstream revisions and hash-checked. The Rust
+lockfile resolves all five GlassVM crates from crates.io.
 
 If version or source changes affect machine behavior, preparation, evidence,
 or storage accounting, rerun the affected experiments before sealing claims.
@@ -486,9 +486,13 @@ selected specimens, and measured conditions.
 
 ## Immediate next work
 
-Publication of the `0.2.0` product packages is complete. Before sealing paper
-claims, first regenerate the full three-machine bounded-memory matrix from the
-same clean pinned source coordinate (Slice 6), then run the clean 60,000-frame
-Python-consumer cost matrix (Slice 7b). Keep the external zero-checkout Python
-and Rust consumer proofs visible as packaging gaps; do not infer them from CI's
-repository-backed smoke test.
+Publication of the `0.2.0` product packages, the clean 60,000-frame
+Python-consumer matrix (Slice 7b), semantic-equivalence check (Slice 7c), and
+Glass Garden downstream demo (Slice 7d) are complete. The next evidence gate is
+the full three-machine bounded-memory matrix: rerun all 120 trials from one
+clean pinned source coordinate and review the regenerated results before making
+a cross-bundle bounded-memory claim.
+
+Slice 8's independent-installation proofs are complete. The next gate remains
+the full three-machine bounded-memory matrix in Slice 6. Once it is reviewed,
+proceed to Slice 9's manuscript-wide regeneration and immutable artifact seal.

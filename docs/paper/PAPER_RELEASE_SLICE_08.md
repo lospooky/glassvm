@@ -40,12 +40,66 @@ Fresh Python 3.12.13 virtual environments installed directly from PyPI and passe
 
 The installed providers completed the same `Runtime.discover -> prepare -> execute` lifecycle, delivered Python emissions, finalized the Rust file recorder, and atomically published the run with separate machine, evidence, Python sink, recorder, and publication outcomes. CHIP-8 was not included in the invalid-artifact rejection assertion because its declared admission contract accepts arbitrary artifact bytes.
 
-The interpreter environments installed only published distributions; the conformance script and smoke fixtures were supplied from the checked-out machines repository. Thus this verifies published package installation and execution, but it does not close the separate zero-checkout consumer-project proof. Temporary run outputs were written under `/tmp/glassvm-index-proof.ktb4qG` and are not paper measurement data.
+The interpreter environments installed only published distributions; the conformance script and smoke fixtures were supplied from the checked-out machines repository. This verifies published package installation and execution, but is distinct from the no-checkout proof below. Temporary run outputs were written under `/tmp/glassvm-index-proof.ktb4qG` and are not paper measurement data.
 
-## Remaining packaging gates
+## External consumer proofs
 
-- Build a minimal external Rust consumer against published crate versions without local paths.
-- Run a Python consumer project with no GlassVM repository checkout, supplying fixtures independently.
-- Keep the Slice 7b 60,000-frame Python-consumer performance matrix open; this smoke is packaging validation, not performance evidence.
+Both outstanding consumer gates passed on 2026-10-12 using published `0.2.0`
+artifacts, with the consumer projects copied to fresh temporary directories.
+The reusable project sources and lockfiles are in
+[`experiments/external-consumer-proof/`](experiments/external-consumer-proof/).
+
+### Python, no GlassVM checkout
+
+The proof ran with CPython 3.12.13 and uv 0.12.1 on Linux x86_64. Its isolated
+`pyproject.toml` depends only on `glassvm==0.2.0`; provider distributions were
+installed separately from PyPI in fresh environments. No GlassVM or machine
+source checkout was on the consumer import path. Public input artifacts were
+downloaded directly from their pinned upstream GitHub revisions; the PICO-8
+input applies the documented title-only normalization. All derived bytes
+matched the workload manifest hashes:
+
+| Machine | SHA-256 |
+| --- | --- |
+| CHIP-8 | `010f9ab220f55cc59645a6d05157b33a7099bac01037816ef06b74c2f8339b8a` |
+| PICO-8 | `491888897d07e5699a5e411c9cb881181f313e6cad7b0dcfec2fd333ea0b833a` |
+| TIC-80 | `f095a8ad534482a3aefbe0aa84c9b8bc47b74a89dd4202acbd5fc8b517995994` |
+
+Each external run used installed `glassvm.machine_bundles` entry points,
+prepared typed machine configuration plus an empty typed input schedule,
+requested normalized events and hash frames, then used the shared Python
+facade to execute and publish through the Rust recorder. Every provider run
+completed execution, fulfilled evidence, finalized the recorder, and
+atomically published. The tested fresh-environment selections were:
+
+| Install selection | Discovery and execution result |
+| --- | --- |
+| `glassvm==0.2.0` | No providers discovered; base-only caller passed |
+| Base + `glassvm-chip8==0.2.0` | CHIP-8 only; published run passed |
+| Base + `glassvm-pico8==0.2.0` | PICO-8 only; published run passed |
+| Base + `glassvm-tic80==0.2.0` | TIC-80 only; published run passed |
+| Base + all three provider wheels | Exactly the three providers; all published runs passed |
+
+The caller source, pinned fixture downloader, exact commands, and `uv.lock`
+are retained in the external-consumer proof project. These checks validate
+package consumption and execution, not performance.
+
+### Rust, crates.io only
+
+A separate Rust 2024 consumer project used exact `=0.2.0` dependencies on all
+five published crates: `glassvm_normalizer_contract`, `glassvm_core`,
+`glassvm_recorder`, `glassvm_query`, and `glassvm_registry`. Its `Cargo.lock`
+records each GlassVM crate with the crates.io registry source; the manifest has
+no path or Git dependencies. On rustc/cargo `1.97.1`, both `cargo check
+--locked` and `cargo run --locked` passed from the temporary copy. The small
+executable references public types from every crate. Its source and lockfile
+are retained beside the Python proof.
+
+## Scope boundary
+
+The Slice 7b 60,000-frame Python-consumer matrix is measured evidence and is
+documented separately; this installation proof makes no performance claim.
+The full manuscript-wide regeneration and final immutable artifact seal remain
+in Slice 9.
 
 The release workflows build from clean GitHub runners. Machine CI rebuilds the provider sdists into wheels and exercises base-only, individual-provider, and all-provider installs for CPython 3.12, 3.13, and 3.14.
