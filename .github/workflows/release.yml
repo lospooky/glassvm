@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "v*"
-      - "python-v*"
 
 permissions:
   contents: read
@@ -45,7 +44,7 @@ jobs:
           from pathlib import Path
 
           tag = sys.argv[1]
-          match = re.fullmatch(r"(?:python-)?v([0-9]+\.[0-9]+\.[0-9]+)", tag)
+          match = re.fullmatch(r"v([0-9]+\.[0-9]+\.[0-9]+)", tag)
           if match is None:
               raise SystemExit(f"Expected a vMAJOR.MINOR.PATCH tag, got {tag!r}")
           expected = match.group(1)
@@ -56,6 +55,7 @@ jobs:
               ("crates/recorder/Cargo.toml", "package"),
               ("crates/query/Cargo.toml", "package"),
               ("crates/registry/Cargo.toml", "package"),
+              ("python/facade/Cargo.toml", "package"),
               ("python/facade/pyproject.toml", "project"),
           ]
           for filename, section in manifests:
@@ -66,15 +66,6 @@ jobs:
                       f"{filename} declares {version}, but tag {tag} requires {expected}"
                   )
 
-          with Path("python/facade/pyproject.toml").open("rb") as manifest_file:
-              project = tomllib.load(manifest_file)["project"]
-          for extra, requirements in project["optional-dependencies"].items():
-              for requirement in requirements:
-                  if requirement.rsplit("==", 1)[-1] != expected:
-                      raise SystemExit(
-                          f"extra {extra!r} has a dependency not pinned to {expected}: "
-                          f"{requirement}"
-                      )
           PY
 
       - name: Check formatting
@@ -143,20 +134,43 @@ jobs:
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.crates-auth.outputs.token }}
         run: |
-          cargo publish --locked --package glassvm_normalizer_contract
-          cargo publish --locked --package glassvm_core
-          cargo publish --locked --package glassvm_recorder
-          cargo publish --locked --package glassvm_query
-          cargo publish --locked --package glassvm_registry
+          version="${GITHUB_REF_NAME#v}"
+          wait_for_index() {
+            crate="$1"
+            for attempt in $(seq 1 60); do
+              if curl --fail --silent --show-error \
+                --user-agent "glassvm-release/1.0 (lospooky)" \
+                "https://crates.io/api/v1/crates/$crate/$version" \
+                --output /dev/null; then
+                return 0
+              fi
+              echo "Waiting for crates.io to index $crate $version ($attempt/60)"
+              sleep 20
+            done
+            echo "Timed out waiting for crates.io to index $crate $version" >&2
+            return 1
+          }
+
+          publish_and_wait() {
+            package="$1"
+            crate="${package//_/-}"
+            cargo publish --locked --package "$package"
+            wait_for_index "$crate"
+          }
+
+          publish_and_wait glassvm_normalizer_contract
+          publish_and_wait glassvm_core
+          publish_and_wait glassvm_recorder
+          publish_and_wait glassvm_query
+          publish_and_wait glassvm_registry
 
   publish-facade:
     name: Publish generic Python facade
     needs: [validate-and-build, publish-crates]
     if: >-
       ${{
-        always() &&
         needs.validate-and-build.result == 'success' &&
-        (needs.publish-crates.result == 'success' || needs.publish-crates.result == 'skipped')
+        needs.publish-crates.result == 'success'
       }}
     runs-on: ubuntu-24.04
     environment: pypi
@@ -175,44 +189,6 @@ jobs:
         with:
           name: glassvm-facade-dist
           path: dist/
-
-      - name: Wait for matching bundle releases on PyPI
-        env:
-          RELEASE_VERSION: ${{ github.ref_name }}
-        run: |
-          python - <<'PY'
-          import os
-          import time
-          import urllib.error
-          import urllib.request
-
-          tag = os.environ["RELEASE_VERSION"]
-          version = tag.removeprefix("python-v").removeprefix("v")
-          projects = (
-              "glassvm-chip8",
-              "glassvm-pico8",
-              "glassvm-tic80",
-          )
-          deadline = time.monotonic() + 45 * 60
-          pending = set(projects)
-          while pending and time.monotonic() < deadline:
-              for project in tuple(pending):
-                  url = f"https://pypi.org/pypi/{project}/{version}/json"
-                  try:
-                      with urllib.request.urlopen(url, timeout=15) as response:
-                          if response.status == 200:
-                              pending.remove(project)
-                  except urllib.error.HTTPError as error:
-                      if error.code != 404:
-                          raise
-              if pending:
-                  print(f"Waiting for {version} on PyPI: {', '.join(sorted(pending))}", flush=True)
-                  time.sleep(30)
-          if pending:
-              raise SystemExit(
-                  f"Timed out waiting for version {version} of: {', '.join(sorted(pending))}"
-              )
-          PY
 
       - name: Publish facade with PyPI Trusted Publishing
         run: uv publish dist/* --trusted-publishing always

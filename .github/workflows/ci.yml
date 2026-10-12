@@ -33,6 +33,9 @@ jobs:
       - name: Test workspace
         run: cargo test --workspace --locked --no-fail-fast
 
+      - name: Test Python consumer feature
+        run: cargo test -p glassvm_recorder --features python --locked --no-fail-fast
+
   facade-package:
     name: Build generic Python facade (CPython ${{ matrix.python-version }})
     runs-on: ubuntu-24.04

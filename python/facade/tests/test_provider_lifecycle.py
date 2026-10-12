@@ -116,7 +116,7 @@ class ProviderDiscoveryTests(unittest.TestCase):
                     "module": "glassvm_test_provider",
                     "prepare_function": "prepare_run",
                     "execute_function": "execute_prepared",
-                    "bundle_version": "0.1.0",
+                    "bundle_version": "0.2.0",
                 }
             )
 
