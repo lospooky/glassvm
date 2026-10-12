@@ -1,7 +1,7 @@
 # Independent GlassVM and machine releases
 
-Status: approved and implemented. GlassVM 0.2.0 is published; machine release
-preparation is in progress.
+Status: approved, implemented, and exercised. GlassVM 0.2.0 and the matching
+CHIP-8, PICO-8, TIC-80, and `glassvm-machines` distributions are published.
 
 This decision replaces the coordinated publication scheme in which GlassVM
 waits for matching machine package versions before publishing its Python facade.
@@ -149,5 +149,8 @@ GlassVM completes its publication without waiting for the machines repository.
 - Unsupported provider protocol metadata is rejected explicitly.
 
 This document records the approved publication model and its current
-implementation. The `glassvm-machines` PyPI trusted publisher must be registered
-before that new distribution can be published.
+implementation. The 0.2.0 release completed with GlassVM first, followed by the
+three provider distributions and then the selector distribution. The machine
+release is recorded by [workflow run 38250729717](https://github.com/lospooky/glassvm-machines/actions/runs/38250729717);
+its source tag resolves to `0aefbb950c451b4d54de85e8c13c25345065ae92`. The
+GlassVM release completed in [workflow run 38247046904](https://github.com/lospooky/glassvm/actions/runs/38247046904).
