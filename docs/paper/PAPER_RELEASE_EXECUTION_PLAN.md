@@ -358,12 +358,25 @@ remains the sole file-backed lifecycle owner.
   counts, logical bytes, peak bridge buffer, RSS high-water, receipts, and
   source/package metadata. The short local smoke matrix is plumbing validation,
   not paper evidence.
-- [ ] Publish the GlassVM recorder version that supplies the Python feature,
+- [x] Publish the GlassVM recorder version that supplies the Python feature,
   resolve the machine lockfile against that registry artifact, and repeat the
   smoke test without local source overrides.
-- [ ] Run the registered three-machine, 60,000-frame, three-repetition matrix
-  from clean pinned builds; review the generated summary and retain the raw
-  trials. Keep the Python consumer cost claim unchecked until this closes.
+- [x] Run the registered three-machine, 60,000-frame, three-repetition matrix
+  using the published `0.2.0` wheels from clean pinned source coordinates;
+  review the generated summary and retain the raw trials.
+
+Execution record: 45 isolated trials completed in Python 3.14.3 on WSL2 using
+the package-index `0.2.0` facade and CHIP-8/PICO-8/TIC-80 provider wheels. The
+source checkouts were clean at GlassVM `e067605a3eab34300f9b83df3996958a93b7cd7e`
+and machines `3edb0ae31a4a3887a1f385d9d7b9aa50f7a9b026`. Raw trials, manifest,
+and generated summaries are retained under
+[`experiments/measurements/python-sink-cost-0.2.0/`](experiments/measurements/python-sink-cost-0.2.0/).
+The Python-consumer median increment over observed/no-external-sink execution
+was CHIP-8 +1.957 s (+31.4%), PICO-8 +0.442 s (+1.3%), and TIC-80 +1.155 s
+(+8.0%). PICO-8's 33.497 s observed baseline remains substantially slower than
+TIC-80's 14.375 s and CHIP-8's 6.239 s for the respective 60,000-frame
+workloads; this is a descriptive cross-machine comparison, not normalized
+throughput. Full manuscript-wide regeneration is still deferred.
 
 Reproduction harness: [`experiments/run_python_sink_cost.py`](experiments/run_python_sink_cost.py).
 The observed/no-external-sink case is not described as a direct Rust `NullSink`

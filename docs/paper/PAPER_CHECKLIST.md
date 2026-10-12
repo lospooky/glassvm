@@ -279,8 +279,7 @@ Remaining consumer comparison:
 
 - [x] execution / observation disabled
 - [x] observation + `NullSink`
-- [ ] observation + Python consumer (bridge and three-provider smoke exist;
-  complete clean 60,000-frame paper matrix is pending; see Slice 7b)
+- [x] observation + Python consumer (complete three-machine matrix; see Slice 7b)
 - [x] observation + bounded Rust recorder
 
 Python-consumer implementation status (checked 2026-10-12): the bounded
@@ -295,13 +294,29 @@ installed and exercised the published facade, individual providers, and
 `glassvm-machines[all]`; see [Slice 8](PAPER_RELEASE_SLICE_08.md). This smoke
 validates packaging and lifecycle wiring, not consumer performance.
 
-Remaining Slice 7b gates:
+Slice 7b execution record: 45 isolated trials (three machines, five modes,
+three repetitions) completed using the published `0.2.0` facade and provider
+wheels in Python 3.14.3 on WSL2. Both paper-branch source checkouts were clean;
+the exact revisions and provider metadata are in the run manifest and raw
+trials. The generated summary and data are in
+[`experiments/measurements/python-sink-cost-0.2.0/`](experiments/measurements/python-sink-cost-0.2.0/).
+
+The Python consumer added a median 1.957 s (31.4%) for CHIP-8, 0.442 s (1.3%)
+for PICO-8, and 1.155 s (8.0%) for TIC-80 relative to observed execution with
+no external sink. PICO-8's observed/no-external-sink median was 33.497 s,
+versus 14.375 s for TIC-80 and 6.239 s for CHIP-8 on their respective fixtures.
+These are descriptive end-to-end timings, not normalized cross-machine speed
+claims: each machine has distinct semantics and workload. In particular, the
+PICO-8 wall time is dominated by its execution baseline, not incremental Python
+consumer delivery. Full manuscript-wide regeneration remains deferred.
+
+Completed Slice 7b gates:
 
 - [x] Publish the recorder crate version containing the Python feature as part
   of GlassVM `0.2.0`.
 - [x] Resolve machine lockfiles against published registry crates and exercise
   published provider wheels without local package/source overrides.
-- [ ] Run the clean pinned three-machine, 60,000-frame, three-repetition
+- [x] Run the clean pinned three-machine, 60,000-frame, three-repetition
   Python-consumer matrix; retain raw trials and review the generated summary.
 
 Purpose:

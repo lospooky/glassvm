@@ -280,6 +280,8 @@ def summarize(trials: list[dict]) -> dict:
                         f"{machine} repetition {repetition} execution differs in {name}"
                     )
             for name, row in observed.items():
+                machine_result = row["execution"].get("result", {})
+                reference_result = reference["execution"].get("result", {})
                 if row["request"] != reference["request"]:
                     raise ValueError(
                         f"{machine} repetition {repetition} observed request differs in {name}"
@@ -288,9 +290,9 @@ def summarize(trials: list[dict]) -> dict:
                     raise ValueError(
                         f"{machine} repetition {repetition} evidence receipt differs in {name}"
                     )
-                if name != "observation_disabled" and machine_result.get(
+                if machine_result.get("capabilities") != reference_result.get(
                     "capabilities"
-                ) != reference_result.get("capabilities"):
+                ):
                     raise ValueError(
                         f"{machine} repetition {repetition} capability output differs in {name}"
                     )
@@ -338,6 +340,114 @@ def summarize(trials: list[dict]) -> dict:
     return summary
 
 
+def load_existing_trials(
+    output_dir: Path, machines: list[str], modes: list[str], frames: int, repetitions: int
+) -> list[dict]:
+    raw_dir = output_dir / "raw"
+    trials = [
+        json.loads(path.read_text())
+        for path in sorted(raw_dir.glob("*.json"))
+    ]
+    expected = {
+        (machine, mode, repetition)
+        for machine in machines
+        for mode in modes
+        for repetition in range(1, repetitions + 1)
+    }
+    actual = [
+        (
+            trial["trial"]["machine_id"],
+            trial["trial"]["mode"],
+            trial["trial"]["repetition"],
+        )
+        for trial in trials
+    ]
+    if len(actual) != len(set(actual)):
+        raise ValueError("existing raw trials contain duplicate matrix coordinates")
+    if set(actual) != expected:
+        missing = sorted(expected - set(actual))
+        unexpected = sorted(set(actual) - expected)
+        raise ValueError(
+            f"existing raw trial matrix is incomplete or mismatched; "
+            f"missing={missing}, unexpected={unexpected}"
+        )
+    wrong_frames = [
+        trial["trial"]
+        for trial in trials
+        if trial["trial"]["frame_limit"] != frames
+    ]
+    if wrong_frames:
+        raise ValueError(f"existing raw trials have a different frame limit: {wrong_frames}")
+    return trials
+
+
+def write_results(args: argparse.Namespace, trials: list[dict]) -> None:
+    summary = summarize(trials)
+    source = {
+        name: trials[0]["source"][name] for name in ("glassvm", "machines")
+    }
+    for trial in trials[1:]:
+        if any(trial["source"][name] != source[name] for name in source):
+            raise ValueError("raw trials were collected from different source coordinates")
+    manifest = {
+        "schema": "glassvm.paper_python_sink_manifest",
+        "schema_version": "1.0.0",
+        "created_utc": datetime.now(UTC).isoformat(),
+        "policy": {
+            "independent_process_per_trial": True,
+            "frame_limit": args.frames,
+            "repetitions": args.repetitions,
+            "modes": args.modes,
+            "machines": args.machines,
+            "order_seed": args.order_seed,
+            "consumer_retains_emissions": False,
+        },
+        "host": {
+            "system": platform.platform(),
+            "architecture": platform.machine(),
+            "python": sys.version,
+        },
+        "source": source,
+        "trial_count": len(trials),
+    }
+    (args.output_dir / "manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+    )
+    (args.output_dir / "summary.json").write_text(
+        json.dumps(summary, indent=2, sort_keys=True) + "\n"
+    )
+    lines = [
+        "# Python consumer sink-cost experiment",
+        "",
+        "This is a host/workload-specific end-to-end lifecycle comparison. The",
+        "`observed_no_external_sink` row is not a direct `NullSink` microbenchmark;",
+        "the public provider lifecycle still applies the shared budgeted bridge.",
+        "Recorder rows include finalization and atomic publication.",
+        "",
+        "| Machine | Mode | Median lifecycle (s) | Delta vs observed/no external sink (s) | Delta (%) |",
+        "|---|---|---:|---:|---:|",
+    ]
+    for machine, rows in summary.items():
+        for mode, values in rows.items():
+            lines.append(
+                f"| {machine} | {mode} | {values['median_execute_lifecycle_seconds']:.3f} | "
+                f"{values['median_delta_vs_observed_no_external_sink_seconds']:.3f} | "
+                f"{values['relative_delta_percent_vs_observed_no_external_sink']:.1f}% |"
+            )
+    lines.extend(
+        [
+            "",
+            "Raw trials record per-run batch/item/logical-byte counts, peak bounded",
+            "batch size, RSS high-water where available, receipts, provider metadata,",
+            "and both checkout revisions. Regenerate from clean pinned builds before",
+            "using these values as paper evidence.",
+            "",
+        ]
+    )
+    (args.output_dir / "SUMMARY.md").write_text("\n".join(lines))
+    print(f"Wrote Python sink-cost results to {args.output_dir}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -358,6 +468,11 @@ def main() -> None:
     parser.add_argument("--modes", nargs="*", choices=MODES, default=list(MODES))
     parser.add_argument("--order-seed", type=int, default=20261011)
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument(
+        "--summarize-existing",
+        action="store_true",
+        help="validate and summarize a complete existing raw-trial matrix",
+    )
     parser.add_argument("--machine")
     parser.add_argument("--mode", choices=MODES)
     parser.add_argument("--repetition", type=int)
@@ -373,6 +488,12 @@ def main() -> None:
             "--modes must include observed_no_external_sink as the comparison reference"
         )
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    if args.summarize_existing:
+        trials = load_existing_trials(
+            args.output_dir, args.machines, args.modes, args.frames, args.repetitions
+        )
+        write_results(args, trials)
+        return
     cases = [
         (machine, mode, repetition)
         for machine in args.machines
@@ -426,67 +547,7 @@ def main() -> None:
             ),
             flush=True,
         )
-    summary = summarize(trials)
-    manifest = {
-        "schema": "glassvm.paper_python_sink_manifest",
-        "schema_version": "1.0.0",
-        "created_utc": datetime.now(UTC).isoformat(),
-        "policy": {
-            "independent_process_per_trial": True,
-            "frame_limit": args.frames,
-            "repetitions": args.repetitions,
-            "modes": args.modes,
-            "machines": args.machines,
-            "order_seed": args.order_seed,
-            "consumer_retains_emissions": False,
-        },
-        "host": {
-            "system": platform.platform(),
-            "architecture": platform.machine(),
-            "python": sys.version,
-        },
-        "source": {
-            "glassvm": git_metadata(args.glassvm_root.resolve()),
-            "machines": git_metadata(args.machines_root.resolve()),
-        },
-        "trial_count": len(trials),
-    }
-    (args.output_dir / "manifest.json").write_text(
-        json.dumps(manifest, indent=2, sort_keys=True) + "\n"
-    )
-    (args.output_dir / "summary.json").write_text(
-        json.dumps(summary, indent=2, sort_keys=True) + "\n"
-    )
-    lines = [
-        "# Python consumer sink-cost experiment",
-        "",
-        "This is a host/workload-specific end-to-end lifecycle comparison. The",
-        "`observed_no_external_sink` row is not a direct `NullSink` microbenchmark;",
-        "the public provider lifecycle still applies the shared budgeted bridge.",
-        "Recorder rows include finalization and atomic publication.",
-        "",
-        "| Machine | Mode | Median lifecycle (s) | Delta vs observed/no external sink (s) | Delta (%) |",
-        "|---|---|---:|---:|---:|",
-    ]
-    for machine, rows in summary.items():
-        for mode, values in rows.items():
-            lines.append(
-                f"| {machine} | {mode} | {values['median_execute_lifecycle_seconds']:.3f} | "
-                f"{values['median_delta_vs_observed_no_external_sink_seconds']:.3f} | "
-                f"{values['relative_delta_percent_vs_observed_no_external_sink']:.1f}% |"
-            )
-    lines.extend(
-        [
-            "",
-            "Raw trials record per-run batch/item/logical-byte counts, peak bounded",
-            "batch size, RSS high-water where available, receipts, provider metadata,",
-            "and both checkout revisions. Regenerate from clean pinned builds before",
-            "using these values as paper evidence.",
-            "",
-        ]
-    )
-    (args.output_dir / "SUMMARY.md").write_text("\n".join(lines))
-    print(f"Wrote Python sink-cost results to {args.output_dir}")
+    write_results(args, trials)
 
 
 if __name__ == "__main__":

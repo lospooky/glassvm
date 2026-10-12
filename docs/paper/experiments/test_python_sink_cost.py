@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -44,7 +46,13 @@ class PythonSinkCostTests(unittest.TestCase):
                         },
                         "timing": {"execute_lifecycle_seconds": value},
                         "request": {"observation": "selected"},
-                        "execution": {"status": "completed"},
+                        "execution": {
+                            "status": "completed",
+                            "result": {
+                                "common": {"frames": 10},
+                                "capabilities": [{"id": "visual", "value": 1}],
+                            },
+                        },
                         "evidence_fulfillment": {"status": "complete"},
                         "identity": {
                             "prepared_observation_id": "observation-id",
@@ -52,6 +60,27 @@ class PythonSinkCostTests(unittest.TestCase):
                         },
                     }
                 )
+        for repetition in range(1, 4):
+            rows.append(
+                {
+                    "trial": {
+                        "machine_id": "chip8",
+                        "mode": "observation_disabled",
+                        "repetition": repetition,
+                    },
+                    "timing": {"execute_lifecycle_seconds": 0.5},
+                    "request": {"observation": "disabled"},
+                    "execution": {
+                        "status": "completed",
+                        "result": {"common": {"frames": 10}, "capabilities": []},
+                    },
+                    "evidence_fulfillment": {"status": "complete"},
+                    "identity": {
+                        "prepared_observation_id": None,
+                        "run_id": "run-id",
+                    },
+                }
+            )
         summary = HARNESS.summarize(rows)["chip8"]
         self.assertEqual(
             summary["observed_no_external_sink"]["median_execute_lifecycle_seconds"],
@@ -110,6 +139,37 @@ class PythonSinkCostTests(unittest.TestCase):
         self.assertEqual(consumer.capability_receipt_count, 1)
         self.assertEqual(consumer.run_started["run_id"], "test-run")
         self.assertFalse(hasattr(consumer, "emissions"))
+
+    def test_load_existing_trials_requires_exact_matrix(self):
+        trial = {
+            "trial": {
+                "machine_id": "chip8",
+                "mode": "observed_no_external_sink",
+                "repetition": 1,
+                "frame_limit": 60_000,
+            }
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            output_dir = Path(temporary)
+            raw_dir = output_dir / "raw"
+            raw_dir.mkdir()
+            (raw_dir / "one.json").write_text(json.dumps(trial))
+            loaded = HARNESS.load_existing_trials(
+                output_dir,
+                ["chip8"],
+                ["observed_no_external_sink"],
+                60_000,
+                1,
+            )
+            self.assertEqual(loaded, [trial])
+            with self.assertRaisesRegex(ValueError, "matrix is incomplete"):
+                HARNESS.load_existing_trials(
+                    output_dir,
+                    ["chip8", "pico8"],
+                    ["observed_no_external_sink"],
+                    60_000,
+                    1,
+                )
 
 
 if __name__ == "__main__":

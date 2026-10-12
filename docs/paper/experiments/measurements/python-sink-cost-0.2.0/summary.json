@@ -1,0 +1,83 @@
+{
+  "chip8": {
+    "observation_disabled": {
+      "median_delta_vs_observed_no_external_sink_seconds": -6.165111529000569,
+      "median_execute_lifecycle_seconds": 0.073841800000082,
+      "relative_delta_percent_vs_observed_no_external_sink": -98.8164392950843
+    },
+    "observed_no_external_sink": {
+      "median_delta_vs_observed_no_external_sink_seconds": 0.0,
+      "median_execute_lifecycle_seconds": 6.238953329000651,
+      "relative_delta_percent_vs_observed_no_external_sink": 0.0
+    },
+    "python_consumer": {
+      "median_delta_vs_observed_no_external_sink_seconds": 1.9568212649974157,
+      "median_execute_lifecycle_seconds": 8.195774593998067,
+      "relative_delta_percent_vs_observed_no_external_sink": 31.364576104480292
+    },
+    "python_consumer_and_rust_recorder": {
+      "median_delta_vs_observed_no_external_sink_seconds": 11.986614544999611,
+      "median_execute_lifecycle_seconds": 18.225567874000262,
+      "relative_delta_percent_vs_observed_no_external_sink": 192.12540810783102
+    },
+    "rust_recorder": {
+      "median_delta_vs_observed_no_external_sink_seconds": 10.020248626999091,
+      "median_execute_lifecycle_seconds": 16.259201955999742,
+      "relative_delta_percent_vs_observed_no_external_sink": 160.60784715958317
+    }
+  },
+  "pico8": {
+    "observation_disabled": {
+      "median_delta_vs_observed_no_external_sink_seconds": -1.1437383820011746,
+      "median_execute_lifecycle_seconds": 32.35363035699993,
+      "relative_delta_percent_vs_observed_no_external_sink": -3.414412609279116
+    },
+    "observed_no_external_sink": {
+      "median_delta_vs_observed_no_external_sink_seconds": 0.0,
+      "median_execute_lifecycle_seconds": 33.497368739001104,
+      "relative_delta_percent_vs_observed_no_external_sink": 0.0
+    },
+    "python_consumer": {
+      "median_delta_vs_observed_no_external_sink_seconds": 0.44204650599567685,
+      "median_execute_lifecycle_seconds": 33.93941524499678,
+      "relative_delta_percent_vs_observed_no_external_sink": 1.3196454606328543
+    },
+    "python_consumer_and_rust_recorder": {
+      "median_delta_vs_observed_no_external_sink_seconds": 4.715227151998988,
+      "median_execute_lifecycle_seconds": 38.21259589100009,
+      "relative_delta_percent_vs_observed_no_external_sink": 14.076410564478255
+    },
+    "rust_recorder": {
+      "median_delta_vs_observed_no_external_sink_seconds": 5.1937855549986125,
+      "median_execute_lifecycle_seconds": 38.691154293999716,
+      "relative_delta_percent_vs_observed_no_external_sink": 15.505055323797626
+    }
+  },
+  "tic80": {
+    "observation_disabled": {
+      "median_delta_vs_observed_no_external_sink_seconds": -4.130490061001183,
+      "median_execute_lifecycle_seconds": 10.244360145999963,
+      "relative_delta_percent_vs_observed_no_external_sink": -28.734143323381993
+    },
+    "observed_no_external_sink": {
+      "median_delta_vs_observed_no_external_sink_seconds": 0.0,
+      "median_execute_lifecycle_seconds": 14.374850207001145,
+      "relative_delta_percent_vs_observed_no_external_sink": 0.0
+    },
+    "python_consumer": {
+      "median_delta_vs_observed_no_external_sink_seconds": 1.154563235999376,
+      "median_execute_lifecycle_seconds": 15.529413443000522,
+      "relative_delta_percent_vs_observed_no_external_sink": 8.031827945150036
+    },
+    "python_consumer_and_rust_recorder": {
+      "median_delta_vs_observed_no_external_sink_seconds": 6.31600213999991,
+      "median_execute_lifecycle_seconds": 20.690852347001055,
+      "relative_delta_percent_vs_observed_no_external_sink": 43.93786404065453
+    },
+    "rust_recorder": {
+      "median_delta_vs_observed_no_external_sink_seconds": 5.049309834997985,
+      "median_execute_lifecycle_seconds": 19.42416004199913,
+      "relative_delta_percent_vs_observed_no_external_sink": 35.12599966112177
+    }
+  }
+}
