@@ -16,8 +16,8 @@ use glassvm_core::{
     BudgetedSink, CapabilityId, CapabilityOutput, CapabilityReceipt, CapabilitySchema,
     ContentDigest, EMISSION_SCHEMA_VERSION, Emission, EmissionSink, EventSelection,
     EvidenceReceipt, EvidenceStatus, ExecutionEvent, FrameArtifact, FrameCapture,
-    InputValueEvidence, MachineId, NativeEvidenceEnvelope, ObservationRequest, RunId, SchemaRef,
-    SchemaVersion, SinkError, SnapshotArtifact, SnapshotCapture, VersionStamp,
+    InputValueEvidence, MachineId, NativeEvidenceEnvelope, ObservationRequest, PreparedRunIdentity,
+    RunId, SchemaRef, SchemaVersion, SinkError, SnapshotArtifact, SnapshotCapture, VersionStamp,
     canonical_json_bytes,
 };
 use serde::{Deserialize, Serialize};
@@ -34,7 +34,7 @@ pub use python_sink::{
     RunStartedRecord,
 };
 
-pub const REFERENCE_RUN_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 0, 0);
+pub const REFERENCE_RUN_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 1, 0);
 pub const REFERENCE_SEGMENT_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 0, 0);
 pub const RECORDER_RECEIPT_SCHEMA_VERSION: SchemaVersion = SchemaVersion::new(1, 1, 0);
 pub const SEGMENT_FORMAT_VERSION: u8 = 1;
@@ -643,6 +643,9 @@ pub struct ReferenceRunManifest {
     pub machine_version: VersionStamp,
     pub request: ObservationRequest,
     pub prepared_observation_id: Option<ContentDigest>,
+    /// Canonical execution identity emitted as `RunStarted` provenance.
+    #[serde(default)]
+    pub prepared_run_identity: Option<PreparedRunIdentity>,
     pub requested_channels: BTreeSet<ReferenceChannel>,
     pub limits: RecorderLimits,
 }
@@ -659,6 +662,12 @@ impl ReferenceRunManifest {
         self.request
             .validate()
             .map_err(|error| format!("invalid observation request: {error}"))?;
+        if let Some(identity) = &self.prepared_run_identity {
+            identity.validate()?;
+            if identity.machine_identity.machine_id != self.machine_id {
+                return Err("prepared run identity machine ID does not match the manifest".into());
+            }
+        }
         self.limits.validate()
     }
 }
@@ -1290,6 +1299,7 @@ impl FileEmissionSink {
             machine_version: self.machine_version.clone(),
             request: observation.clone(),
             prepared_observation_id: request.prepared_observation_id,
+            prepared_run_identity: request.prepared_run_identity.clone(),
             requested_channels,
             limits: self.limits.clone(),
         };
@@ -1746,8 +1756,9 @@ mod tests {
     use glassvm_core::{
         BudgetReceipt, Emission, EmissionBudgets, EmulatorSession, EventContext, EventKind,
         EventSelection, EvidenceGuarantee, ExecutionControls, ExecutionEvent, ExecutionRequest,
-        InputCoordinate, InputId, InputSchedule, InputSource, MachineConfiguration,
-        ObservationRequest, RunResult, StructuredValue, TypedInputPayload,
+        InputCoordinate, InputId, InputSchedule, InputSource, MachineArtifactSpec,
+        MachineConfigSchema, MachineConfiguration, MachineIdentity, ObservationRequest,
+        PreparedRun, RunResult, StructuredValue, TypedInputPayload,
     };
 
     fn manifest(limits: RecorderLimits, channels: &[ReferenceChannel]) -> ReferenceRunManifest {
@@ -1764,6 +1775,7 @@ mod tests {
             machine_version,
             request,
             prepared_observation_id: None,
+            prepared_run_identity: None,
             requested_channels: channels.iter().cloned().collect(),
             limits,
         }
@@ -2081,20 +2093,52 @@ mod tests {
     fn successful_request(run_id: &str) -> ExecutionRequest {
         let mut observation = ObservationRequest::summary();
         observation.normalized_events.events = EventSelection::All;
+        let artifact = b"artifact".to_vec();
+        let configuration = MachineConfiguration::new(
+            SchemaRef::new("test.configuration", SchemaVersion::V1),
+            StructuredValue::Map(BTreeMap::new()),
+        )
+        .unwrap();
+        let prepared = PreparedRun::prepare(
+            RunId::from(run_id),
+            &MachineArtifactSpec {
+                schema: SchemaRef::new("test.artifact", SchemaVersion::V1),
+                encoding: glassvm_core::ArtifactEncoding::RawBytes,
+                min_bytes: 1,
+                max_bytes: 64,
+                alignment_bytes: 1,
+                load_address: None,
+            },
+            &artifact,
+            MachineIdentity {
+                machine_id: MachineId::from("test.machine"),
+                bundle_version: VersionStamp::from("bundle-test"),
+                machine_version: VersionStamp::from("machine-test"),
+                emulator_version: VersionStamp::from("emulator-test"),
+                contract_schema: SchemaRef::new("test.contract", SchemaVersion::V1),
+            },
+            &configuration,
+            &MachineConfigSchema {
+                schema: SchemaRef::new("test.configuration", SchemaVersion::V1),
+                fields: Vec::new(),
+            },
+            &glassvm_core::InputCatalog::empty(),
+            &InputSchedule::empty(),
+            &ExecutionControls::default(),
+            &glassvm_core::ExecutionLimitCatalog::empty(),
+        )
+        .unwrap();
         ExecutionRequest::new(
             run_id,
             "test.machine",
-            b"artifact".to_vec(),
-            MachineConfiguration::new(
-                SchemaRef::new("test.configuration", SchemaVersion::V1),
-                StructuredValue::Map(BTreeMap::new()),
-            )
-            .unwrap(),
+            artifact,
+            configuration,
             InputSchedule::empty(),
             observation,
             ExecutionControls::default(),
         )
         .unwrap()
+        .with_prepared_run_identity(prepared.identity)
     }
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -2636,9 +2680,31 @@ mod tests {
         ));
         assert!(matches!(result.publication, PublicationOutcome::Published));
         assert!(result.published.is_some());
+        let published = result.published.as_ref().unwrap();
+        assert_eq!(
+            published.manifest().prepared_run_identity,
+            request.prepared_run_identity
+        );
         Python::attach(|py| {
             let events = python_events.bind(py).getattr("events").unwrap();
             assert!(events.len().unwrap() >= 4);
+            let started_identity = events
+                .get_item(0)
+                .unwrap()
+                .get_item("record")
+                .unwrap()
+                .get_item("prepared_run_identity")
+                .unwrap();
+            let encoded = py
+                .import("json")
+                .unwrap()
+                .call_method1("dumps", (started_identity,))
+                .unwrap()
+                .extract::<String>()
+                .unwrap();
+            let python_identity: glassvm_core::PreparedRunIdentity =
+                serde_json::from_str(&encoded).unwrap();
+            assert_eq!(Some(python_identity), request.prepared_run_identity.clone());
         });
         std::fs::remove_dir_all(parent).unwrap();
     }

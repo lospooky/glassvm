@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     ContentDigest, EventKind, ExecutionControls, InputSchedule, MachineConfiguration, MachineId,
-    ObservationRequest, RunId, SchemaVersion,
+    ObservationRequest, PreparedRunIdentity, RunId, SchemaVersion,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -81,6 +81,10 @@ pub struct ExecutionRequest {
     /// request.
     #[serde(default)]
     pub prepared_observation_id: Option<ContentDigest>,
+    /// Canonical execution identity produced by bundle preparation. It is
+    /// attached before session execution and emitted as provenance only.
+    #[serde(default)]
+    pub prepared_run_identity: Option<PreparedRunIdentity>,
 }
 
 impl ExecutionRequest {
@@ -106,6 +110,7 @@ impl ExecutionRequest {
             observation,
             execution_controls,
             prepared_observation_id: None,
+            prepared_run_identity: None,
         })
     }
 
@@ -138,11 +143,24 @@ impl ExecutionRequest {
             }
             limit.value.validate()?;
         }
+        if let Some(identity) = &self.prepared_run_identity {
+            identity.validate()?;
+            if identity.machine_identity.machine_id != self.machine_id {
+                return Err(
+                    "prepared run identity machine ID does not match the execution request".into(),
+                );
+            }
+        }
         Ok(())
     }
 
     pub fn with_prepared_observation_id(mut self, identity: ContentDigest) -> Self {
         self.prepared_observation_id = Some(identity);
+        self
+    }
+
+    pub fn with_prepared_run_identity(mut self, identity: PreparedRunIdentity) -> Self {
+        self.prepared_run_identity = Some(identity);
         self
     }
 }
