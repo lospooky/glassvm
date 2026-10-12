@@ -1,0 +1,35 @@
+\section{Execution Model and Failure Semantics}
+
+Execution begins with a request whose artifact, configuration, input schedule,
+controls, and observation selection remain independent. The bundle first
+checks the artifact and machine-specific configuration, resolves inputs and
+execution limits, and negotiates observation prerequisites. This preparation
+step is the admission boundary: an invalid execution request or an
+unavailable required observation prerequisite fails before \texttt{RunStarted}
+and before a machine session begins. Optional capabilities can be downgraded
+explicitly, with their unavailable status and reason represented in the
+negotiated contract and later accounting.
+
+After successful preparation, the backend constructs an
+\texttt{EmulatorSession}. The session executes according to the machine's own
+semantics and emits the selected evidence through synchronous callbacks. A
+slow consumer applies backpressure directly to execution. A consumer error is
+reported as a delivery failure instead of being conflated with the machine's
+execution result. This makes the throughput effect of a synchronous sink
+observable and prevents an implicit queue from changing the contract.
+
+The run reports separate outcomes for machine execution, evidence
+fulfillment, Python sink delivery, recorder finalization, and publication.
+Execution can complete while evidence is incomplete; evidence can be
+fulfilled while recorder finalization fails; a finalized recorder package is
+not considered published until the publication step succeeds. These statuses
+describe different responsibilities and should not be collapsed into a
+single success flag.
+
+Python consumers receive owned typed batches derived from the same logical
+emission stream used by Rust consumers. They do not implement a second file
+format or recorder lifecycle. The Rust file recorder remains the sole
+implementation of the reference durable format. It writes channel segments
+incrementally and publishes only after successful finalization. Synchronous
+delivery also means that a consumer's memory policy remains visible to its
+caller rather than being hidden behind framework buffering.
