@@ -26,7 +26,7 @@ class ProviderDiscoveryTests(unittest.TestCase):
                 self.assertEqual(entry["protocol"], "glassvm.python_bundle")
                 self.assertEqual(
                     entry["protocol_version"],
-                    {"major": 1, "minor": 0, "patch": 0},
+                    {"major": 2, "minor": 0, "patch": 0},
                 )
                 self.assertEqual(entry["prepare_function"], "prepare_run")
                 self.assertEqual(entry["execute_function"], "execute_prepared")
@@ -42,13 +42,13 @@ class ProviderDiscoveryTests(unittest.TestCase):
             return json.dumps(
                 {
                     "protocol": "glassvm.python_bundle",
-                    "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                    "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                     "machine_id": "test-machine",
                     "distribution": "glassvm-test-machine",
                     "module": "glassvm_test_provider",
                     "prepare_function": "prepare_run",
                     "execute_function": "execute_prepared",
-                    "bundle_version": "0.1.0",
+                    "bundle_version": "0.2.0",
                 }
             )
 
@@ -110,13 +110,13 @@ class ProviderDiscoveryTests(unittest.TestCase):
             return json.dumps(
                 {
                     "protocol": "glassvm.python_bundle",
-                    "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                    "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                     "machine_id": "test-machine",
                     "distribution": "glassvm-test-machine",
                     "module": "glassvm_test_provider",
                     "prepare_function": "prepare_run",
                     "execute_function": "execute_prepared",
-                    "bundle_version": "0.1.0",
+                    "bundle_version": "0.2.0",
                 }
             )
 

@@ -1,5 +1,10 @@
 # GlassVM release-candidate preflight
 
+> Historical preflight for the initial 0.1.0 publication. For the current
+> provider protocol and independent release process, see
+> [Python packaging](PYTHON_PACKAGING.md) and
+> [release sequencing](RELEASE_SEQUENCING.md).
+
 **Status (2026-10-04):** The five machine-neutral GlassVM contract crates are
 published at `0.1.0`. Machine-specific Rust crates are implementation details
 and are marked `publish = false`; the three machine Python distributions have

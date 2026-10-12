@@ -13,7 +13,7 @@ use serde_json::Value;
 const PYTHON_BUNDLE_ENTRY_POINT_GROUP: &str = "glassvm.machine_bundles";
 const PYTHON_BUNDLE_PROVIDER_CONTRACT: &str = "glassvm.python_bundle";
 const PYTHON_BUNDLE_PROTOCOL_VERSION: ProtocolVersion = ProtocolVersion {
-    major: 1,
+    major: 2,
     minor: 0,
     patch: 0,
 };
@@ -436,7 +436,7 @@ impl Runtime {
             .cloned()
             .ok_or_else(|| {
                 pyo3::exceptions::PyLookupError::new_err(format!(
-                    "machine bundle {machine_id:?} is not installed; install with `uv add \"glassvm[{machine_id}]\"`"
+                    "machine bundle {machine_id:?} is not installed; install `glassvm` and `glassvm-{machine_id}`, or use `glassvm-machines[{machine_id}]`"
                 ))
             })?;
         let module = py.import(&provider.module)?;
@@ -555,13 +555,13 @@ mod tests {
         let (_, provider) = validate_bundle_provider(
             json!({
                 "protocol": "glassvm.python_bundle",
-                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-chip8",
                 "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
-                "bundle_version": "0.1.0"
+                "bundle_version": "0.2.0"
             }),
             "chip8",
         )
@@ -583,13 +583,13 @@ mod tests {
         let error = validate_bundle_provider(
             json!({
                 "protocol": "glassvm.python_bundle",
-                "protocol_version": {"major": 2, "minor": 0, "patch": 0},
+                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-chip8",
                 "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
-                "bundle_version": "0.1.0"
+                "bundle_version": "0.2.0"
             }),
             "chip8",
         )
@@ -602,13 +602,13 @@ mod tests {
         let error = validate_bundle_provider(
             json!({
                 "protocol": format!("{PYTHON_BUNDLE_PROVIDER_CONTRACT}.v1"),
-                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-chip8",
                 "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
                 "execute_function": "execute_prepared",
-                "bundle_version": "0.1.0"
+                "bundle_version": "0.2.0"
             }),
             "chip8",
         )
@@ -621,12 +621,12 @@ mod tests {
         let error = validate_bundle_provider(
             json!({
                 "protocol": "glassvm.python_bundle",
-                "protocol_version": {"major": 1, "minor": 0, "patch": 0},
+                "protocol_version": {"major": 2, "minor": 0, "patch": 0},
                 "machine_id": "chip8",
                 "distribution": "glassvm-chip8",
                 "module": "glassvm_chip8",
                 "prepare_function": "prepare_run",
-                "bundle_version": "0.1.0"
+                "bundle_version": "0.2.0"
             }),
             "chip8",
         )
