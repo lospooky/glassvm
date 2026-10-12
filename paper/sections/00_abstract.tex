@@ -1,0 +1,21 @@
+Experimental virtual-machine studies combine execution, observation, storage,
+and downstream analysis, but these responsibilities are often implemented as
+one machine-specific path. This coupling makes it difficult to compare
+heterogeneous machines under a shared experimental procedure and to account
+for what was observed, delivered, and persisted. GlassVM separates
+machine-owned semantics from experimental orchestration. It validates a run
+at preparation time, negotiates requested observations before execution, and
+delivers typed evidence synchronously to caller-owned sinks. Streaming
+normalizers derive selected capabilities from bounded reducer state, while a
+reference Rust recorder reports persistence and publication separately from
+execution and evidence fulfillment.
+
+We evaluate this design across CHIP-8, PICO-8, and TIC-80, whose execution
+models and fidelity boundaries differ. The evaluation covers shared-contract
+conformance, selective observation, memory behavior as run length grows,
+Python sink delivery, Rust/Python semantic equivalence, package-index-only
+consumption, and a small downstream consumer. Final sealed measurements are
+not yet available: memory behavior is \TBAMemoryResult, selective observation
+cost is \TBAOverheadResult, persistence cost is \TBAStorageResult, and Python
+sink overhead is \TBAPythonSinkResult. The manuscript leaves these empirical
+claims unresolved until their sealed artifact receipts are available.

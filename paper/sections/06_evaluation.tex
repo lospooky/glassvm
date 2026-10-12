@@ -1,0 +1,196 @@
+\section{Evaluation}
+
+The evaluation asks whether one orchestration and evidence contract can
+support heterogeneous machines while keeping observation selection, sink
+costs, memory behavior, persistence, and package consumption inspectable.
+Every numerical result in this section remains unresolved until the sealed
+artifact receipts arrive. The source and package identities used for final
+claims will be injected through GlassVM source \GlassVMSourceSHA, machine
+source \MachinesSourceSHA, GlassVM package \GlassVMVersion, and machine
+package \MachinesVersion; the exact setup coordinates are
+\TBASourceCoordinates.
+
+\subsection{Experimental setup}
+\label{sec:setup}
+
+\paragraph{Question.} Which exact source trees, package artifacts, hosts, and
+run configurations produced the evidence reported here?
+
+\paragraph{Method.} Re-run the prescribed evaluation matrix from clean
+checkouts and sealed package artifacts. Record source revisions, package
+versions, toolchains, host identity, observation requests, run controls, and
+artifact digests in the sealed manifest. No intermediate summary supplies a
+final result.
+
+\paragraph{Metrics.} Final source and package coordinates, environment
+identifiers, workload definitions, and repetition structure are
+\TBASourceCoordinates. These values will be read from the sealed receipts.
+
+\paragraph{Expected artifact source.} Sealed experiment manifest and source
+attestations for the GlassVM and machine repositories.
+
+\paragraph{Result.} \TBASourceCoordinates
+
+\subsection{Shared-contract conformance}
+\label{sec:conformance}
+
+\paragraph{Question.} Can the same preparation, observation negotiation,
+execution, and accounting path serve all evaluated machine bundles?
+
+\paragraph{Method.} Exercise each provider through the shared public
+contracts. Check successful preparation and execution, required-observation
+prerequisites, optional capability downgrades, channel delivery, receipt
+statuses, recorder finalization, and publication behavior.
+
+\paragraph{Metrics.} Per-machine and per-contract-case outcomes, including
+required and optional prerequisite handling, fulfilled channels, and
+separate execution, evidence, sink, recorder, and publication statuses.
+
+\paragraph{Expected artifact source.} Sealed conformance receipts tied to the
+source coordinates in Section~\ref{sec:setup}.
+
+\paragraph{Result.} The shared path is implemented across CHIP-8, PICO-8, and
+TIC-80. The final conformance summary is \TBAConformanceResult.
+
+\subsection{Selective observation cost}
+\label{sec:observation-cost}
+
+\paragraph{Question.} What resource cost is associated with selecting
+different observation channels and capabilities?
+
+\paragraph{Method.} Compare runs under the sealed observation modes while
+holding each machine's workload and execution controls fixed. Account for
+the selected channel set and requested normalizer dependencies in each run.
+
+\paragraph{Metrics.} Execution time and resource use by observation mode,
+with the measured differences and uncertainty left to the sealed result.
+
+\paragraph{Expected artifact source.} Sealed selective-observation runs,
+receipt data, and the figure generator identified by the artifact manifest.
+
+\paragraph{Result.} \TBAObservationResult
+
+\begin{figure}[t]
+  \centering
+  \PaperPlaceholderFigure{2.4cm}{\TBAObservationFigure}
+  \caption{Selective observation cost across negotiated modes.
+  \TBAObservationCaption}
+  \label{fig:observation-cost}
+\end{figure}
+
+\subsection{Run-length memory behavior}
+\label{sec:memory}
+
+We test whether selected observation paths retain run-length-dependent state
+inside GlassVM by executing geometrically increasing frame counts under
+multiple observation modes. The comparison distinguishes process memory,
+normalizer state, recorder buffering, and persisted evidence. Bounded
+recorder buffering does not imply a bound on total retained run data.
+
+\paragraph{Question.} How do in-process memory and retained evidence change
+as execution length increases under the selected observation paths?
+
+\paragraph{Method.} Execute the sealed workload matrix over increasing run
+lengths with observation disabled, selected streaming reducers, and durable
+recording as applicable. Measure the process and channel accounting without
+conflating transient memory with on-disk evidence volume.
+
+\paragraph{Metrics.} Peak resident memory, reported live recorder buffers,
+logical evidence volume, and persisted bytes by run length and observation
+mode. Numerical estimates and uncertainty are reserved for sealed results.
+
+\paragraph{Expected artifact source.} Sealed memory-run records, recorder and
+evidence receipts, and the sealed plot generator.
+
+\paragraph{Result.} \TBAMemoryResult.\par
+\noindent Evidence-volume result: \TBAStorageResult.
+
+\begin{figure}[t]
+  \centering
+  \PaperPlaceholderFigure{2.6cm}{\TBAMemoryFigure}
+  \caption{Peak resident memory and retained evidence versus run length.
+  \TBAMemoryCaption}
+  \label{fig:memory-scaling}
+\end{figure}
+
+\subsection{Python consumer overhead}
+\label{sec:python-sink}
+
+\paragraph{Question.} What is the cost of delivering owned emission batches
+to a synchronous Python consumer?
+
+\paragraph{Method.} Compare the sealed Rust-side execution path with Python
+sink delivery for corresponding requests and workloads. The sink receives
+typed values from the same logical emission stream; it does not write a
+second durable format. Record callback work and execution outcomes separately.
+
+\paragraph{Metrics.} Delivery time, execution time, number and logical size
+of delivered batches, and any delivery failures, as reported by the sealed
+measurement protocol.
+
+\paragraph{Expected artifact source.} Sealed Python sink measurements and
+their source, package, workload, and environment manifest.
+
+\paragraph{Result.} \TBAPythonSinkResult
+
+\begin{figure}[t]
+  \centering
+  \PaperPlaceholderFigure{2.4cm}{\TBAPythonFigure}
+  \caption{Python sink delivery cost under the sealed workload.
+  \TBAPythonCaption}
+  \label{fig:python-sink-cost}
+\end{figure}
+
+\subsection{Rust/Python semantic equivalence}
+\label{sec:equivalence}
+
+The equivalence check uses one \texttt{PreparedRun}, one
+\texttt{PreparedObservation}, one execution, and one emission stream routed
+to a Python sink and the Rust recorder. The comparison is performed over
+logical evidence per compared channel, preserving order within each channel.
+It does not assert a global ordering between independent channels.
+
+\paragraph{Question.} Do both consumers receive equivalent identities and
+logical records when they consume the same prepared execution?
+
+\paragraph{Method.} Compare \texttt{PreparedRunIdentity} and
+\texttt{PreparedObservationIdentity}, then compare logical evidence for each
+included channel, capability outputs, and capability receipts. Keep delivery
+and persistence accounting distinct from the evidence comparison.
+
+\paragraph{Metrics.} Identity agreement, per-channel record agreement,
+capability output and receipt agreement, and the sealed summary of any
+permitted representation normalization.
+
+\paragraph{Expected artifact source.} Sealed semantic-equivalence report,
+including exact source coordinates and comparison artifact digests.
+
+\paragraph{Result.} Structural semantic equivalence has been checked across
+the three machine implementations. The final sealed summary is
+\TBAEquivalenceResult.\par
+\noindent Exact artifact coordinates: \TBASourceCoordinates.
+
+\subsection{Package-index-only consumption}
+\label{sec:package-consumption}
+
+\paragraph{Question.} Can an external consumer install and use the facade
+and machine provider from package indexes without a local GlassVM source
+checkout on its import or execution path?
+
+\paragraph{Method.} In a clean consumer environment, install the facade and
+provider from package indexes, discover the provider through its entry point,
+prepare an artifact, execute it, receive an evidence receipt, finalize the
+reference recorder, and verify a published run. A separate Rust consumer
+resolves the published GlassVM crates from crates.io without a local source
+path.
+
+\paragraph{Metrics.} Successful package resolution, provider discovery,
+preparation and execution outcomes, evidence receipt, recorder finalization,
+publication reference, and the exact sealed package/source coordinates.
+
+\paragraph{Expected artifact source.} Sealed Python and Rust external-consumer
+proof manifests and package-index receipts.
+
+\paragraph{Result.} Package-index-only consumption has been demonstrated;
+final package versions and exact proof coordinates remain
+\TBAPackageProofCoordinates.

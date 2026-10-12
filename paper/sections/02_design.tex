@@ -1,0 +1,55 @@
+\section{Design}
+
+GlassVM defines a shared orchestration boundary around machine-owned
+semantics. The boundary is expressed as a small set of contracts rather than
+as a universal emulator implementation.
+
+\paragraph{Machine identity and admission.}
+\texttt{MachineDescriptor} identifies a bundle and describes the execution
+coordinates, artifact expectations, and supported machine semantics exposed
+to callers. \texttt{MachineContract} supplies machine-specific admission
+rules, configuration and input schemas, and the observation capabilities the
+bundle can provide. These declarations let orchestration validate a request
+without transferring machine semantics into the facade.
+
+\paragraph{Execution request and preparation.}
+An \texttt{ExecutionRequest} keeps artifact bytes, typed configuration,
+scheduled inputs, execution controls, and the observation request as separate
+values. \texttt{EmulatorBackend} validates the execution-side values and
+constructs a session only after preparation succeeds. Preparation returns
+two distinct objects: \texttt{PreparedRun} is validated execution-side state
+and identity; \texttt{PreparedObservation} is the prospective, negotiated
+evidence contract. The pair makes it possible to reason separately about
+which machine run is admitted and which observations that run will attempt to
+produce.
+
+\paragraph{Session and evidence derivation.}
+An \texttt{EmulatorSession} advances the selected machine and emits typed
+records at supported boundaries. A \texttt{Normalizer} declares capability
+dependencies and reduces selected evidence as it arrives. It receives a
+begin notification, zero or more observations, and finalization with any
+negotiated final state. The normalizer owns only its reducer state; the
+framework does not create a hidden evidence bag or require a whole-run trace.
+
+\paragraph{Delivery and accounting.}
+An \texttt{EmissionSink} is caller-owned and consumes each synchronous batch.
+The \texttt{Evidence\allowbreak Receipt} retrospectively describes fulfillment
+of the negotiated observation request. A \texttt{Recorder\allowbreak Receipt}
+describes what the reference recorder persisted and whether its package can
+be published. A \texttt{FileRun\allowbreak Session} coordinates execution,
+sink delivery, recorder finalization, and publication while preserving these
+independent outcomes.
+
+The lifecycle and ownership boundaries are summarized in
+Figure~\ref{fig:architecture}. The same emission stream can be delivered to a
+Python consumer and to the Rust file recorder; these consumers do not define
+separate machine execution paths.
+
+\begin{figure}[t]
+  \centering
+  \input{figures/architecture.tex}
+  \caption{Preparation separates validated execution state from negotiated
+  observations. A synchronous emission stream is delivered to caller-owned
+  consumers and, when requested, the reference Rust recorder.}
+  \label{fig:architecture}
+\end{figure}

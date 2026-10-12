@@ -1,0 +1,34 @@
+\resizebox{0.90\linewidth}{!}{%
+\begin{tikzpicture}[
+  >=Stealth,
+  box/.style={draw=black!70, rounded corners, fill=gray!8, align=center,
+              text width=3.0cm, minimum height=0.65cm, inner sep=4pt},
+  flow/.style={->, thick, draw=black!75}
+]
+  \node[box] (experiment) at (0, 0) {Experiment};
+  \node[box] (request) at (0, -1.0) {ExecutionRequest + ObservationRequest};
+  \node[box] (prepare) at (0, -2.0) {prepare};
+  \node[box] (run) at (-2.1, -3.0) {PreparedRun};
+  \node[box] (observation) at (2.1, -3.0) {Prepared\\Observation};
+  \node[box] (session) at (0, -4.0) {EmulatorSession};
+  \node[box] (emissions) at (0, -5.0) {Bounded emission stream};
+  \node[box] (python) at (-2.1, -6.0) {Python consumers};
+  \node[box] (recorder) at (2.1, -6.0) {Rust recorder};
+  \node[box] (downstream) at (-2.1, -7.0) {Downstream analysis};
+  \node[box] (receipt) at (2.1, -7.0) {RecorderReceipt};
+  \node[box] (published) at (2.1, -8.0) {PublishedRun};
+
+  \draw[flow] (experiment) -- (request);
+  \draw[flow] (request) -- (prepare);
+  \draw[flow] (prepare) -- (run);
+  \draw[flow] (prepare) -- (observation);
+  \draw[flow] (run) -- (session);
+  \draw[flow] (observation) -- (session);
+  \draw[flow] (session) -- (emissions);
+  \draw[flow] (emissions) -- (python);
+  \draw[flow] (emissions) -- (recorder);
+  \draw[flow] (python) -- (downstream);
+  \draw[flow] (recorder) -- (receipt);
+  \draw[flow] (receipt) -- (published);
+\end{tikzpicture}%
+}

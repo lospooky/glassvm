@@ -1,0 +1,24 @@
+\section{A Small Downstream Consumer}
+\label{sec:glass-garden}
+
+Glass Garden illustrates how a downstream program can use the evidence
+contract without reading recorder files or accumulating a whole-run trace.
+It is one generic Python sink shared across the evaluated machines. The sink
+consumes frame hashes and normalized events, maps progress into twenty fixed
+timeline buckets, retains only the previous frame fingerprint for
+change-oriented display, maintains bounded counters by event kind, and
+observes the final evidence receipt. It produces one SVG postcard per machine.
+
+The consumer contains no recorder reads and no machine-specific branches.
+Its reducers operate during synchronous delivery, so the example is a
+concrete illustration of bounded downstream work over selected evidence. It
+is not a performance benchmark and does not test behavioral equivalence
+between machines.
+
+\begin{figure}[t]
+  \centering
+  \PaperPlaceholderFigure{4cm}{\TBAGardenFigure}
+  \caption{Representative Glass Garden postcards generated from a generic
+  bounded Python sink. \TBAGardenCaption}
+  \label{fig:glass-garden}
+\end{figure}
