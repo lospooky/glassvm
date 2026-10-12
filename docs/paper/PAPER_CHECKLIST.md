@@ -333,21 +333,34 @@ Output:
 
 ## 10. Rust ↔ Python semantic-equivalence check
 
-Nice-to-have but recommended before paper freeze.
+Completed 2026-10-12. For each machine, one prepared execution
+used a Python provider and synchronously fanned the same emissions
+to a streaming Python consumer and the Rust `FileRecorder`. The Rust recorder
+reader decoded the published channels; the harness compared canonical logical
+values and per-channel order. See
+[`experiments/measurements/semantic-equivalence-0.2.0-prepared-identity/REPORT.md`](experiments/measurements/semantic-equivalence-0.2.0-prepared-identity/REPORT.md)
+and [`experiments/run_semantic_equivalence.py`](experiments/run_semantic_equivalence.py).
 
-Using the same fixture, `PreparedRun`, and `PreparedObservation`:
+Results: CHIP-8 (2,568 normalized / 1 native / 600 frame / 1 capability
+records), PICO-8 (600 / 1 / 600 / 1), and TIC-80 (1,200 / 1 / 600 / 1) all
+matched. Capability receipts, `EvidenceReceipt`, and terminal machine metrics
+also matched. Snapshot and input-value evidence were not requested.
 
-- [ ] execute through canonical Rust recorder path
-- [ ] execute through Python consumer/provider path
-- [ ] compare canonical logical records per channel
-- [ ] preserve per-channel order
-- [ ] do not invent global cross-channel ordering
-- [ ] compare receipts and capability outputs
-- [ ] do not compare raw `.gvmseg` bytes as semantic identity
+Both `PreparedRunIdentity` and prepared-observation identity matched exactly
+between Python `RunStarted` and the Rust recorder manifest. The opaque
+provider-owned prepared object remains in-process and non-serializable; only
+the existing canonical identity value is emitted as provenance.
+
+- [x] compare canonical logical records per channel
+- [x] preserve per-channel order
+- [x] do not invent global cross-channel ordering
+- [x] compare receipts and capability outputs
+- [x] do not compare raw `.gvmseg` bytes as semantic identity
+- [x] independently compare `PreparedRunIdentity` without making
+  provider-owned prepared state serializable or public
 
 Output:
-- deterministic equivalence report
-- failing channel + first mismatch if non-equivalent
+- [x] deterministic equivalence report and first-mismatch diagnostics
 
 ## 11. Package-index-only install proof
 

@@ -11,7 +11,8 @@ use glassvm_core::{
     CapabilityOutput, CapabilityReceipt, CommonMetrics, ContentDigest, Emission, EmissionSink,
     EvidenceReceipt, ExecutionControls, ExecutionEvent, ExecutionRequest, FrameArtifact,
     InputSchedule, InputValueEvidence, MachineConfiguration, MachineId, NativeEvidenceEnvelope,
-    ObservationRequest, RunId, RunResult, SchemaVersion, SinkError, SnapshotArtifact,
+    ObservationRequest, PreparedRunIdentity, RunId, RunResult, SchemaVersion, SinkError,
+    SnapshotArtifact,
 };
 use serde::{Deserialize, Serialize};
 
@@ -20,8 +21,9 @@ use pyo3::prelude::*;
 #[cfg(feature = "python")]
 use pyo3::types::{PyBytes, PyModule};
 
-/// Metadata visible at run start. Artifact bytes are intentionally not copied
-/// into the consumer record.
+/// Metadata visible at run start. The direct request artifact field is not
+/// copied; the canonical prepared identity may include artifact bytes because
+/// that is how `PreparedArtifactIdentity` is currently defined.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RunStartedRecord {
@@ -30,6 +32,7 @@ pub struct RunStartedRecord {
     pub machine_id: MachineId,
     pub artifact_length_bytes: u64,
     pub prepared_observation_id: Option<ContentDigest>,
+    pub prepared_run_identity: Option<PreparedRunIdentity>,
     pub configuration: MachineConfiguration,
     pub input_schedule: InputSchedule,
     pub observation: ObservationRequest,
@@ -60,6 +63,7 @@ impl From<&ExecutionRequest> for RunStartedRecord {
             machine_id: request.machine_id.clone(),
             artifact_length_bytes: request.artifact.len() as u64,
             prepared_observation_id: request.prepared_observation_id.clone(),
+            prepared_run_identity: request.prepared_run_identity.clone(),
             configuration: request.configuration.clone(),
             input_schedule: request.input_schedule.clone(),
             observation: request.observation.clone(),
@@ -643,9 +647,11 @@ mod batching_tests {
     use glassvm_core::{
         BudgetReceipt, CommonMetrics, Emission, EmissionBudgets, EventContext, EventKind,
         EvidenceGuarantee, EvidenceStatus, ExecutionControls, ExecutionEvent, ExecutionRequest,
-        FrameArtifact, InputCoordinate, InputId, InputSchedule, InputSource, MachineConfiguration,
-        MachineId, NativeEvent, NativeEvidenceEnvelope, ObservationRequest, RunResult, SchemaRef,
-        SchemaVersion, SnapshotArtifact, StructuredValue, TypedInputPayload, VersionStamp,
+        FrameArtifact, InputCoordinate, InputId, InputSchedule, InputSource, MachineArtifactSpec,
+        MachineConfigSchema, MachineConfiguration, MachineId, MachineIdentity, NativeEvent,
+        NativeEvidenceEnvelope, ObservationRequest, PreparedRun, PreparedRunIdentity, RunResult,
+        SchemaRef, SchemaVersion, SnapshotArtifact, StructuredValue, TypedInputPayload,
+        VersionStamp,
     };
 
     use super::*;
@@ -702,6 +708,44 @@ mod batching_tests {
             ExecutionControls::default(),
         )
         .unwrap()
+        .with_prepared_run_identity(prepared_run_identity())
+    }
+
+    fn prepared_run_identity() -> PreparedRunIdentity {
+        let schema = SchemaRef::new("test.configuration", SchemaVersion::V1);
+        let configuration =
+            MachineConfiguration::new(schema.clone(), StructuredValue::Map(BTreeMap::new()))
+                .unwrap();
+        let prepared = PreparedRun::prepare(
+            glassvm_core::RunId::from("run"),
+            &MachineArtifactSpec {
+                schema: SchemaRef::new("test.artifact", SchemaVersion::V1),
+                encoding: glassvm_core::ArtifactEncoding::RawBytes,
+                min_bytes: 1,
+                max_bytes: 8,
+                alignment_bytes: 1,
+                load_address: None,
+            },
+            &[1, 2, 3],
+            MachineIdentity {
+                machine_id: MachineId::from("test-machine"),
+                bundle_version: VersionStamp::from("bundle-test"),
+                machine_version: VersionStamp::from("machine-test"),
+                emulator_version: VersionStamp::from("emulator-test"),
+                contract_schema: SchemaRef::new("test.contract", SchemaVersion::V1),
+            },
+            &configuration,
+            &MachineConfigSchema {
+                schema,
+                fields: Vec::new(),
+            },
+            &glassvm_core::InputCatalog::empty(),
+            &InputSchedule::empty(),
+            &ExecutionControls::default(),
+            &glassvm_core::ExecutionLimitCatalog::empty(),
+        )
+        .unwrap();
+        prepared.identity
     }
 
     fn evidence_receipt() -> EvidenceReceipt {
@@ -805,12 +849,19 @@ mod batching_tests {
     #[test]
     fn every_core_emission_maps_to_its_typed_owned_record() {
         let request = execution_request();
+        let canonical_identity = request.prepared_run_identity.as_ref().unwrap();
+        let rust_owned = RunStartedRecord::from(&request);
+        assert_eq!(
+            rust_owned.prepared_run_identity.as_ref(),
+            Some(canonical_identity)
+        );
         assert!(matches!(
             OwnedEmission::from(Emission::RunStarted(&request)),
             OwnedEmission::RunStarted(RunStartedRecord {
                 artifact_length_bytes: 3,
+                prepared_run_identity: Some(ref identity),
                 ..
-            })
+            }) if identity == canonical_identity
         ));
 
         let event = execution_event();
@@ -1290,6 +1341,21 @@ mod batching_tests {
             assert!(outcome.peak_batch_logical_bytes > 0);
 
             let emissions = consumer.bind(py).getattr("emissions").unwrap();
+            let python_started = emissions.get_item(0).unwrap().get_item("record").unwrap();
+            let python_identity = python_started.get_item("prepared_run_identity").unwrap();
+            let json = py
+                .import("json")
+                .unwrap()
+                .call_method1("dumps", (python_identity,))
+                .unwrap()
+                .extract::<String>()
+                .unwrap();
+            let python_identity: serde_json::Value = serde_json::from_str(&json).unwrap();
+            let rust_started = RunStartedRecord::from(&request);
+            assert_eq!(
+                python_identity,
+                serde_json::to_value(rust_started.prepared_run_identity.unwrap()).unwrap()
+            );
             let kinds = (0..emissions.len().unwrap())
                 .map(|index| {
                     emissions

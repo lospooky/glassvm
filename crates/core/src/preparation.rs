@@ -671,6 +671,49 @@ mod tests {
     }
 
     #[test]
+    fn execution_request_provenance_is_the_identity_computed_by_preparation() {
+        let configuration = MachineConfiguration::new(
+            schema("test.configuration"),
+            StructuredValue::Map(BTreeMap::new()),
+        )
+        .unwrap();
+        let schedule = InputSchedule::empty();
+        let prepared = PreparedRun::prepare(
+            RunId::from("run"),
+            &artifact_spec(),
+            &[1, 2],
+            machine_identity(),
+            &configuration,
+            &config_schema(),
+            &input_catalog(),
+            &schedule,
+            &ExecutionControls::default(),
+            &ExecutionLimitCatalog::empty(),
+        )
+        .unwrap();
+        let request = crate::ExecutionRequest::new(
+            "run",
+            "test.machine",
+            vec![1, 2],
+            configuration,
+            schedule,
+            crate::ObservationRequest::summary(),
+            ExecutionControls::default(),
+        )
+        .unwrap()
+        .with_prepared_run_identity(prepared.identity.clone());
+
+        request.validate_envelope().unwrap();
+        assert_eq!(
+            request.prepared_run_identity.as_ref(),
+            Some(&prepared.identity)
+        );
+        let decoded: crate::ExecutionRequest =
+            serde_json::from_slice(&serde_json::to_vec(&request).unwrap()).unwrap();
+        assert_eq!(decoded.prepared_run_identity, Some(prepared.identity));
+    }
+
+    #[test]
     fn identity_excludes_observation_and_changes_for_execution_inputs() {
         let configuration = MachineConfiguration::new(
             schema("test.configuration"),

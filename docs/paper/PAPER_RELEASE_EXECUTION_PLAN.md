@@ -384,11 +384,18 @@ microbenchmark; Rust `NullSink` decomposition remains Slice 7a.
 
 ### 7c. Rust/Python semantic equivalence
 
-- [ ] Execute equivalent canonical requests through the Rust recorder and installed Python provider paths.
-- [ ] Check matching execution and prepared-observation identities; keep provider-owned prepared objects opaque.
-- [ ] Select/decode channel records using the recorder reader, then compare canonical logical values and per-channel order.
-- [ ] Compare capability outputs and receipts; explicitly define comparison treatment for operational metadata.
-- [ ] Report the first mismatching channel/record if equivalence fails. Do not compare raw segment bytes or invent a global event ordering.
+- [x] Execute canonical requests with the Rust recorder and Python consumer attached to the same prepared execution.
+- [x] Check matching execution and prepared-observation identities while keeping provider-owned prepared objects opaque. `RunStarted` carries the canonical `PreparedRunIdentity` and `PreparedObservationIdentity`.
+- [x] Select/decode channel records using the Rust recorder reader, then compare canonical logical values and per-channel order.
+- [x] Compare capability outputs/receipts and define operational metadata exclusions.
+- [x] Report the first mismatching channel/record if equivalence fails. No raw segment-byte comparison or cross-channel order was introduced.
+
+Result: all compared projections and both identities matched for CHIP-8,
+PICO-8, and TIC-80. The matrix used locally rebuilt `0.2.0` validation wheels
+linked against the updated workspace crates. See
+[`experiments/measurements/semantic-equivalence-0.2.0-prepared-identity/REPORT.md`](experiments/measurements/semantic-equivalence-0.2.0-prepared-identity/REPORT.md)
+and reproduction harness
+[`experiments/run_semantic_equivalence.py`](experiments/run_semantic_equivalence.py).
 
 ### 7d. Generic downstream demonstration
 

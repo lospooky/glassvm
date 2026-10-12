@@ -1,0 +1,1 @@
+{"schema":{"id":"chip8.visual_trajectory_motifs","version":{"major":1,"minor":0,"patch":0}},"value":{"display_state_writes":0,"display_write_events":1968,"frame_artifacts":600,"frame_events":600,"frame_hash_changes":599,"full_artifact_count":0,"input_events":0,"max_display_writes_per_event":0,"repeated_frame_hashes":0,"schema":"chip8_visual_trajectory_motifs"}}
