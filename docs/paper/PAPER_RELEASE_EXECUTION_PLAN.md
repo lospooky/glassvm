@@ -64,6 +64,14 @@ source commits.
 
 ## Execution sequence
 
+Current focused follow-up: align PICO-8 and TIC-80 visual capability evidence
+with CHIP-8's broader bounded profile. The reducers now include normalized
+graphics API-call and input-application counts, with visual schema `2.0.0` and
+exact event prerequisites. This records selected API calls and input
+applications; it does not claim CHIP-8-equivalent display writes or actual Lua
+button reads. Focused conformance and Python consumer/recorder checks remain
+before closing this item. Do not regenerate the full paper suite here.
+
 | Slice | Outcome | Prerequisite | Checklist sections |
 | --- | --- | --- | --- |
 | 1 | Reviewed implementation, selected workloads, published green source coordinates | None | 1–3 |
@@ -514,6 +522,15 @@ graphics-only slice and released 0.3.0 evidence. TIC-80 execution identity
 changes intentionally; this is not merely an observational change. Capability
 granularity, meaningful input consumption, and selective state access remain
 open follow-ups rather than claims already supported by the new raw summaries.
+
+Visual-capability direction: use CHIP-8's broader bounded frame/display/input
+profile as the reference for now. The proposed frame-only narrowing is
+superseded; no existing visual fields or prerequisites have been removed.
+`glassvm-machines/conformance/CAPABILITY_GRANULARITY_PLAN.md` records the approved
+direction and implementation. Drawing API-call counts must not be relabeled as
+display-state writes to claim parity. Reducer negotiation and installed Python
+consumer/recorder checks remain pending; the historical paper results have not
+been regenerated.
 
 Publication of the `0.3.0` product packages, the clean 60,000-frame
 Python-consumer matrix (Slice 7b), semantic-equivalence check (Slice 7c),

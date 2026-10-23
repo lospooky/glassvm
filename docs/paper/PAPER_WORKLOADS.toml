@@ -34,7 +34,7 @@ upstream_blob = "33329fd679fcdbff1a2a22ef49fd3cce2bebd6a2"
 rebuild_command = ["python3", "build_paper_workload.py", "--output", "paper/fireintro.p8"]
 configuration = { cycles_per_frame = 1, instruction_budget = 500000, machine_seed = 0 }
 capability = "pico8.visual.motifs"
-normalized_event_kinds = ["frame_completed"]
+normalized_event_kinds = ["frame_completed", "input_applied", "extension:glassvm.graphics_activity"]
 expected_termination = "frame_limit"
 
 [[workload]]
@@ -48,5 +48,5 @@ upstream_revision = "f958fd19218510468a36f93b77449ca26a2d13cf"
 rebuild_command = ["python3", "build_fixture.py", "--output", "paper/game.tic"]
 configuration = { cycles_per_frame = 1, runtime = "lua", machine_seed = 0 }
 capability = "tic80.visual.motifs"
-normalized_event_kinds = ["frame_completed", "input_sampled", "extension:tic80.trace"]
+normalized_event_kinds = ["frame_completed", "input_sampled", "input_applied", "extension:glassvm.graphics_activity", "extension:tic80.trace"]
 expected_termination = "frame_limit"
