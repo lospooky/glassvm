@@ -1,0 +1,52 @@
+schema_version = 1
+frame_limit = 600
+input_schedule = "empty"
+frame_capture = "hashes"
+evidence_guarantee = "summary"
+
+# These finite workloads validate publication-facing execution and observation
+# contracts. They are not a compatibility or performance benchmark by themselves.
+
+[[workload]]
+machine_id = "chip8"
+artifact_path = "chip8/fixtures/paper/octojam2title.ch8"
+source_path = "chip8/fixtures/source/public/octojam2title.ch8"
+artifact_sha256 = "010f9ab220f55cc59645a6d05157b33a7099bac01037816ef06b74c2f8339b8a"
+origin = "public upstream cartridge; CC0-1.0"
+upstream = "https://github.com/JohnEarnest/chip8Archive"
+upstream_revision = "761e3ffc63f43e6a849e80714122feff2afca208"
+upstream_blob = "6e19074790fe94742e8594b6b109d4946c38d9dc"
+rebuild_command = ["python3", "build_paper_workload.py", "--output", "paper/octojam2title.ch8"]
+configuration = { quirks = "chip8", cycles_per_frame = 12, machine_seed = 0 }
+capability = "chip8.visual_trajectory_motifs"
+normalized_event_kinds = ["frame_completed", "display_write", "input_sampled"]
+expected_termination = "Timeout"
+
+[[workload]]
+machine_id = "pico8"
+artifact_path = "pico8/fixtures/paper/fireintro.p8"
+source_path = "pico8/fixtures/source/public/fireintro.p8"
+artifact_sha256 = "491888897d07e5699a5e411c9cb881181f313e6cad7b0dcfec2fd333ea0b833a"
+origin = "public upstream MIT cartridge with documented title-only P8SCII-to-ASCII normalization"
+upstream = "https://github.com/thxrsxm/fire-intro-effect"
+upstream_revision = "428e67017a8951d4ec32a7adadc0907aa9a36b6e"
+upstream_blob = "33329fd679fcdbff1a2a22ef49fd3cce2bebd6a2"
+rebuild_command = ["python3", "build_paper_workload.py", "--output", "paper/fireintro.p8"]
+configuration = { cycles_per_frame = 1, instruction_budget = 500000, machine_seed = 0 }
+capability = "pico8.visual.motifs"
+normalized_event_kinds = ["frame_completed"]
+expected_termination = "frame_limit"
+
+[[workload]]
+machine_id = "tic80"
+artifact_path = "tic80/fixtures/paper/game.tic"
+source_path = "tic80/fixtures/source/public/game.tic"
+artifact_sha256 = "f095a8ad534482a3aefbe0aa84c9b8bc47b74a89dd4202acbd5fc8b517995994"
+origin = "public upstream Gecko Lua cartridge; MIT"
+upstream = "https://github.com/lincerely/gecko"
+upstream_revision = "f958fd19218510468a36f93b77449ca26a2d13cf"
+rebuild_command = ["python3", "build_fixture.py", "--output", "paper/game.tic"]
+configuration = { cycles_per_frame = 1, runtime = "lua", machine_seed = 0 }
+capability = "tic80.visual.motifs"
+normalized_event_kinds = ["frame_completed", "input_sampled", "extension:tic80.trace"]
+expected_termination = "frame_limit"

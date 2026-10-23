@@ -1,0 +1,104 @@
+{
+  "schema_version": {
+    "major": 2,
+    "minor": 1,
+    "patch": 0
+  },
+  "run_id": "python-tic80-3",
+  "machine_id": "tic80",
+  "machine_version": "tic80-python-bundle",
+  "requested_guarantee": "summary",
+  "fulfilled_guarantee": "summary",
+  "status": "complete",
+  "channels": [
+    {
+      "channel": "normalized_events",
+      "requested": true,
+      "status": "complete",
+      "item_count": 1200,
+      "logical_bytes": 465399,
+      "encoded_bytes": null
+    },
+    {
+      "channel": "capabilities",
+      "requested": true,
+      "status": "complete",
+      "item_count": 1,
+      "logical_bytes": 183,
+      "encoded_bytes": null
+    },
+    {
+      "channel": "native_evidence",
+      "requested": true,
+      "status": "complete",
+      "item_count": 1,
+      "logical_bytes": 412,
+      "encoded_bytes": null
+    },
+    {
+      "channel": "frames",
+      "requested": true,
+      "status": "complete",
+      "item_count": 600,
+      "logical_bytes": 279189,
+      "encoded_bytes": null
+    },
+    {
+      "channel": "snapshots",
+      "requested": false,
+      "status": "omitted",
+      "item_count": 0,
+      "logical_bytes": 0,
+      "encoded_bytes": null
+    },
+    {
+      "channel": "input_value_evidence",
+      "requested": false,
+      "status": "omitted",
+      "item_count": 0,
+      "logical_bytes": 0,
+      "encoded_bytes": null
+    },
+    {
+      "channel": "envelope",
+      "requested": true,
+      "status": "complete",
+      "item_count": 2,
+      "logical_bytes": 0,
+      "encoded_bytes": null
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "tic80.visual.motifs",
+      "status": "fulfilled",
+      "output_schema": {
+        "id": "tic80.visual.motifs",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "logical_bytes": 93,
+      "message": null
+    }
+  ],
+  "budgets": {
+    "configured": {
+      "max_normalized_events": null,
+      "max_normalized_bytes": null,
+      "max_capability_bytes": null,
+      "max_native_events": null,
+      "max_native_bytes": null,
+      "max_frame_bytes": null,
+      "max_snapshot_bytes": null,
+      "max_input_value_events": null,
+      "max_input_value_bytes": null,
+      "max_total_logical_bytes": null
+    },
+    "exceeded": null,
+    "observed_logical_bytes": 745183
+  },
+  "failure": null
+}

@@ -1,0 +1,303 @@
+{
+  "evidence_receipt": {
+    "budgets": {
+      "configured": {
+        "max_capability_bytes": null,
+        "max_frame_bytes": null,
+        "max_input_value_bytes": null,
+        "max_input_value_events": null,
+        "max_native_bytes": null,
+        "max_native_events": null,
+        "max_normalized_bytes": null,
+        "max_normalized_events": null,
+        "max_snapshot_bytes": null,
+        "max_total_logical_bytes": null
+      },
+      "exceeded": null,
+      "observed_logical_bytes": 79735275
+    },
+    "capabilities": [
+      {
+        "id": "tic80.visual.motifs",
+        "logical_bytes": 99,
+        "message": null,
+        "output_schema": {
+          "id": "tic80.visual.motifs",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "status": "fulfilled"
+      }
+    ],
+    "channels": [
+      {
+        "channel": "normalized_events",
+        "encoded_bytes": null,
+        "item_count": 120000,
+        "logical_bytes": 50139265,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "capabilities",
+        "encoded_bytes": null,
+        "item_count": 1,
+        "logical_bytes": 189,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "native_evidence",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "frames",
+        "encoded_bytes": null,
+        "item_count": 60000,
+        "logical_bytes": 29595821,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "snapshots",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "input_value_evidence",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "envelope",
+        "encoded_bytes": null,
+        "item_count": 2,
+        "logical_bytes": 0,
+        "requested": true,
+        "status": "complete"
+      }
+    ],
+    "failure": null,
+    "fulfilled_guarantee": "summary",
+    "machine_id": "tic80",
+    "machine_version": "tic80-lua-semantics.v2",
+    "requested_guarantee": "summary",
+    "run_id": "paper-memory-tic80-recorder-60000-r1",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "status": "complete"
+  },
+  "execution": {
+    "capabilities": [
+      {
+        "schema": {
+          "id": "tic80.visual.motifs",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "changed_frames": 59999,
+          "frames": 60000,
+          "repeated_frames": 0,
+          "sampled_inputs": 60000,
+          "trace_events": 0
+        }
+      }
+    ],
+    "common": {
+      "boot_success": true,
+      "cycles": 60000,
+      "frames": 60000,
+      "termination": "frame_limit"
+    }
+  },
+  "memory": {
+    "allocator_high_water_bytes": null,
+    "peak_rss_bytes": 6389760,
+    "peak_rss_source": "/proc/self/status VmHWM"
+  },
+  "publication": {
+    "attempted": true,
+    "directory_bytes": 63810009,
+    "published": true
+  },
+  "recorder_receipt": {
+    "block_count": 705,
+    "channels": [
+      {
+        "channel": "normalized_events",
+        "stats": {
+          "block_count": 469,
+          "encoded_bytes": 40530751,
+          "logical_bytes": 52539265,
+          "record_count": 120000,
+          "segment_count": 469
+        }
+      },
+      {
+        "channel": "frames",
+        "stats": {
+          "block_count": 235,
+          "encoded_bytes": 22876045,
+          "logical_bytes": 30195821,
+          "record_count": 60000,
+          "segment_count": 235
+        }
+      },
+      {
+        "channel": "capability_outputs",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 211,
+          "logical_bytes": 257,
+          "record_count": 1,
+          "segment_count": 1
+        }
+      }
+    ],
+    "encoded_bytes": 63407007,
+    "evidence_receipt_published": true,
+    "evidence_status": "complete",
+    "failure": null,
+    "file_count": 708,
+    "finalized": true,
+    "logical_bytes": 82735343,
+    "record_count": 180001,
+    "schema": {
+      "id": "glassvm.recorder_receipt",
+      "version": {
+        "major": 1,
+        "minor": 1,
+        "patch": 0
+      }
+    },
+    "segment_count": 705,
+    "status": "complete"
+  },
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "tic80.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "runtime": {
+            "Text": "lua"
+          }
+        }
+      }
+    },
+    "execution_controls": {
+      "bundle_limits": [],
+      "frame_limit": 60000,
+      "step_limit": null
+    },
+    "input_schedule": "empty",
+    "observation": {
+      "budgets": {
+        "max_capability_bytes": null,
+        "max_frame_bytes": null,
+        "max_input_value_bytes": null,
+        "max_input_value_events": null,
+        "max_native_bytes": null,
+        "max_native_events": null,
+        "max_normalized_bytes": null,
+        "max_normalized_events": null,
+        "max_snapshot_bytes": null,
+        "max_total_logical_bytes": null
+      },
+      "capabilities": [
+        {
+          "id": "tic80.visual.motifs",
+          "parameters": {},
+          "required": true
+        }
+      ],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "input_sampled",
+            "frame_completed",
+            {
+              "extension": "tic80.trace"
+            }
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    }
+  },
+  "schema": "glassvm.paper_memory_trial",
+  "schema_version": "1.0.0",
+  "source": {
+    "artifact_path": "/home/spooky/workspace/glassvm-machines/tic80/fixtures/paper/game.tic",
+    "artifact_sha256": "sha256:f095a8ad534482a3aefbe0aa84c9b8bc47b74a89dd4202acbd5fc8b517995994"
+  },
+  "timing": {
+    "execute_and_sink_seconds": 20.385360546,
+    "preparation_seconds": 0.000153473,
+    "session_construction_seconds": 0.000460818
+  },
+  "trial": {
+    "frame_limit": 60000,
+    "machine_id": "tic80",
+    "mode": "recorder",
+    "repetition": 1
+  },
+  "measurement": {
+    "process_wall_seconds": 20.387178423000023
+  },
+  "status": "completed"
+}

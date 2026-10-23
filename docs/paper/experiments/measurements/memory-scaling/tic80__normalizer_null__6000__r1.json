@@ -1,0 +1,251 @@
+{
+  "evidence_receipt": {
+    "budgets": {
+      "configured": {
+        "max_capability_bytes": null,
+        "max_frame_bytes": null,
+        "max_input_value_bytes": null,
+        "max_input_value_events": null,
+        "max_native_bytes": null,
+        "max_native_events": null,
+        "max_normalized_bytes": null,
+        "max_normalized_events": null,
+        "max_snapshot_bytes": null,
+        "max_total_logical_bytes": null
+      },
+      "exceeded": null,
+      "observed_logical_bytes": 8015539
+    },
+    "capabilities": [
+      {
+        "id": "tic80.visual.motifs",
+        "logical_bytes": 96,
+        "message": null,
+        "output_schema": {
+          "id": "tic80.visual.motifs",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "status": "fulfilled"
+      }
+    ],
+    "channels": [
+      {
+        "channel": "normalized_events",
+        "encoded_bytes": null,
+        "item_count": 12000,
+        "logical_bytes": 5037932,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "capabilities",
+        "encoded_bytes": null,
+        "item_count": 1,
+        "logical_bytes": 186,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "native_evidence",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "frames",
+        "encoded_bytes": null,
+        "item_count": 6000,
+        "logical_bytes": 2977421,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "snapshots",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "input_value_evidence",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "envelope",
+        "encoded_bytes": null,
+        "item_count": 2,
+        "logical_bytes": 0,
+        "requested": true,
+        "status": "complete"
+      }
+    ],
+    "failure": null,
+    "fulfilled_guarantee": "summary",
+    "machine_id": "tic80",
+    "machine_version": "tic80-lua-semantics.v2",
+    "requested_guarantee": "summary",
+    "run_id": "paper-memory-tic80-normalizer_null-6000-r1",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "status": "complete"
+  },
+  "execution": {
+    "capabilities": [
+      {
+        "schema": {
+          "id": "tic80.visual.motifs",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "changed_frames": 5999,
+          "frames": 6000,
+          "repeated_frames": 0,
+          "sampled_inputs": 6000,
+          "trace_events": 0
+        }
+      }
+    ],
+    "common": {
+      "boot_success": true,
+      "cycles": 6000,
+      "frames": 6000,
+      "termination": "frame_limit"
+    }
+  },
+  "memory": {
+    "allocator_high_water_bytes": null,
+    "peak_rss_bytes": 5423104,
+    "peak_rss_source": "/proc/self/status VmHWM"
+  },
+  "publication": {
+    "attempted": false,
+    "directory_bytes": null,
+    "published": false
+  },
+  "recorder_receipt": null,
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "tic80.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "runtime": {
+            "Text": "lua"
+          }
+        }
+      }
+    },
+    "execution_controls": {
+      "bundle_limits": [],
+      "frame_limit": 6000,
+      "step_limit": null
+    },
+    "input_schedule": "empty",
+    "observation": {
+      "budgets": {
+        "max_capability_bytes": null,
+        "max_frame_bytes": null,
+        "max_input_value_bytes": null,
+        "max_input_value_events": null,
+        "max_native_bytes": null,
+        "max_native_events": null,
+        "max_normalized_bytes": null,
+        "max_normalized_events": null,
+        "max_snapshot_bytes": null,
+        "max_total_logical_bytes": null
+      },
+      "capabilities": [
+        {
+          "id": "tic80.visual.motifs",
+          "parameters": {},
+          "required": true
+        }
+      ],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "input_sampled",
+            "frame_completed",
+            {
+              "extension": "tic80.trace"
+            }
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    }
+  },
+  "schema": "glassvm.paper_memory_trial",
+  "schema_version": "1.0.0",
+  "source": {
+    "artifact_path": "/home/spooky/workspace/glassvm-machines/tic80/fixtures/paper/game.tic",
+    "artifact_sha256": "sha256:f095a8ad534482a3aefbe0aa84c9b8bc47b74a89dd4202acbd5fc8b517995994"
+  },
+  "timing": {
+    "execute_and_sink_seconds": 1.538079453,
+    "preparation_seconds": 0.000192479,
+    "session_construction_seconds": 0.000515409
+  },
+  "trial": {
+    "frame_limit": 6000,
+    "machine_id": "tic80",
+    "mode": "normalizer_null",
+    "repetition": 1
+  },
+  "measurement": {
+    "process_wall_seconds": 1.540043636000064
+  },
+  "status": "completed"
+}

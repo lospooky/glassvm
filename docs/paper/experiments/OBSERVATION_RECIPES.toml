@@ -1,0 +1,77 @@
+schema_version = 1
+
+# Each recipe is an exact contract request. "supported_machines" is explicit:
+# an unsupported cell is reported as excluded by the pilot, never substituted.
+machines = ["chip8", "pico8", "tic80"]
+
+[[recipe]]
+id = "disabled"
+description = "No requested evidence channels."
+normalized = "none"
+frames = "none"
+native = "none"
+capability = false
+
+[[recipe]]
+id = "minimal"
+description = "Normalized lifecycle events only."
+normalized = "lifecycle"
+frames = "none"
+native = "none"
+capability = false
+
+[[recipe]]
+id = "selected_normalized"
+description = "Workload-specific normalized kinds declared in PAPER_WORKLOADS.toml."
+normalized = "workload"
+frames = "none"
+native = "none"
+capability = false
+
+[[recipe]]
+id = "all_normalized"
+description = "All normalized event kinds."
+normalized = "all"
+frames = "none"
+native = "none"
+capability = false
+
+[[recipe]]
+id = "selected_native"
+description = "The machine's declared execution-summary native evidence kind."
+normalized = "none"
+frames = "none"
+native = "execution_summary"
+capability = false
+
+[[recipe]]
+id = "frame_hashes"
+description = "First-class frame fingerprint artifacts only."
+normalized = "none"
+frames = "hashes"
+native = "none"
+capability = false
+
+[[recipe]]
+id = "frame_full"
+description = "First-class full frame artifacts only."
+normalized = "none"
+frames = "full"
+native = "none"
+capability = false
+
+[[recipe]]
+id = "visual_capability"
+description = "The declared visual capability and exactly its workload event/frame prerequisites."
+normalized = "workload"
+frames = "hashes"
+native = "none"
+capability = true
+
+[[recipe]]
+id = "mixed"
+description = "Visual capability, selected normalized events, selected native summary, and frame hashes."
+normalized = "workload"
+frames = "hashes"
+native = "execution_summary"
+capability = true

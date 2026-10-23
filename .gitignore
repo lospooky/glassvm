@@ -2,6 +2,7 @@
 .codex/
 /target/
 /dist/
+__pycache__/
 /standalone_glassvm/baselines/
 /docs/paper/baselines/
 *.pyc
