@@ -4,3 +4,6 @@
 /dist/
 /standalone_glassvm/baselines/
 /docs/paper/baselines/
+*.pyc
+__pycache__/
+docs/internal/
