@@ -1,0 +1,297 @@
+{
+  "evidence_receipt": {
+    "budgets": {
+      "configured": {
+        "max_capability_bytes": null,
+        "max_frame_bytes": null,
+        "max_input_value_bytes": null,
+        "max_input_value_events": null,
+        "max_native_bytes": null,
+        "max_native_events": null,
+        "max_normalized_bytes": null,
+        "max_normalized_events": null,
+        "max_snapshot_bytes": null,
+        "max_total_logical_bytes": null
+      },
+      "exceeded": null,
+      "observed_logical_bytes": 535481993
+    },
+    "capabilities": [
+      {
+        "id": "pico8.visual.motifs",
+        "logical_bytes": 61,
+        "message": null,
+        "output_schema": {
+          "id": "pico8.visual.motifs",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "status": "fulfilled"
+      }
+    ],
+    "channels": [
+      {
+        "channel": "normalized_events",
+        "encoded_bytes": null,
+        "item_count": 600000,
+        "logical_bytes": 227111115,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "capabilities",
+        "encoded_bytes": null,
+        "item_count": 1,
+        "logical_bytes": 151,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "native_evidence",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "frames",
+        "encoded_bytes": null,
+        "item_count": 600000,
+        "logical_bytes": 308370727,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "snapshots",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "input_value_evidence",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "envelope",
+        "encoded_bytes": null,
+        "item_count": 2,
+        "logical_bytes": 0,
+        "requested": true,
+        "status": "complete"
+      }
+    ],
+    "failure": null,
+    "fulfilled_guarantee": "summary",
+    "machine_id": "pico8",
+    "machine_version": "pico8-0.2x-headless-compat.v2",
+    "requested_guarantee": "summary",
+    "run_id": "paper-memory-pico8-recorder-600000-r1",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "status": "complete"
+  },
+  "execution": {
+    "capabilities": [
+      {
+        "schema": {
+          "id": "pico8.visual.motifs",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "changed_frames": 599999,
+          "frames": 600000,
+          "repeated_frames": 0
+        }
+      }
+    ],
+    "common": {
+      "boot_success": true,
+      "cycles": 600000,
+      "frames": 600000,
+      "termination": "frame_limit"
+    }
+  },
+  "memory": {
+    "allocator_high_water_bytes": null,
+    "peak_rss_bytes": 6750208,
+    "peak_rss_source": "/proc/self/status VmHWM"
+  },
+  "publication": {
+    "attempted": true,
+    "directory_bytes": 433253774,
+    "published": true
+  },
+  "recorder_receipt": {
+    "block_count": 4689,
+    "channels": [
+      {
+        "channel": "normalized_events",
+        "stats": {
+          "block_count": 2344,
+          "encoded_bytes": 187940268,
+          "logical_bytes": 239111115,
+          "record_count": 600000,
+          "segment_count": 2344
+        }
+      },
+      {
+        "channel": "frames",
+        "stats": {
+          "block_count": 2344,
+          "encoded_bytes": 242670003,
+          "logical_bytes": 314370727,
+          "record_count": 600000,
+          "segment_count": 2344
+        }
+      },
+      {
+        "channel": "capability_outputs",
+        "stats": {
+          "block_count": 1,
+          "encoded_bytes": 183,
+          "logical_bytes": 219,
+          "record_count": 1,
+          "segment_count": 1
+        }
+      }
+    ],
+    "encoded_bytes": 430610454,
+    "evidence_receipt_published": true,
+    "evidence_status": "complete",
+    "failure": null,
+    "file_count": 4692,
+    "finalized": true,
+    "logical_bytes": 553482061,
+    "record_count": 1200001,
+    "schema": {
+      "id": "glassvm.recorder_receipt",
+      "version": {
+        "major": 1,
+        "minor": 1,
+        "patch": 0
+      }
+    },
+    "segment_count": 4689,
+    "status": "complete"
+  },
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "pico8.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "instruction_budget": {
+            "Unsigned": 500000
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          }
+        }
+      }
+    },
+    "execution_controls": {
+      "bundle_limits": [],
+      "frame_limit": 600000,
+      "step_limit": null
+    },
+    "input_schedule": "empty",
+    "observation": {
+      "budgets": {
+        "max_capability_bytes": null,
+        "max_frame_bytes": null,
+        "max_input_value_bytes": null,
+        "max_input_value_events": null,
+        "max_native_bytes": null,
+        "max_native_events": null,
+        "max_normalized_bytes": null,
+        "max_normalized_events": null,
+        "max_snapshot_bytes": null,
+        "max_total_logical_bytes": null
+      },
+      "capabilities": [
+        {
+          "id": "pico8.visual.motifs",
+          "parameters": {},
+          "required": true
+        }
+      ],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "frame_completed"
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    }
+  },
+  "schema": "glassvm.paper_memory_trial",
+  "schema_version": "1.0.0",
+  "source": {
+    "artifact_path": "/home/spooky/workspace/glassvm-machines/pico8/fixtures/paper/fireintro.p8",
+    "artifact_sha256": "sha256:491888897d07e5699a5e411c9cb881181f313e6cad7b0dcfec2fd333ea0b833a"
+  },
+  "timing": {
+    "execute_and_sink_seconds": 386.405918006,
+    "preparation_seconds": 0.000165971,
+    "session_construction_seconds": 0.000605441
+  },
+  "trial": {
+    "frame_limit": 600000,
+    "machine_id": "pico8",
+    "mode": "recorder",
+    "repetition": 1
+  },
+  "measurement": {
+    "process_wall_seconds": 386.408050215
+  },
+  "status": "completed"
+}

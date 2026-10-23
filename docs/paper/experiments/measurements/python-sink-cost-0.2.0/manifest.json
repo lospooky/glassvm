@@ -1,0 +1,40 @@
+{
+  "created_utc": "2026-10-12T13:35:35.544858+00:00",
+  "host": {
+    "architecture": "x86_64",
+    "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]",
+    "system": "Linux-5.15.133.1-microsoft-standard-WSL2-x86_64-with-glibc2.35"
+  },
+  "policy": {
+    "consumer_retains_emissions": false,
+    "frame_limit": 60000,
+    "independent_process_per_trial": true,
+    "machines": [
+      "chip8",
+      "pico8",
+      "tic80"
+    ],
+    "modes": [
+      "observation_disabled",
+      "observed_no_external_sink",
+      "python_consumer",
+      "rust_recorder",
+      "python_consumer_and_rust_recorder"
+    ],
+    "order_seed": 20261011,
+    "repetitions": 3
+  },
+  "schema": "glassvm.paper_python_sink_manifest",
+  "schema_version": "1.0.0",
+  "source": {
+    "glassvm": {
+      "dirty": false,
+      "revision": "e067605a3eab34300f9b83df3996958a93b7cd7e"
+    },
+    "machines": {
+      "dirty": false,
+      "revision": "3edb0ae31a4a3887a1f385d9d7b9aa50f7a9b026"
+    }
+  },
+  "trial_count": 45
+}

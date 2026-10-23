@@ -1,0 +1,98 @@
+{
+  "schema": "glassvm.paper_memory_experiment",
+  "schema_version": "1.0.0",
+  "started_utc": "2026-10-09T20:57:44.221786+00:00",
+  "machines": [
+    "chip8",
+    "pico8",
+    "tic80"
+  ],
+  "modes": [
+    "disabled",
+    "normalizer_null",
+    "recorder"
+  ],
+  "frame_limits": [
+    60000
+  ],
+  "repetitions": {
+    "60000": 3
+  },
+  "randomized_job_order_seed": 20261009,
+  "source": {
+    "glassvm": {
+      "revision": "d9377c65efcdea71e1c450eb7acd50596e4ba147",
+      "exact_tag": null,
+      "dirty": true
+    },
+    "machines": {
+      "revision": "1aca8f625f141adb72b959e413a11fb9e371cf3e",
+      "exact_tag": "v0.1.2",
+      "dirty": true
+    },
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "machines_cargo_lock_sha256": "f3298afae652640c2cc0a1fbd8936400b006af119dbe39249a36c8775e2aaf1e",
+    "trial_binary_sha256": "5f6cc1cc80afae23f772eae4ad20378fa23f0aa62ea4dc985371e45bc5d6cef0",
+    "host_system": "Linux-5.15.133.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "host_machine": "x86_64",
+    "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]"
+  },
+  "workloads": {
+    "chip8": {
+      "artifact_path": "chip8/fixtures/paper/octojam2title.ch8",
+      "artifact_sha256": "010f9ab220f55cc59645a6d05157b33a7099bac01037816ef06b74c2f8339b8a",
+      "configuration": {
+        "quirks": "chip8",
+        "cycles_per_frame": 12,
+        "machine_seed": 0
+      },
+      "input_schedule": "empty",
+      "normalized_event_kinds": [
+        "frame_completed",
+        "display_write",
+        "input_sampled"
+      ],
+      "capability": "chip8.visual_trajectory_motifs"
+    },
+    "pico8": {
+      "artifact_path": "pico8/fixtures/paper/fireintro.p8",
+      "artifact_sha256": "491888897d07e5699a5e411c9cb881181f313e6cad7b0dcfec2fd333ea0b833a",
+      "configuration": {
+        "cycles_per_frame": 1,
+        "instruction_budget": 500000,
+        "machine_seed": 0
+      },
+      "input_schedule": "empty",
+      "normalized_event_kinds": [
+        "frame_completed"
+      ],
+      "capability": "pico8.visual.motifs"
+    },
+    "tic80": {
+      "artifact_path": "tic80/fixtures/paper/game.tic",
+      "artifact_sha256": "f095a8ad534482a3aefbe0aa84c9b8bc47b74a89dd4202acbd5fc8b517995994",
+      "configuration": {
+        "cycles_per_frame": 1,
+        "runtime": "lua",
+        "machine_seed": 0
+      },
+      "input_schedule": "empty",
+      "normalized_event_kinds": [
+        "frame_completed",
+        "input_sampled",
+        "extension:tic80.trace"
+      ],
+      "capability": "tic80.visual.motifs"
+    }
+  },
+  "recorder_limits": {
+    "max_block_logical_bytes": 1048576,
+    "max_segment_records": 256,
+    "max_segment_logical_bytes": 2097152,
+    "max_buffered_bytes_per_channel": 1048576
+  },
+  "finished_utc": "2026-10-09T21:06:27.712558+00:00",
+  "completed_trials": 27,
+  "failed_trials": 0
+}

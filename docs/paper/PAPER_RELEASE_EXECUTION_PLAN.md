@@ -1,0 +1,524 @@
+# GlassVM paper release execution plan
+
+Planning date: 2026-10-04. Refreshed: 2026-10-12.
+
+This plan breaks down the remaining work in [PAPER_CHECKLIST.md](PAPER_CHECKLIST.md)
+into executable slices. The checklist remains the acceptance contract, and
+[CLAIM_EVIDENCE_MAP.md](CLAIM_EVIDENCE_MAP.md) remains the claim-to-evidence map.
+An unchecked checklist item is not proof that an implementation is missing.
+Close items with inspectable evidence rather than declarations of completion.
+
+## Release scope and stopping rule
+
+The release denominator is CHIP-8, PICO-8, and TIC-80. CHIP-8 is the reference
+implementation; PICO-8 and TIC-80 are external machine validation specimens.
+Hexwell and Wyrd-16 remain on their parked branch and outside this release.
+
+Freeze the architecture around the approved contracts. Freeze machine features
+once the selected paper workloads run correctly through those contracts.
+Full TIC-80 or PICO-8 compatibility is not the release gate. Describe the tested
+subsets precisely, including Lua runtime differences and unsupported features.
+Add implementation work only for a concrete workload, conformance, or
+claim-breaking defect.
+
+The workload denominator is now frozen as one publicly sourced, zero-input
+cartridge per machine. The exact artifacts, pins, configurations, selected
+events/capabilities, and 600-frame gate are recorded in
+[PAPER_WORKLOADS.toml](PAPER_WORKLOADS.toml). The PICO-8 specimen is explicitly
+a title-normalized derivative, not an unmodified upstream run. The selected
+TIC-80 graphics work remains in scope: native palette operations, palette-only
+BDR, and default 4-bpp affine textured triangles; nonzero depth remains
+unsupported.
+Paper artifacts are kept uniformly under each bundle's `fixtures/paper/`,
+with native extensions and upstream filenames; unmodified inputs remain under
+`fixtures/source/public/`.
+
+The TIC-80 palette, palette-only BDR, and default 4-bpp affine triangle work
+has been reference-reviewed locally and retained in the evaluated subset.
+Nonzero depth remains unsupported. Depth/perspective and additional graphics
+features are not automatic next slices.
+
+## Planning snapshot
+
+The following records the current source/release state after the `0.3.0` wave.
+The final measured-artifact coordinates are produced by the Slice 9 runner and
+recorded separately in `PAPER_ARTIFACT.md` after regeneration.
+
+| Area | Refreshed state (2026-10-12) |
+| --- | --- |
+| Public repositories | Both `lospooky/glassvm` and `lospooky/glassvm-machines` are public. |
+| GlassVM source/release | `v0.3.0` resolves to `2cf6db6fc4a8547eb5fbdaf545ceb0847b8c91a6`; all five contract crates and the generic Python facade are published at `0.3.0`. |
+| Machine source/release | `v0.3.0` resolves to `f4059b7a3657d785d73cccdb60d9755d3757d7d7`; the three provider distributions and selector distribution are published at `0.3.0`. |
+| Paper-branch product sync | GlassVM `paper-publication` locally merges `main` at `b0c29bc`; machines locally merges `main` at `4ea3d25`. These preserve paper-only scripts, records, and the memory-trial example on the publication branches. The machine memory-trial example compiles with `--locked` against GlassVM crates `0.3.0`. |
+| Published CI | GlassVM release run [38303283758](https://github.com/lospooky/glassvm/actions/runs/38303283758) passed. Machine release run [38304322861](https://github.com/lospooky/glassvm-machines/actions/runs/38304322861) and tag CI [38304322766](https://github.com/lospooky/glassvm-machines/actions/runs/38304322766) passed, including Rust/conformance and CPython 3.12, 3.13, 3.14. |
+| Python package indexes | `glassvm`, `glassvm-chip8`, `glassvm-pico8`, `glassvm-tic80`, and `glassvm-machines` are published at `0.3.0`. Each provider has an sdist and CPython 3.12/3.13/3.14 wheels; the selector has an sdist and pure-Python wheel. The five GlassVM contract crates are published at `0.3.0`; machine-specific Rust crates remain unpublished. |
+| Package-index smoke | Fresh, cache-disabled Python 3.12 environments passed for facade-only, each provider individually, and all providers; the separate zero-checkout caller also passed using upstream-downloaded, hash-checked fixtures. The unified runner pins the new 0.3.0 wave. |
+| Source archive audit | Release CI built bundle sdists and wheels on a clean runner and rebuilt/tested wheel installs for CPython 3.12/3.13/3.14. A minimal external Rust consumer resolved all five published crates with `--locked` and no local paths; the runner now repeats this with an empty Cargo home and target. See [Slice 8](PAPER_RELEASE_SLICE_08.md) for the historical 0.2.0 release record. |
+| Paper tooling | [`run_paper.py`](run_paper.py) creates a disposable locked Python 3.12 environment with uv cache disabled and isolated Cargo home/target; all published Python packages and contract crates are pinned to `0.3.0`. Fixture rebuilds, 23 harness tests, the standalone published-crate consumer, and table freshness checks pass. Full final measurement regeneration remains pending. |
+| Documentation | The execution plan and claim/evidence map are being reconciled with the 0.3.0 release. Existing experiment results remain historical; final 0.3.0 measurements will be written to a new external results directory. |
+
+The Slice 1 source and clean-room matrix are now validated at the public
+coordinates above. The paper checklist/plan and workload manifest remain
+uncommitted for later review; they were intentionally excluded from machine
+source commits.
+
+## Execution sequence
+
+| Slice | Outcome | Prerequisite | Checklist sections |
+| --- | --- | --- | --- |
+| 1 | Reviewed implementation, selected workloads, published green source coordinates | None | 1–3 |
+| 2 | Release audit, conformance matrix, reconciled claim map | 1 | 1–5 |
+| 3 | Generated machine heterogeneity table | 2 | 6 |
+| 4 | Reproducible measurement harness and result format | 1–3 | 7, 14 |
+| 5 | Selective-observation measurements | 4 | 7 |
+| 6 | Run-length bounded-memory evidence | 4; use 5 to calibrate practical lengths | 8 |
+| 7 | Consumer costs, semantic equivalence, generic downstream demo | 4–6; Python-consumer scope resolved | 9, 10, 13 |
+| 8 | Released packages and package-index-only installation proof | 2; supported release coordinates settled | 11 |
+| 9 | Regenerated paper artifacts, immutable coordinates, final claim report | 3, 5–8 | 12, 14, 15 |
+
+Slice 8 packaging preparation may run alongside experiments after source and
+version choices are stable. Final publication must use the evaluated source.
+Build the regeneration scaffold in slice 4; complete it with the real results
+in slice 9.
+
+At each slice boundary, record changed files, relevant checks, evidence paths,
+remaining decisions, and logical commits. Preserve unrelated worktree changes.
+Do not mark later slices complete on the strength of an earlier smoke test.
+
+## Slice 1: freeze the evaluated implementation and workload scope
+
+Execution record: [PAPER_RELEASE_SLICE_01.md](PAPER_RELEASE_SLICE_01.md).
+Completed 2026-10-04. Workload and graphics-scope decisions are resolved.
+Targeted reference regressions, the 600-frame three-machine workload gate, the
+full workspace test suite, formatting, fixture checksums, changed-package
+Clippy, and public exact-source CI are green. Workspace-wide Clippy still stops
+at a pre-existing CHIP-8 verifier lint; see the execution record.
+
+Machine changes were committed as `8486fc7` (`Correct TIC-80 graphics
+behavior`) and `66860ca` (`Add pinned paper workloads`), then pushed along with
+the two earlier continuation/retention commits. The published machine SHA is
+`66860cad9db978d6399f4f1a7a0e016e61c82b92`. The paper planning/checklist
+documents remain uncommitted for review.
+
+### Tasks
+
+- [x] Inventory the committed and uncommitted differences from public `main` in both repositories; see the source inventory in the execution record.
+- [x] Review the pending TIC-80 APIs against the reference, including texture addressing, callback timing, clipping, and unsupported paths. Scope limits are recorded in the execution record.
+- [x] Define the supported machine subsets and finite public workload set, including fixture provenance, configuration, empty input schedules, and intended execution length; see `PAPER_WORKLOADS.toml`.
+- [x] Confirm each workload requests its visual capability's declared normalized-event prerequisites, emits changing frame hashes, fulfills one capability output/receipt, and reaches 600 frames.
+- [x] Resolve workload-blocking defects and record remaining unsupported features accurately; no additional feature work is authorized by this gate.
+- [x] Commit the reviewed machine source changes in logical units (`8486fc7`, `66860ca`); keep the paper checklist/plan documents out of these commits for later review.
+- [x] Push the four machine commits, including PICO-8 continuation and TIC-80 retention fixes, and run CI on the exact source coordinate.
+- [x] Recheck clean-clone Rust/conformance and CPython 3.10/3.13 base, individual-provider, and all-provider jobs for those coordinates.
+
+### Deliverables and exit gate
+
+Produce a workload manifest and a supported-subset statement for all three
+machines, plus exact source SHAs and passing CI links. Every evaluated behavior
+must exist in the published source. Additional machine features require a
+specific acceptance need.
+
+Exit evidence: machine source `66860cad9db978d6399f4f1a7a0e016e61c82b92`,
+GlassVM facade source `5aa7d2a60210f173b344958e1338e6f8500c2a81`, and passing
+[CI run 37214867564](https://github.com/lospooky/glassvm-machines/actions/runs/37214867564).
+
+Workload decision resolved: one suitable public no-input cartridge per release
+machine. Keep the PICO-8 title normalization explicit in all generated claims;
+do not present that artifact as byte-identical upstream evidence.
+
+## Slice 2: reconcile release and conformance evidence
+
+Execution record: [PAPER_RELEASE_SLICE_02.md](PAPER_RELEASE_SLICE_02.md).
+Completed 2026-10-04 for source audit, conformance mapping, licensing,
+dependency/source-closure, and public CI. PyPI publication and empty-cache
+release verification remain open and are not represented as completed.
+
+### Tasks
+
+- [x] Audit repository boundaries and release-facing descriptions against the three-machine denominator.
+- [x] Audit Cargo/Python license metadata and root licenses for BSD-3-Clause consistency; preserve third-party fixture provenance.
+- [x] Inventory intended Rust crate and Python distribution release targets and inspect their dependency/source closure.
+- [x] Distinguish valid sibling source paths inside a complete sdist from path-only dependencies that cannot be published as Rust crates.
+- [x] Run both independent prohibited-surface checks and inspect release-facing manifests/docs that those source checks do not scan. Classify historical hits separately.
+- [x] Assemble the CHIP-8/PICO-8/TIC-80 conformance matrix linking each checklist section 3 property to a concrete test or implementation anchor: [PAPER_CONFORMANCE_MATRIX.md](PAPER_CONFORMANCE_MATRIX.md).
+- [x] Verify required rejection, optional downgrade, exact prerequisite closure, and typed configuration/input admission in every released bundle.
+- [x] Verify separate execution/evidence/recorder/publication outcomes, bounded normalization, state-only continuation, atomic publication, and interrupted staging behavior.
+- [x] Update stale CI/public-repository claims and reconcile C1/C2 evidence without marking C3 measurements complete.
+- [x] Reconcile the maturity inventory with actual evidence; preserve any packaging or paper gates still open.
+
+### Deliverables and exit gate
+
+Produce the conformance matrix, release-audit findings with dispositions, and
+an updated claim map. Close implementation items only when the specific
+behavior is evidenced; every unresolved claim-breaking finding must name a
+repair and verification task.
+
+Resolved release choices: publish the five machine-neutral GlassVM contract
+crates only; keep machine-specific Rust crates `publish = false`; advertise a
+Python minimum of 3.12; test CPython 3.12, 3.13, and 3.14. The tested platform
+claim remains Ubuntu 24.04 x86_64 only. On 2026-10-12 the five crates and all
+five Python distributions were published at `0.3.0`; package-index smoke and
+clean-runner release builds are recorded in [Slice 8](PAPER_RELEASE_SLICE_08.md).
+
+## Slice 3: generate the heterogeneity table
+
+Execution record: [PAPER_RELEASE_SLICE_03.md](PAPER_RELEASE_SLICE_03.md).
+Completed 2026-10-07 for the three-machine comparison and deterministic
+Markdown/LaTeX generation. The table is pinned to the current public source
+revisions; it establishes contract heterogeneity and the common caller
+lifecycle, not compatibility breadth or empirical performance.
+
+### Tasks
+
+- [x] Extract artifact representation, execution/configuration/input models, and timing/coordinate semantics.
+- [x] Extract frame schemas, normalized/native evidence families, snapshot support, capabilities, static services, and Python provider metadata.
+- [x] Explain the material machine differences and the shared caller lifecycle using the declarations and supported subsets.
+- [x] Preserve the Lua compatibility-runtime qualification for PICO-8 and TIC-80; avoid instruction-exact or full-console claims.
+- [x] Save the comparison as machine-readable data and generate Markdown and LaTeX-ready tables from it.
+
+### Deliverables and exit gate
+
+One source data file and generated tables cover every checklist section 6
+dimension. Each entry links to a declaration or supported-subset document at
+the evaluated source revision. Re-running generation produces identical
+output. See the Slice 3 execution record for validation and limitations.
+
+## Slice 4: build the experiment harness and result contract
+
+Measurement boundary decision: the Python harness orchestrates runs through
+the installed provider API; Rust `FileRunSession` continues to own
+`BudgetedSink -> FileEmissionSink`. Recorder schema `1.1.0` now exposes bounded
+per-channel segment, record, block, logical-byte, and encoded-block-payload
+counters in `RecorderReceipt`. These counters aggregate closed segment footers
+into the fixed six-channel set rather than retaining a run-length-sized footer
+collection. The harness should consume these receipt counters instead of
+introducing a parallel Python sink. `encoded_bytes` excludes segment/block
+framing, and remains distinct from physical file size.
+
+Implementation record: the Slice 4 harness, nine explicit observation recipes,
+versioned single-trial result schema, and 27-cell eight-frame pilot now exist in
+[`experiments/`](experiments/), with regeneration instructions in its README.
+The initial pilot used published `0.1.1` wheels and could not observe
+per-channel recorder counters. GlassVM `0.1.2` publishes recorder receipt schema
+`1.1.0`; the machine wheels were rebuilt against those crates, and the pilot was
+regenerated from installed `0.1.2` distributions. The harness requires schema
+`1.1.0` and checks per-channel totals against recorder aggregates, without
+inferring persistence counters from `EvidenceReceipt` or reading stored records.
+The identity-reporting requirement is resolved without changing the opaque
+Python facade: trials record the artifact digest, explicit configuration,
+schedule, execution controls, provider/package metadata, and
+`PreparedObservation` identity. The experiment does not need to expose the
+internal `PreparedRun` identity object or add an identity-reference API.
+
+### Tasks
+
+- [x] Create experiment/results locations, a versioned raw-result contract, and regeneration entry points for trial data and the pilot summary.
+- [x] Implement one shared execution driver that submits typed JSON requests through the installed-provider preparation and file-backed execution lifecycle.
+- [x] Define recipes for disabled, minimal, selected/all normalized, selected native, hash/full frames, visual capability, and mixed observation.
+- [x] Resolve all nine recipes on CHIP-8, PICO-8, and TIC-80 in the pilot; no unsupported recipe cells occurred. Missing provider cells are represented as explicit exclusions.
+- [x] Fix artifact/configuration/input/seed/control material across observation comparisons and record reproducibility metadata plus negotiated observation identity. Keep `PreparedRun` opaque; no identity accessor is required.
+- [x] Separate provider discovery, preparation, execute-and-publish, worker-process, and process-lifecycle timing. Pure emulator-only time is not exposed and is not inferred.
+- [x] Define raw fields for evidence/recorder counters, outcomes, runtime, peak RSS, and optional allocator high-water; unavailable counters remain explicitly null/unavailable.
+- [x] Launch each trial in an independent Python 3.14 process and record repetition policy, host/toolchain/package versions, provider metadata, and both source revisions/dirty state.
+- [x] Keep the measurement driver bounded: it retains receipts and metadata only, scans file sizes incrementally, and never reads segment records.
+- [x] Regenerate the 27-cell pilot from published `0.1.2` distributions and validate per-channel recorder accounting under schema `1.1.0`.
+- [x] Run the small 27-cell pilot and validate request preparation, separate outcomes, receipt completion, publication, schema shape, and evidence/physical-byte accounting boundaries.
+
+### Deliverables and exit gate
+
+A runnable harness, workload/observation manifests, a versioned result schema,
+pilot results, and a regeneration scaffold are present. The prepared-run
+identity boundary is resolved by retaining the opaque facade and recording
+execution inputs directly. Slice 4's pilot gate is complete: all 27 published
+`0.1.2` runs carry recorder receipt `1.1.0`, and each per-channel total matches
+its receipt aggregate. Every
+reported pilot metric has defined units and a measurement source; missing
+fields are explicit rather than reconstructed from another channel.
+
+Fixture/configuration fingerprints are reproducibility metadata. They do not
+introduce an authenticity, signature, or cryptographic audit protocol.
+
+## Slice 5: collect selectable-observation measurements
+
+Execution record: completed 2026-10-08. The five repetitions of nine explicit
+observation recipes over CHIP-8, PICO-8, and TIC-80 produced 135/135 published
+runs from the released `0.1.2` wheels on Python 3.14, Linux x86_64 under WSL2.
+All runs reached 600 frames with identical per-machine cycles and termination
+across recipes. CHIP-8 reported `Timeout` after the caller's 600-frame bound;
+PICO-8 and TIC-80 reported `frame_limit`. All evidence and recorder receipts
+were complete, publication succeeded, and the mechanical anomaly report was
+empty. The seeded shuffled order is recorded in the measurement manifest.
+
+Raw trials and the generated table are in
+[`experiments/measurements/`](experiments/measurements/); the exact command and
+measurement boundaries are in [`experiments/README.md`](experiments/README.md).
+Evidence budgets were explicitly unbounded (all maxima null); the provider's
+hard recorder limits were recorded in every trial. Full TIC-80 frame capture
+produced about 120.3 MB of physical run data and a 9.91 s median
+execute-and-publish interval, versus about 219 KB and 0.18 s for frame hashes
+on this host/workload. This is a workload-specific observation-cost contrast,
+not a general performance or bounded-memory claim. Allocator high-water is
+not exposed; process peak RSS includes Python/provider startup.
+
+### Tasks
+
+- [x] Execute each supported observation recipe for each selected machine workload.
+- [x] Use the same resolved machine execution material across mode comparisons and verify actual completed frames/cycles and termination.
+- [x] Collect five independent repetitions in seeded shuffled order and retain the individual observations.
+- [x] Record item/byte accounting, storage layout counts, publication outcome, and separate evidence/recorder receipts for every run.
+- [x] Check explicit evidence-budget policy and hard recorder limits; mechanically flag incomplete evidence, recorder failure, publication failure, and work/counter mismatches.
+- [x] Produce the normalized result table and investigate anomalies before interpreting overhead; no mechanical anomalies were found.
+
+### Deliverables and exit gate
+
+Raw result files and a generated observation-cost table. Every row names the
+workload, request, source coordinates, actual completed work, and outcome.
+Do not infer bounded memory from these fixed-length comparisons.
+
+## Slice 6: establish run-length bounded-memory evidence
+
+### Tasks
+
+- [x] Select four geometric lengths (600, 6,000, 60,000, 600,000 frames) and record the repetition count (three through 60,000; one at 600,000).
+- [x] Run all four paths—observation disabled, selected events to `NullSink`, selected events plus hash frames and visual normalizer to `NullSink`, and the same request through the durable recorder—for all three release workloads (120 trials).
+- [x] Keep artifact, configuration, and empty input schedule fixed per machine; vary only the frame limit and the explicitly defined observation/sink path.
+- [x] Measure per-process peak RSS, wall/runtime, evidence logical bytes, and finalized recorder encoded bytes. Allocator high-water is unavailable; RSS is Linux `/proc/self/status` `VmHWM`.
+- [x] Verify every run reached the requested frame count; all 120 executions and evidence receipts completed, and all 30 recorder trials finalized and published.
+- [x] Diagnose the initial CHIP-8 memory growth as retained per-frame/per-transition state in `chip8_core::Engine`, updated even with observation disabled. PICO-8 and TIC-80 RSS stayed approximately flat in that baseline.
+- [x] Generate the memory-versus-length and evidence/storage-volume plots from the raw result files.
+- [x] Constrain the original result: it did **not** support a cross-bundle run-length-independent memory claim because CHIP-8 RSS grew with run length.
+- [x] Clean the CHIP-8 path: remove frame-hash histories, the exact unique-frame set, unbounded per-transition metric samples, and retained whole-run native events. Keep scalar event counters; derive visual motifs in the bounded normalizer from selected frame artifacts. Remove the legacy native interestingness/trajectory-identity outputs and version the execution-summary schema.
+- [x] Repeat the four-mode/four-length CHIP-8 matrix (40 trials); the observed peak RSS range is approximately 5.0–6.1 MiB from 600 through 600,000 frames on this host.
+- [x] Prepare a clean-versioned regeneration command that builds with `--locked`, records exact checkout/tag/lockfile/binary coordinates, requires clean pinned revisions, validates complete execution-outcome equivalence, and refuses source/matrix-mismatched resume data. Results are directed outside the source checkouts.
+- [x] Repeat all three machines together from clean checkouts at one common source coordinate (120/120 trials completed; zero failures; 30/30 recorder trials finalized and published).
+
+### Deliverables and exit gate
+
+The original three-machine matrix and its generated plots are retained under
+[`experiments/measurements/memory-scaling/`](experiments/measurements/memory-scaling/).
+The CHIP-8 cleanup follow-up, 40 raw trials, manifest, summary, and plots are
+under
+[`experiments/measurements/chip8-retention-cleanup/`](experiments/measurements/chip8-retention-cleanup/).
+The clean three-machine rerun, all raw trials, manifest, generated summary, and
+plots are retained under
+[`experiments/measurements/memory-scaling-three-machine-a7dd374-3edb0ae/`](experiments/measurements/memory-scaling-three-machine-a7dd374-3edb0ae/);
+the execution record is [PAPER_RELEASE_SLICE_06.md](PAPER_RELEASE_SLICE_06.md).
+On the recorded WSL2 host, endpoint median peak RSS stayed within 1.5× across
+all tested machine/mode combinations from 600 to 600,000 frames. This supports
+only a workload-, revision-, and host-specific observed-RSS claim, not a
+universal bound. Recorder encoded volume remains a separate persistence cost
+and grows with emitted records.
+
+## Slice 7: consumer costs, equivalence, and downstream use
+
+### 7a. Rust sink-cost decomposition
+
+Execution record: a three-repetition 60,000-frame exploratory matrix completed
+for all three machines. It compares disabled observation, one fixed visual/event
+request to `NullSink`, and that exact request to the bounded recorder. The
+mode-independent run ID, artifact, configuration, schedule, controls, execution
+outcome, and evidence receipt are validated across the NullSink/recorder pairs.
+The summarizer reports lifecycle medians, absolute and relative deltas, process
+wall times, and evidence/storage volumes. Current checkouts were dirty, so these
+are exploratory results; regenerate from clean pinned revisions before paper
+use. The initial run with mode-dependent run IDs is retained and marked
+invalidated rather than mixed into the corrected matrix.
+
+Observed lifecycle medians (disabled / NullSink / recorder) were CHIP-8
+0.072 / 6.219 / 16.504 s, PICO-8 33.087 / 34.598 / 38.432 s, and TIC-80
+10.606 / 15.080 / 19.959 s. The recorder-over-NullSink deltas were 10.285 s
+(165.4%), 3.834 s (11.1%), and 4.879 s (32.4%), respectively. CHIP-8's
+disabled baseline is very small, so its enormous relative percentages should
+be interpreted with the absolute deltas. This is an observed end-to-end
+lifecycle contrast, not a hardware-independent estimate of recorder encoding
+alone.
+
+- [x] Compare disabled observation, the same observation with `NullSink`, and the same observation with the bounded recorder.
+- [x] Preserve identical machine execution material; verify exact request and receipt equality for the NullSink/recorder pair.
+- [x] Report absolute runtime, relative overhead, and the limits of the decomposition.
+
+Results: [`experiments/measurements/sink-cost-rust-7a-corrected/SINK_COST_SUMMARY.md`](experiments/measurements/sink-cost-rust-7a-corrected/SINK_COST_SUMMARY.md).
+
+### 7b. Resolve the Python-consumer experiment
+
+Decision: implement the bounded synchronous Python consumer bridge in the
+existing `glassvm_recorder` crate and expose it through the generic facade and
+the three release providers. The Rust emission contract remains borrowed and
+emission-at-a-time; Python receives owned bounded batches. `FileRunSession`
+remains the sole file-backed lifecycle owner.
+
+- [x] Add `PreparedRun.execute(sinks=..., file_recorder=...)` and the
+  `FileRecorder` request facade; allow consumer-only, recorder-only, combined,
+  and no-external-sink execution.
+- [x] Wire CHIP-8, PICO-8, and TIC-80 providers to the same bounded
+  `FileRunSession::run_with_sinks` path.
+- [x] Preserve separate machine execution, evidence fulfillment, Python sink,
+  recorder, and publication results; exercise structured Python callback
+  failure without reclassifying it as machine or recorder failure.
+- [x] Exercise all three providers with an installed-entry-point Python
+  consumer, and exercise consumer + Rust recorder publication.
+- [x] Add an isolated-process five-mode experiment harness recording batch
+  counts, logical bytes, peak bridge buffer, RSS high-water, receipts, and
+  source/package metadata. The short local smoke matrix is plumbing validation,
+  not paper evidence.
+- [x] Publish the GlassVM recorder version that supplies the Python feature,
+  resolve the machine lockfile against that registry artifact, and repeat the
+  smoke test without local source overrides.
+- [x] Run the registered three-machine, 60,000-frame, three-repetition matrix
+  using the published `0.2.0` wheels from clean pinned source coordinates;
+  review the generated summary and retain the raw trials.
+
+Execution record: 45 isolated trials completed in Python 3.14.3 on WSL2 using
+the package-index `0.2.0` facade and CHIP-8/PICO-8/TIC-80 provider wheels. The
+source checkouts were clean at GlassVM `e067605a3eab34300f9b83df3996958a93b7cd7e`
+and machines `3edb0ae31a4a3887a1f385d9d7b9aa50f7a9b026`. Raw trials, manifest,
+and generated summaries are retained under
+[`experiments/measurements/python-sink-cost-0.2.0/`](experiments/measurements/python-sink-cost-0.2.0/).
+The Python-consumer median increment over observed/no-external-sink execution
+was CHIP-8 +1.957 s (+31.4%), PICO-8 +0.442 s (+1.3%), and TIC-80 +1.155 s
+(+8.0%). PICO-8's 33.497 s observed baseline remains substantially slower than
+TIC-80's 14.375 s and CHIP-8's 6.239 s for the respective 60,000-frame
+workloads; this is a descriptive cross-machine comparison, not normalized
+throughput. Full manuscript-wide regeneration is still deferred.
+
+Reproduction harness: [`experiments/run_python_sink_cost.py`](experiments/run_python_sink_cost.py).
+The observed/no-external-sink case is not described as a direct Rust `NullSink`
+microbenchmark; Rust `NullSink` decomposition remains Slice 7a.
+
+### 7c. Rust/Python semantic equivalence
+
+- [x] Execute canonical requests with the Rust recorder and Python consumer attached to the same prepared execution.
+- [x] Check matching execution and prepared-observation identities while keeping provider-owned prepared objects opaque. `RunStarted` carries the canonical `PreparedRunIdentity` and `PreparedObservationIdentity`.
+- [x] Select/decode channel records using the Rust recorder reader, then compare canonical logical values and per-channel order.
+- [x] Compare capability outputs/receipts and define operational metadata exclusions.
+- [x] Report the first mismatching channel/record if equivalence fails. No raw segment-byte comparison or cross-channel order was introduced.
+
+Result: all compared projections and both identities matched for CHIP-8,
+PICO-8, and TIC-80. The matrix used locally rebuilt `0.2.0` validation wheels
+linked against the updated workspace crates. See
+[`experiments/measurements/semantic-equivalence-0.2.0-prepared-identity/REPORT.md`](experiments/measurements/semantic-equivalence-0.2.0-prepared-identity/REPORT.md)
+and reproduction harness
+[`experiments/run_semantic_equivalence.py`](experiments/run_semantic_equivalence.py).
+
+### 7d. Generic downstream demonstration
+
+- [x] Implement one generic Python consumer over frame hashes and normalized event kinds only.
+- [x] Run the identical caller path through installed CHIP-8, PICO-8, and TIC-80 providers, without machine-specific orchestration or visualization branches.
+- [x] Keep bounded state: previous fingerprint, 20 fixed frame-coordinate buckets, at most 128 event-kind counters, and one `EvidenceReceipt`.
+- [x] Generate three SVG postcards and one Markdown summary table without recorder reading, trace collection, native-evidence interpretation, or cross-channel ordering.
+
+Execution record: Glass Garden ran in CPython 3.14.3 using the package-index
+`glassvm`, `glassvm-chip8`, `glassvm-pico8`, and `glassvm-tic80` wheels, all at
+`0.2.0`. It used the three public fixture paths in `PAPER_WORKLOADS.toml`, each
+bundle's declared default configuration, an empty input schedule, and a shared
+600-frame limit. The observation selected all normalized events and hash-only
+frames; native evidence, capabilities, snapshots, and input values were not
+requested. All three evidence receipts were complete. The postcards literally
+show adjacent fingerprint changes by frame-coordinate bucket and top event-kind
+counts; they make no performance, complexity, or behavioral-equivalence claim.
+
+Artifacts: [`glass_garden.py`](experiments/glass_garden.py),
+[`test_glass_garden.py`](experiments/test_glass_garden.py), and the generated
+[`SUMMARY.md`](experiments/measurements/glass-garden-0.2.0/SUMMARY.md) with
+three linked SVG postcards.
+
+### Deliverables and exit gate
+
+The cost table, equivalence report, and reproducible downstream demo are
+complete. The equivalence check is documented in checklist section 10; Glass
+Garden is documented in section 13.
+
+## Slice 8: publish packages and prove independent installation
+
+Execution record: [PAPER_RELEASE_SLICE_08.md](PAPER_RELEASE_SLICE_08.md).
+The `0.2.0` GlassVM and machine packages were published on 2026-10-12. The
+package-index smoke and the no-checkout Python consumer passed for base-only,
+each provider individually, and all providers together in fresh Python 3.12
+environments. A no-path Rust consumer built against all five released crates.
+
+### Tasks
+
+- [x] Reconcile package versions with the reviewed/evaluated source and already published registry coordinates.
+- [x] Verify release builds and source archives on clean runners, with machine crates resolving published GlassVM dependencies and no local source overrides.
+- [x] Build the declared wheel/platform set and verify each bundle distribution supplies exactly one installed entry-point provider.
+- [x] Publish shared GlassVM dependencies before the machine packages that consume them; keep extras as ordinary package dependencies.
+- [x] Run the caller from a separate zero-checkout project with providers installed from the package index and no local overrides.
+- [x] Supply public fixtures independently of the repository checkout and verify base-only, each provider alone, and all providers together through that external caller.
+- [x] Record exact package versions, release workflow links, entry-point discovery, receipts, and published-run results in the Slice 8 execution record.
+- [x] Build a minimal external Rust consumer against the released versions without local path overrides.
+
+### Deliverables and exit gate
+
+Published package identifiers, release artifacts, clean-environment results,
+and rerunnable external consumer projects are recorded. Python fixtures are
+downloaded from pinned public upstream revisions and hash-checked. The Rust
+lockfile resolves all five GlassVM crates from crates.io.
+
+If version or source changes affect machine behavior, preparation, evidence,
+or storage accounting, rerun the affected experiments before sealing claims.
+
+## Slice 9: seal and regenerate the paper artifact
+
+### Tasks
+
+- [ ] Complete the regeneration command for all numbers, tables, and figures using public raw result files.
+- [ ] Ensure every quantitative claim identifies its result source and every supported-subset/conformance claim identifies its evidence.
+- [ ] Record exact evaluated source SHAs, package versions, toolchains, host characteristics, fixtures, and experiment configurations in PAPER_ARTIFACT.md.
+- [ ] Make experiment/regeneration scripts detect source-coordinate mismatches and record the provenance of regenerated outputs.
+- [ ] Generate the final claim map and reconcile the checklist/maturity inventory with the completed evidence.
+- [ ] Verify regeneration without private paths, unavailable fixtures, or hand-transcribed tables.
+- [ ] Create immutable tags/releases for the exact evaluated coordinates and use those coordinates in the manuscript.
+- [ ] Produce the final ship-gate report using the checklist's required sections.
+
+### Deliverables and exit gate
+
+One regeneration command, public raw results and generated artifacts,
+PAPER_ARTIFACT.md, immutable release coordinates, and the final report:
+
+- GREEN
+- AMBER
+- RED
+- PAPER CLAIMS NOW SAFE TO MAKE
+- CLAIMS STILL NOT SAFE TO MAKE
+- REQUIRED BEFORE SUBMISSION
+- OPTIONAL POLISH
+
+Optional polish and broader machine compatibility must not become implicit
+submission requirements. Claims remain limited to the verified contracts,
+selected specimens, and measured conditions.
+
+## Immediate next work
+
+Local follow-up (2026-10-21): the filtering investigation identified sparse
+normalized vocabularies, not a faulty filter, in PICO-8/TIC-80. Both now have
+an independently selectable, bounded `glassvm.graphics_activity` extension in
+unreleased local builds on `paper-publication`. Focused conformance and the
+two-machine, three-recipe, three-repetition 600-frame spot matrices passed;
+the full paper suite was not rerun. The machines repository records the schema,
+scope, measurements, and remaining priorities in
+`conformance/GRAPHICS_ACTIVITY.md`. These changes do not alter the released
+0.3.0 results. Before sealing claims against this new code:
+
+- [x] Add selective per-frame drawing-call summaries without retained call history.
+- [x] Check independent selection, coordinates, budgets, continuation, and unchanged frame contents.
+- [x] Verify graphics-only/all-normalized semantic projections and unchanged narrow recipes.
+- [x] Add independently selectable bounded callback/hook and RNG activity summaries, with observation-on/off and continuation conformance.
+- [x] Fix the confirmed TIC-80 seed initialization defect under approved `tic80-lua-semantics.v3`; reject host-entropy reseeding and test load/BOOT/frame determinism.
+- [x] Run the runtime-activity spot matrix and simultaneous Python/Rust-recorder projection checks without rerunning the paper suite.
+- [ ] Publish reviewed code at new immutable coordinates and update the affected pins.
+- [ ] Regenerate affected paper evidence from those published coordinates before sealing.
+
+The runtime slice is documented in the machines repository's
+`conformance/RUNTIME_ACTIVITY.md`; its results are separate from both the
+graphics-only slice and released 0.3.0 evidence. TIC-80 execution identity
+changes intentionally; this is not merely an observational change. Capability
+granularity, meaningful input consumption, and selective state access remain
+open follow-ups rather than claims already supported by the new raw summaries.
+
+Publication of the `0.3.0` product packages, the clean 60,000-frame
+Python-consumer matrix (Slice 7b), semantic-equivalence check (Slice 7c),
+Glass Garden downstream demo (Slice 7d), and Slice 8 independent-installation
+proofs are complete. Slice 6's clean three-machine bounded-memory rerun is also
+complete and reviewed; its results are recorded in
+[`PAPER_RELEASE_SLICE_06.md`](PAPER_RELEASE_SLICE_06.md). The next gate is
+Slice 9: manuscript-wide regeneration and immutable artifact sealing.

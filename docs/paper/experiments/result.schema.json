@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "glassvm.paper-experiment-result/1.0.0",
+  "title": "GlassVM paper experiment single-run result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_schema_version", "kind", "trial", "source", "host", "timing",
+    "workload", "request", "negotiation", "outcomes", "evidence_channels",
+    "recorder", "memory", "publication"
+  ],
+  "properties": {
+    "result_schema_version": { "const": "1.0.0" },
+    "kind": { "enum": ["run", "excluded", "failed"] },
+    "trial": {
+      "type": "object",
+      "required": ["machine_id", "recipe_id", "repetition", "started_utc"],
+      "properties": {
+        "machine_id": { "type": "string" },
+        "recipe_id": { "type": "string" },
+        "repetition": { "type": "integer", "minimum": 1 },
+        "started_utc": { "type": "string", "format": "date-time" }
+      }
+    },
+    "source": { "type": "object" },
+    "host": { "type": "object" },
+    "timing": { "type": "object" },
+    "workload": { "type": "object" },
+    "request": { "type": "object" },
+    "negotiation": { "type": "object" },
+    "outcomes": { "type": "object" },
+    "execution_result": { "type": "object" },
+    "evidence_receipt": { "type": "object" },
+    "recorder_receipt": { "type": "object" },
+    "evidence_channels": { "type": "array" },
+    "recorder": { "type": "object" },
+    "memory": { "type": "object" },
+    "publication": { "type": "object" },
+    "failure": {
+      "type": "object",
+      "required": ["phase", "error_type", "message"],
+      "properties": {
+        "phase": { "type": "string" },
+        "error_type": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "exclusion_reason": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "excluded" } } },
+      "then": { "required": ["exclusion_reason"] }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "run" } } },
+      "then": { "required": ["execution_result", "evidence_receipt", "recorder_receipt"] }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "failed" } } },
+      "then": { "required": ["failure"] }
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "evidence_receipt": {
+    "budgets": {
+      "configured": {
+        "max_capability_bytes": null,
+        "max_frame_bytes": null,
+        "max_input_value_bytes": null,
+        "max_input_value_events": null,
+        "max_native_bytes": null,
+        "max_native_events": null,
+        "max_normalized_bytes": null,
+        "max_normalized_events": null,
+        "max_snapshot_bytes": null,
+        "max_total_logical_bytes": null
+      },
+      "exceeded": null,
+      "observed_logical_bytes": 1754664
+    },
+    "capabilities": [
+      {
+        "id": "chip8.visual_trajectory_motifs",
+        "logical_bytes": 262,
+        "message": null,
+        "output_schema": {
+          "id": "chip8.visual_trajectory_motifs",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "status": "fulfilled"
+      }
+    ],
+    "channels": [
+      {
+        "channel": "normalized_events",
+        "encoded_bytes": null,
+        "item_count": 2568,
+        "logical_bytes": 1467100,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "capabilities",
+        "encoded_bytes": null,
+        "item_count": 1,
+        "logical_bytes": 363,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "native_evidence",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "frames",
+        "encoded_bytes": null,
+        "item_count": 600,
+        "logical_bytes": 287201,
+        "requested": true,
+        "status": "complete"
+      },
+      {
+        "channel": "snapshots",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "input_value_evidence",
+        "encoded_bytes": null,
+        "item_count": 0,
+        "logical_bytes": 0,
+        "requested": false,
+        "status": "omitted"
+      },
+      {
+        "channel": "envelope",
+        "encoded_bytes": null,
+        "item_count": 2,
+        "logical_bytes": 0,
+        "requested": true,
+        "status": "complete"
+      }
+    ],
+    "failure": null,
+    "fulfilled_guarantee": "summary",
+    "machine_id": "chip8",
+    "machine_version": "chip8-family-semantics.v1",
+    "requested_guarantee": "summary",
+    "run_id": "paper-cost-chip8-600-r2",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "status": "complete"
+  },
+  "execution": {
+    "capabilities": [
+      {
+        "schema": {
+          "id": "chip8.visual_trajectory_motifs",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "display_state_writes": 0,
+          "display_write_events": 1968,
+          "frame_artifacts": 600,
+          "frame_events": 600,
+          "frame_hash_changes": 599,
+          "full_artifact_count": 0,
+          "input_events": 0,
+          "max_display_writes_per_event": 0,
+          "repeated_frame_hashes": 0,
+          "schema": "chip8_visual_trajectory_motifs"
+        }
+      }
+    ],
+    "common": {
+      "boot_success": true,
+      "cycles": 7200,
+      "frames": 600,
+      "termination": "Timeout"
+    }
+  },
+  "memory": {
+    "allocator_high_water_bytes": null,
+    "peak_rss_bytes": 5242880,
+    "peak_rss_source": "/proc/self/status VmHWM"
+  },
+  "publication": {
+    "attempted": false,
+    "directory_bytes": null,
+    "published": false
+  },
+  "recorder_receipt": null,
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "chip8.machine_configuration",
+        "version": {
+          "major": 2,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 12
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "quirks": {
+            "Text": "chip8"
+          }
+        }
+      }
+    },
+    "execution_controls": {
+      "bundle_limits": [],
+      "frame_limit": 600,
+      "step_limit": null
+    },
+    "input_schedule": "empty",
+    "observation": {
+      "budgets": {
+        "max_capability_bytes": null,
+        "max_frame_bytes": null,
+        "max_input_value_bytes": null,
+        "max_input_value_events": null,
+        "max_native_bytes": null,
+        "max_native_events": null,
+        "max_normalized_bytes": null,
+        "max_normalized_events": null,
+        "max_snapshot_bytes": null,
+        "max_total_logical_bytes": null
+      },
+      "capabilities": [
+        {
+          "id": "chip8.visual_trajectory_motifs",
+          "parameters": {},
+          "required": true
+        }
+      ],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "display_write",
+            "input_sampled",
+            "frame_completed"
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    }
+  },
+  "schema": "glassvm.paper_memory_trial",
+  "schema_version": "1.1.0",
+  "source": {
+    "artifact_path": "/tmp/glassvm-slice6.LbOiTf/glassvm-machines/chip8/fixtures/paper/octojam2title.ch8",
+    "artifact_sha256": "sha256:010f9ab220f55cc59645a6d05157b33a7099bac01037816ef06b74c2f8339b8a"
+  },
+  "timing": {
+    "directory_measurement_seconds": null,
+    "execution_lifecycle_seconds": 0.063690652,
+    "preparation_seconds": 0.000469368,
+    "session_construction_seconds": 0.00028688
+  },
+  "trial": {
+    "frame_limit": 600,
+    "machine_id": "chip8",
+    "mode": "normalizer_null",
+    "repetition": 2
+  },
+  "measurement": {
+    "process_wall_seconds": 0.06530991600084235
+  },
+  "status": "completed"
+}

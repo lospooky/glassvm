@@ -1,0 +1,130 @@
+{
+  "schema": "glassvm.paper_sink_cost_summary",
+  "schema_version": "1.0.0",
+  "source": {
+    "glassvm": {
+      "revision": "d9377c65efcdea71e1c450eb7acd50596e4ba147",
+      "exact_tag": null,
+      "dirty": true
+    },
+    "machines": {
+      "revision": "1aca8f625f141adb72b959e413a11fb9e371cf3e",
+      "exact_tag": "v0.1.2",
+      "dirty": true
+    },
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "machines_cargo_lock_sha256": "f3298afae652640c2cc0a1fbd8936400b006af119dbe39249a36c8775e2aaf1e",
+    "trial_binary_sha256": "a6ca2eb8989b46b8431ea811e294f4f4f906f8e9cb604671589ac99fc0fd2ffe",
+    "host_system": "Linux-5.15.133.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "host_machine": "x86_64",
+    "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]"
+  },
+  "machines": {
+    "chip8": {
+      "repetitions": 3,
+      "frame_limit": 60000,
+      "lifecycle_seconds": {
+        "recorder": {
+          "median": 16.44387512,
+          "min": 16.367223203,
+          "max": 16.764936487
+        },
+        "disabled": {
+          "median": 0.073884558,
+          "min": 0.071564039,
+          "max": 0.07482976
+        },
+        "normalizer_null": {
+          "median": 6.26612759,
+          "min": 6.2035293639999995,
+          "max": 6.28190499
+        }
+      },
+      "process_wall_seconds_median": {
+        "recorder": 16.44683495499976,
+        "disabled": 0.07567216799998278,
+        "normalizer_null": 6.268023372000243
+      },
+      "relative_overhead_percent": {
+        "observation_pipeline_vs_disabled": 8380.970529728282,
+        "recorder_vs_same_request_null_sink": 162.42483709145156,
+        "recorder_vs_disabled": 22156.173096413462
+      },
+      "evidence_logical_bytes_median": 182036965,
+      "recorder_encoded_bytes_median": 145423949,
+      "directory_bytes_median": 146133811,
+      "directory_measurement_seconds_median": 0.001249138
+    },
+    "pico8": {
+      "repetitions": 3,
+      "frame_limit": 60000,
+      "lifecycle_seconds": {
+        "recorder": {
+          "median": 38.18737022,
+          "min": 38.142747754,
+          "max": 39.715642628
+        },
+        "disabled": {
+          "median": 32.499029524,
+          "min": 32.467274139,
+          "max": 33.25206706
+        },
+        "normalizer_null": {
+          "median": 34.071902821,
+          "min": 34.056122385,
+          "max": 34.980211947
+        }
+      },
+      "process_wall_seconds_median": {
+        "recorder": 38.18995635200008,
+        "disabled": 32.50093474700043,
+        "normalizer_null": 34.0740153859997
+      },
+      "relative_overhead_percent": {
+        "observation_pipeline_vs_disabled": 4.839754663561435,
+        "recorder_vs_same_request_null_sink": 12.078771827393965,
+        "recorder_vs_disabled": 17.503109413772645
+      },
+      "evidence_logical_bytes_median": 53007561,
+      "recorder_encoded_bytes_median": 42287151,
+      "directory_bytes_median": 42555792,
+      "directory_measurement_seconds_median": 0.00052888
+    },
+    "tic80": {
+      "repetitions": 3,
+      "frame_limit": 60000,
+      "lifecycle_seconds": {
+        "recorder": {
+          "median": 19.811131157,
+          "min": 19.748586918,
+          "max": 20.026724105
+        },
+        "disabled": {
+          "median": 10.560185867,
+          "min": 10.537080856,
+          "max": 10.618053356
+        },
+        "normalizer_null": {
+          "median": 14.691773835,
+          "min": 14.651769421000001,
+          "max": 14.799334491
+        }
+      },
+      "process_wall_seconds_median": {
+        "recorder": 19.813591679000638,
+        "disabled": 10.561922232000143,
+        "normalizer_null": 14.69364029099961
+      },
+      "relative_overhead_percent": {
+        "observation_pipeline_vs_disabled": 39.12419743397686,
+        "recorder_vs_same_request_null_sink": 34.84505941552292,
+        "recorder_vs_disabled": 87.60210669121548
+      },
+      "evidence_logical_bytes_median": 79735275,
+      "recorder_encoded_bytes_median": 63407007,
+      "directory_bytes_median": 63810009,
+      "directory_measurement_seconds_median": 0.000789693
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema": {
+    "id": "glassvm.recorder_receipt",
+    "version": {
+      "major": 1,
+      "minor": 1,
+      "patch": 0
+    }
+  },
+  "status": "complete",
+  "finalized": true,
+  "evidence_receipt_published": true,
+  "evidence_status": "complete",
+  "channels": [
+    {
+      "channel": "normalized_events",
+      "stats": {
+        "segment_count": 3,
+        "record_count": 600,
+        "block_count": 3,
+        "logical_bytes": 218115,
+        "encoded_bytes": 168220
+      }
+    },
+    {
+      "channel": "native_evidence",
+      "stats": {
+        "segment_count": 1,
+        "record_count": 1,
+        "block_count": 1,
+        "logical_bytes": 560,
+        "encoded_bytes": 466
+      }
+    },
+    {
+      "channel": "frames",
+      "stats": {
+        "segment_count": 3,
+        "record_count": 600,
+        "block_count": 3,
+        "logical_bytes": 295223,
+        "encoded_bytes": 224324
+      }
+    },
+    {
+      "channel": "capability_outputs",
+      "stats": {
+        "segment_count": 1,
+        "record_count": 1,
+        "block_count": 1,
+        "logical_bytes": 213,
+        "encoded_bytes": 179
+      }
+    }
+  ],
+  "segment_count": 8,
+  "record_count": 1202,
+  "block_count": 8,
+  "logical_bytes": 514111,
+  "encoded_bytes": 393189,
+  "file_count": 11,
+  "failure": null
+}

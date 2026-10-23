@@ -1,6 +1,6 @@
 # GlassVM paper claim-to-evidence map
 
-**Status:** current release and paper evidence boundary, 2026-10-04
+**Status:** current release and paper evidence boundary, 2026-10-12
 
 This map separates claims supported by the clean in-tree implementation from
 claims that require independent release artifacts or paper-scale measurements.
@@ -11,9 +11,9 @@ standalone release evidence boundary.
 
 | Claim | What the release must show | Current evidence | Status |
 | --- | --- | --- | --- |
-| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8 is the baseline/reference implementation; PICO-8 and TIC-80 provide independently designed external validation specimens. Shared conformance and installed-wheel tests exercise the same prepared-run and facade paths across the three release bundles. Hexwell and Wyrd-16 are preserved on a separate parked branch and are outside this release denominator. | Architecture and three-machine behavior are verified at GlassVM `cf7dee8444e1f5968f7206f65335663855c981e2` and Machines `56563bd0dfb92a67d272ed4d8ab4868e448b265d`; current CPython 3.12/3.13/3.14 CI is green. Python package-index publication and install proof remain open. |
-| **C2 — Observation inversion.** An experiment requests the evidence it needs through an explicit contract. | Preparation resolves exact channel, event-kind, native, frame, snapshot, final-state, and capability prerequisites before execution; emission and derived outputs remain separate. | `ObservationRequest`, `PreparedObservation`, exact dependency closure, optional downgrade, bounded normalizers, typed frame/native/input-value channels, and `EvidenceReceipt` tests are exercised by shared conformance cases for every release bundle. The installed-wheel clean-room path checks preparation and separate result domains. | Preparation and evidence semantics are verified across all three bundles; the current 3.12/3.13/3.14 source-distribution-to-wheel and provider matrix is green. Package-index publication and install proof remain open. |
-| **C3 — Practical selectable observation.** Observation cost is selectable, measurable, and suitable for long-running experimentation. | Measurements distinguish execution, normalization, sink, encoding, durable storage, memory, and file-count costs across observation selections and workloads. | Synchronous borrowed emissions, hard block/segment/buffer limits, independent channels, finalized `RecorderReceipt`, atomic publication, and recorder round-trip tests provide engineering support. | Mechanism demonstrated; paper-scale measurements pending. |
+| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8 is the baseline/reference implementation; PICO-8 and TIC-80 provide independently designed external validation specimens. Shared conformance and installed-wheel tests exercise the same prepared-run and facade paths across the three release bundles. Hexwell and Wyrd-16 are preserved on a separate parked branch and are outside this release denominator. | Architecture and three-machine behavior were exercised with GlassVM HEAD `28b02ec04fc525c1fdca886c01f9436167979d13` (working tree dirty only for experiment/docs changes at collection) and Machines `1aca8f625f141adb72b959e413a11fb9e371cf3e` (clean); current CPython 3.12/3.13/3.14 CI is green. The four 0.1.2 Python distributions were installed from the package index and exercised by the repeated measurement matrix. |
+| **C2 — Observation inversion.** An experiment requests the evidence it needs through an explicit contract. | Preparation resolves exact channel, event-kind, native, frame, snapshot, final-state, and capability prerequisites before execution; emission and derived outputs remain separate. | `ObservationRequest`, `PreparedObservation`, exact dependency closure, optional downgrade, bounded normalizers, typed frame/native/input-value channels, and `EvidenceReceipt` tests are exercised by shared conformance cases for every release bundle. The installed-wheel path checks preparation and separate result domains. | Preparation and evidence semantics are verified across all three bundles; the current 3.12/3.13/3.14 source-distribution-to-wheel and provider matrix is green. All three published 0.1.2 bundle wheels and the generic facade were exercised from package-index installs. |
+| **C3 — Practical selectable observation.** Observation cost is selectable, measurable, and suitable for long-running experimentation. | Measurements distinguish execution, normalization, sink, encoding, durable storage, memory, and file-count costs across observation selections and workloads. | Slice 5 records 135 published runs: nine exact observation recipes × three machines × five repetitions at 600 frames. Slice 6 now includes a clean 120-trial run-length matrix at one common source coordinate, in addition to the initial diagnostic matrix and CHIP-8 cleanup follow-up. Raw data, manifests, summaries, and plots are retained under [`experiments/measurements/`](experiments/measurements/). | On the common clean source pair and this WSL2 host, median peak RSS stayed within 1.5× between 600 and 600,000 frames for every machine/mode pair (three repetitions at shorter lengths; one at 600,000). This supports an observed-RSS statement scoped to the tested fixtures/configurations, revisions, and host—not a universal memory bound or cross-host performance claim. Allocator high-water was unavailable; persisted encoded evidence grew with emitted records. See [Slice 6](PAPER_RELEASE_SLICE_06.md). |
 
 The machine-independent downstream analysis demonstration supports C2 and C3;
 it is not a separate GlassVM claim. Derived metrics belong to bundle-owned
@@ -58,11 +58,11 @@ index availability.
 | --- | --- | --- |
 | Shared-runner heterogeneous execution | C1 | A clean-room example whose caller is unchanged across CHIP-8, PICO-8, and TIC-80. |
 | Preparation and failure behavior | C2 | Required-prerequisite rejection, optional downgrade, dependency closure, typed input/configuration admission, and pre-`RunStarted` failure tests in every released bundle. |
-| Selective observation matrix | C2, C3 | No observation, summary, selected normalized events, complete normalized events, selected native evidence, frame capture, and capability-output runs with explicit receipts. |
-| Bounded online execution | C3 | Long-run RSS/allocation measurements showing memory bounded by configured sink/reducer state rather than run length. |
-| Recorder/storage cost | C3 | Logical bytes, encoded bytes, block/segment counts, file counts, and publication outcomes under identical workloads and observation requests. |
+| Selective observation matrix | C2, C3 | [`experiments/measurements/`](experiments/measurements/) retains five repetitions for all nine exact recipes on CHIP-8, PICO-8, and TIC-80 at a 600-frame bound, including requested/fulfilled channels and separate receipts. |
+| Bounded online execution | C3 | The clean 120-trial, three-machine/four-mode/four-length matrix observed approximately flat peak RSS for every tested pair; source revisions, limits, raw results, and claim caveats are recorded in [Slice 6](PAPER_RELEASE_SLICE_06.md). This is empirical evidence for the measured conditions, not a universal guarantee. |
+| Recorder/storage cost | C3 | [`experiments/measurements/OBSERVATION_SUMMARY.md`](experiments/measurements/OBSERVATION_SUMMARY.md) reports per-channel logical/encoded bytes, block/segment/file counts, physical directory bytes, and publication outcomes for identical machine execution material. |
 | Downstream analysis | C2, C3 | Refinery or equivalent caller consuming selected normalized projections and capability outputs without requiring whole-run GlassVM materialization. |
-| Independent publication | C1, C2, C3 | Both repositories are public and the five machine-neutral GlassVM crates are published at `0.1.0`. Bundle source archives and wheels build from the split repositories without GlassVM path overrides. The four Python distributions are not yet published to PyPI, so package-index-only installation remains open. |
+| Independent publication | C1, C2, C3 | Both repositories are public; the five machine-neutral GlassVM crates and all four Python distributions are available at `0.1.2`. Package-index-installed Python distributions executed successfully in the Slice 5 matrix. |
 | Paper regeneration | All | Versioned scripts regenerate every table and figure from public result files. |
 
 ## Permitted claim language before those gates close
@@ -80,10 +80,12 @@ as the independent validation machines. Hexwell and Wyrd-16 are parked outside
 the current release branch and should not be counted as publication specimens.
 The checked-in baseline remains a host-specific regression artifact.
 
-They must not yet state that the machine Python distributions are published to
-PyPI, that the system has paper-scale boundedness or population-scale
-throughput, or that a machine-independent Refinery benchmark is complete.
-Those statements require the evidence items above.
+They may state that measured peak RSS stayed approximately flat over the
+600–600,000-frame range for the three pinned workloads, four tested observation
+modes, source pair, and WSL2 host, while explicitly noting the single longest
+repetition and growth in persisted evidence. They must not generalize this to a
+universal memory bound, cross-host performance, population-scale throughput, or
+a completed machine-independent Refinery benchmark.
 
 ## Baseline boundary
 
@@ -118,6 +120,8 @@ GlassVM publication evidence boundary.
 CB-01 through CB-12 are complete in the implementation ledger. Slice 2's
 source audit and cross-bundle conformance matrix are recorded in
 [`PAPER_RELEASE_SLICE_02.md`](PAPER_RELEASE_SLICE_02.md). Both public source
-coordinates and their current Rust/Python CI are green. PyPI publication,
-empty-cache release verification, paper-scale measurement, and paper artifact
-regeneration remain open gates.
+coordinates and their current Rust/Python CI are green. The original Slice 6
+run-length measurement, CHIP-8 retention cleanup, and clean same-coordinate
+three-machine rerun are complete. Slice 9 manuscript-wide regeneration and
+immutable artifact sealing remain open gates. PyPI availability and
+package-index-installed execution were verified by the Slice 5 collection.
