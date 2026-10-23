@@ -85,6 +85,10 @@ Verify all three release bundles satisfy the same contract surface.
 - [x] Atomic publication still requires finalized recorder state.
 - [x] Interrupted staging remains inspectable/cleanable and is not silently resumed.
 - [x] `NullSink` remains truly zero-retention.
+- [ ] PICO-8 and TIC-80 visual reducers consume bounded graphics-activity and
+  input-application evidence with exact prerequisites; TIC-80 retains its
+  distinct sampled-input and trace summaries. See the alignment plan in
+  `glassvm-machines/conformance/CAPABILITY_GRANULARITY_PLAN.md`.
 
 Output:
 - one conformance matrix across CHIP-8 / PICO-8 / TIC-80: [PAPER_CONFORMANCE_MATRIX.md](PAPER_CONFORMANCE_MATRIX.md)
@@ -481,6 +485,13 @@ selection. It includes the separately approved TIC-80 seeded-execution fix
 Core/bundle conformance and targeted installed-wheel/spot checks passed;
 `glassvm-machines/conformance/RUNTIME_ACTIVITY.md` records scope and results.
 The new execution identity and evidence are not retroactively part of 0.3.0.
+
+The visual-capability decision is to align PICO-8 and TIC-80 with CHIP-8's
+broader bounded frame/display/input profile, not narrow existing capabilities
+to frames only. Their reducers now include selected graphics API-call and
+input-application facts; TIC-80 retains its frame-level input sample and trace
+counts. Targeted conformance and Python consumer/recorder verification remains
+open, so this is not yet a completed parity or regenerated-paper claim.
 
 Create a single reproducible path that regenerates every paper number/figure/table.
 
