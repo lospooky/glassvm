@@ -53,7 +53,7 @@ evidence and are not relabeled as `0.3.1` measurements.
 | GlassVM source/release | Tag `v0.3.1`, commit `f9c68f95bd579a002e1ed69a04b600fefcc90f8c`; all five contract crates and the generic Python facade are published. [Release workflow](https://github.com/lospooky/glassvm/actions/runs/40389448254) passed. |
 | Machine source/release | Tag `v0.3.1`, commit `a136f83cd5f44092e56eeb5678d56c35255f59cd`; CHIP-8, PICO-8, TIC-80, and the selector package are published. [Release workflow](https://github.com/lospooky/glassvm-machines/actions/runs/40390864736) passed, including clean sdist-to-wheel builds. |
 | Paper pins | The unified runner, Python lock, external Python consumer, external Rust consumer, and machine clean-room expectation target `0.3.1`. |
-| Provider metadata | The installed wheels are distribution version `0.3.1`, but all three providers self-report `bundle_version: 0.3.0`. Published artifacts cannot be replaced in place; correct this in a later machine-package release before final evidence sealing. |
+| Provider metadata | The installed wheels are distribution version `0.3.1`, but all three providers self-report `bundle_version: 0.3.0`. This accepted discrepancy is documented in the results and does not block the 0.3.1 run or evidence sealing; keep the two version fields distinct. |
 | Regeneration | The full `0.3.1` paper run remains pending. Focused Glass Garden and Glass Relay results are recorded separately and are not performance or full-suite evidence. |
 
 ## Historical planning snapshot after 0.3.0
