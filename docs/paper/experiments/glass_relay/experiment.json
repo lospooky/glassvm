@@ -1,0 +1,42 @@
+{
+  "schema": "glass-relay.experiment",
+  "version": 1,
+  "frame_limit": 120,
+  "repetitions": 2,
+  "response_deadline_frames": 1,
+  "restoration_deadline_frames": 1,
+  "trials": [
+    {"press": 12, "release": 20},
+    {"press": 44, "release": 57},
+    {"press": 80, "release": 100}
+  ],
+  "machines": [
+    {
+      "machine_id": "chip8",
+      "configuration_schema": {"id": "chip8.machine_configuration", "version": {"major": 2, "minor": 0, "patch": 0}},
+      "configuration": {"quirks": "chip8", "cycles_per_frame": 128, "machine_seed": 0},
+      "input_id": "chip8.key.0",
+      "input_schema": {"id": "chip8.input.key", "version": {"major": 1, "minor": 0, "patch": 0}},
+      "pressed": true,
+      "released": false
+    },
+    {
+      "machine_id": "pico8",
+      "configuration_schema": {"id": "pico8.machine_configuration", "version": {"major": 1, "minor": 0, "patch": 0}},
+      "configuration": {"cycles_per_frame": 1, "instruction_budget": 500000, "machine_seed": 0},
+      "input_id": "pico8.button.0",
+      "input_schema": {"id": "pico8.input.button", "version": {"major": 1, "minor": 0, "patch": 0}},
+      "pressed": true,
+      "released": false
+    },
+    {
+      "machine_id": "tic80",
+      "configuration_schema": {"id": "tic80.machine_configuration", "version": {"major": 1, "minor": 0, "patch": 0}},
+      "configuration": {"cycles_per_frame": 1, "runtime": "lua", "machine_seed": 0},
+      "input_id": "tic80.gamepad",
+      "input_schema": {"id": "tic80.input.gamepad", "version": {"major": 1, "minor": 0, "patch": 0}},
+      "pressed": 1,
+      "released": 0
+    }
+  ]
+}

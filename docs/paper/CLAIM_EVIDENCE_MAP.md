@@ -20,6 +20,18 @@ it is not a separate GlassVM claim. Derived metrics belong to bundle-owned
 normalizers, while Refinery remains a consumer that scores or searches over
 their outputs.
 
+Glass Relay adds a focused C1/C2 example of shared experimental evaluation:
+one Python consumer compares the same press/hold/release requirements across
+three machines through normalized input acceptance and frame fingerprints.
+It evaluates experiment-level requirements and introduces no machine-specific
+capability or translation semantics. The original reference/delayed/stuck
+cartridges are controls for the tester; matching measurements concern this
+task and configuration, not general machine equivalence or execution speed.
+The eighteen-run 0.3.0-wheel development matrix is documented in
+[`glass-relay-0.3.0/SUMMARY.md`](experiments/measurements/glass-relay-0.3.0/SUMMARY.md),
+with exact scope in [`glass_relay/README.md`](experiments/glass_relay/README.md).
+Final paper regeneration remains a separate gate.
+
 ## What the clean implementation establishes
 
 The current publication workspace establishes these properties:

@@ -33,6 +33,10 @@ Paper artifacts are kept uniformly under each bundle's `fixtures/paper/`,
 with native extensions and upstream filenames; unmodified inputs remain under
 `fixtures/source/public/`.
 
+Glass Relay's additional original program specimens live under
+`fixtures/relay/`. They evaluate a common interactive protocol and do not
+replace the public zero-input workloads used by the cost/observation matrices.
+
 The TIC-80 palette, palette-only BDR, and default 4-bpp affine triangle work
 has been reference-reviewed locally and retained in the evaluated subset.
 Nonzero depth remains unsupported. Depth/perspective and additional graphics
@@ -430,11 +434,33 @@ Artifacts: [`glass_garden.py`](experiments/glass_garden.py),
 [`SUMMARY.md`](experiments/measurements/glass-garden-0.2.0/SUMMARY.md) with
 three linked SVG postcards.
 
+### 7e. Cross-machine comparative protocol evaluation
+
+Glass Relay complements the descriptive Garden postcards with a shared
+press/hold/release behavioral specification. Nine original cartridge artifacts
+live on the Machines paper branch; one generic Python sink evaluates their
+normalized input acceptance and frame fingerprints under explicit configurations.
+
+- [x] Build reproducible reference/delayed/stuck programs for all three machines.
+- [x] Use one per-frame desired-state schedule path for both latched inputs and frame-scoped masks.
+- [x] Measure acceptance-to-response/restoration in declared frame coordinates; verify hold stability and baseline preconditions.
+- [x] Preserve inconclusive outcomes for missing evidence/input mismatches and test independence from cross-channel delivery order.
+- [x] Run eighteen focused 0.3.0-wheel executions; distinguish the controls consistently across machines and repeat preparations.
+- [x] Generate common trial comparisons, retained canonical provenance, an SVG timeline, and a Markdown summary.
+- [x] Add `relay` and include it in `all` regeneration stages.
+
+The reference programs measured response/restoration delays of 0/0, delayed
+programs 3/0, and stuck programs lacked restoration. All three machines agree
+on these task-specific measurements. Sources are still under development;
+these results are not a sealed final regeneration. Protocol and reproduction:
+[`glass_relay/README.md`](experiments/glass_relay/README.md). Focused report:
+[`glass-relay-0.3.0/SUMMARY.md`](experiments/measurements/glass-relay-0.3.0/SUMMARY.md).
+
 ### Deliverables and exit gate
 
 The cost table, equivalence report, and reproducible downstream demo are
 complete. The equivalence check is documented in checklist section 10; Glass
-Garden is documented in section 13.
+Garden and Glass Relay are documented in section 13.
 
 ## Slice 8: publish packages and prove independent installation
 

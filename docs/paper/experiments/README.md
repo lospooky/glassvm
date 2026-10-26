@@ -55,7 +55,8 @@ The ordered full pass is:
 1. preflight: locked package versions, installed providers, fixture digests,
    a standalone Rust consumer linked only to published 0.3.0 crates.io crates,
    paper harness tests, and generated heterogeneity-table freshness;
-2. Glass Garden SVG postcards and external-consumer clean-room installs;
+2. Glass Garden SVG postcards, Glass Relay's common behavioral protocol matrix,
+   and external-consumer clean-room installs;
 3. one-repetition harness pilot and five-repetition selectable-observation
    matrix, with their reports;
 4. Python/Rust fan-out semantic-equivalence matrix;
@@ -81,6 +82,7 @@ rust-sink            disabled / NullSink / recorder comparison
 python-sink          Python consumer / recorder sink-cost comparison
 equivalence          Python consumer vs Rust recorder projections
 garden               three bounded-consumer SVG postcards
+relay                shared press/hold/release comparison with authored controls
 external-consumer    base-only and per-bundle clean-room installs
 all                  ordered complete pass above
 ```
@@ -101,6 +103,11 @@ the public bounded Python consumer alongside the Rust reference recorder.
 `run_semantic_equivalence.py` compares explicit finite channel projections,
 prepared-run and prepared-observation identities, capability outputs, and
 receipts; it does not compare recorder layout or infer a global channel order.
+`glass_relay.py` compares acceptance-to-visible-response and restoration for
+the same small task across machines, using purpose-built reference, delayed,
+and stuck cartridges. Its protocol/configuration mappings and scope are in
+[`glass_relay/README.md`](glass_relay/README.md). The public zero-input workload
+denominator remains separate from these original controlled specimens.
 
 Treat all performance values as specific to the recorded host, fixtures,
 configuration, package releases, and source coordinates. The existing

@@ -343,6 +343,15 @@ def run_garden(args: argparse.Namespace, output: Path) -> None:
     )
 
 
+def run_relay(args: argparse.Namespace, output: Path) -> None:
+    command(
+        "Glass Relay cross-machine behavioral comparison",
+        [sys.executable, str(EXPERIMENTS / "glass_relay.py"),
+         "--machines-root", str(args.machines_root), "--output-dir", str(output)],
+        GLASSVM_ROOT,
+    )
+
+
 def run_external_consumer(args: argparse.Namespace, output: Path) -> None:
     command(
         "clean-room third-party consumer matrix",
@@ -403,6 +412,7 @@ def run_all(args: argparse.Namespace) -> None:
 
     run_stage("preflight", lambda: stage_check(args))
     run_stage("glass-garden", lambda: run_garden(args, results / "glass-garden"))
+    run_stage("glass-relay", lambda: run_relay(args, results / "glass-relay"))
     run_stage("external-consumer", lambda: run_external_consumer(args, results / "external-consumer"))
     run_stage("pilot", lambda: run_pilot(args, results / "pilot", 1))
     run_stage("observation-matrix", lambda: run_pilot(args, results / "observation-matrix", 5))
@@ -437,6 +447,7 @@ def main() -> int:
             "python-sink",
             "equivalence",
             "garden",
+            "relay",
             "external-consumer",
             "tables",
         ),
@@ -467,6 +478,7 @@ def main() -> int:
             "python-sink": args.results_root / "python-sink-cost",
             "equivalence": args.results_root / "semantic-equivalence",
             "garden": args.results_root / "glass-garden",
+            "relay": args.results_root / "glass-relay",
             "external-consumer": args.results_root / "external-consumer",
         }
         output = output_by_stage.get(args.stage)
@@ -488,6 +500,8 @@ def main() -> int:
             run_semantic_equivalence(args, output)
         elif args.stage == "garden":
             run_garden(args, output)
+        elif args.stage == "relay":
+            run_relay(args, output)
         elif args.stage == "external-consumer":
             run_external_consumer(args, output)
     except (OSError, RuntimeError, subprocess.CalledProcessError) as error:

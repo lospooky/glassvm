@@ -467,6 +467,27 @@ Output:
 - [x] result table and three postcards
 - [x] short description of the generic downstream projection
 
+### Cross-machine comparative extension: Glass Relay
+
+Glass Relay adds a common interactive task to the downstream demonstration.
+One generic Python tester checks response delay, stable hold, and display
+restoration for three purpose-built cartridge variants on each release machine.
+Input bindings/configurations are explicit experiment data. Every frame carries
+the desired input value, accommodating both latched keys and TIC-80's
+frame-scoped gamepad masks through the same schedule-construction path.
+
+- [x] Reproducible reference, three-frame-delayed, and stuck cartridge variants for CHIP-8, PICO-8, and TIC-80; sources stay on the Machines paper branch.
+- [x] One bounded consumer over `InputApplied` and fingerprint-only frame artifacts, with no machine/variant evaluation branches.
+- [x] Compare trial measurements across machines and across independent repetitions; keep prepared identities as supplied diagnostic provenance.
+- [x] Report uncertainty as inconclusive, preserve outcome domains, and avoid cross-channel order or cross-machine fingerprint comparisons.
+- [x] Run the 3-machine × 3-variant × 2-repetition matrix on installed 0.3.0 wheels: reference response/restoration 0/0; delayed 3/0; stuck restoration absent. All controlled outcomes and common protocol measurements match.
+- [x] Add focused attribution/uncertainty tests and a `relay` stage to the single paper runner, including `all`.
+
+This focused working-tree validation does not replace final regeneration or
+establish general machine equivalence. The exact protocol and claim limits are
+in [`experiments/glass_relay/README.md`](experiments/glass_relay/README.md).
+Results: [`glass-relay-0.3.0/SUMMARY.md`](experiments/measurements/glass-relay-0.3.0/SUMMARY.md).
+
 ## 14. Paper regeneration
 
 Local follow-up (2026-10-21): unreleased PICO-8/TIC-80 builds now expose
