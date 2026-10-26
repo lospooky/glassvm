@@ -3,9 +3,8 @@
 Historical audit date: 2026-10-04. This matrix reflects an earlier repository
 layout and source state; its file paths, CI run IDs, and publication status are
 not current release coordinates. The current paper release is 0.3.1; see the
-claim/evidence map and release execution plan for the current status. In
-particular, the machine distributions are published, while provider metadata
-inside the 0.3.1 wheels still reports `bundle_version: 0.3.0`.
+claim/evidence map and release execution plan for the current status. The
+machine bundles are published at 0.3.1.
 
 Evaluated source: [GlassVM `cf7dee8`](https://github.com/lospooky/glassvm/commit/cf7dee8444e1f5968f7206f65335663855c981e2) and [Machines `56563bd`](https://github.com/lospooky/glassvm-machines/commit/56563bd0dfb92a67d272ed4d8ab4868e448b265d). The shared conformance tests instantiate each row for CHIP-8, PICO-8, and TIC-80; the per-bundle column lists supplementary bundle-local evidence.
 
@@ -37,6 +36,5 @@ than a proxy for those semantics.
 This historical matrix documents contract and conformance depth at its stated
 source coordinates, not full compatibility, cross-platform wheel support,
 benchmark performance, or run-length-independent memory. The Python
-distributions are now published at 0.3.1 and package-index smoke runs pass;
-provider metadata in those wheels still reports `bundle_version: 0.3.0`. The
-full 0.3.1 paper regeneration and evidence sealing remain open.
+distributions are now published at 0.3.1 and package-index smoke runs pass.
+Full 0.3.1 paper regeneration remains open.

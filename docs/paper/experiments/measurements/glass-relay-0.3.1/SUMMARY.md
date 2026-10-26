@@ -4,8 +4,7 @@ One generic bounded Python consumer evaluates the same press/hold/release protoc
 
 The comparator receives input bindings and protocol coordinates, never machine/variant-specific evaluation logic.
 Packages: {'glassvm': '0.3.1', 'glassvm-chip8': '0.3.1', 'glassvm-pico8': '0.3.1', 'glassvm-tic80': '0.3.1'}. CPython 3.12.13. 2 repetitions per cell.
-Provider metadata inside these 0.3.1 distributions reports `bundle_version` 0.3.0; the package versions below identify the installed artifacts. Both values are retained as provenance, and this accepted metadata discrepancy does not invalidate this focused run.
-This focused validation records working-tree revisions/dirty state; it is not a final sealed paper regeneration.
+This focused run uses the published 0.3.1 bundle distributions. Its source coordinates are GlassVM `9d47ebf` and Machines `3a9d523`; it is a focused check, not the full paper regeneration.
 The same explicit current-state input is scheduled at every frame for all machines, covering both latched keys and frame-scoped gamepad masks.
 
 | Machine | Cartridge | Protocol | Response delays | Restoration delays | Repeatable |

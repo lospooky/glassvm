@@ -470,21 +470,21 @@
     {
       "dimension": "Python provider surface",
       "chip8": {
-        "text": "glassvm-chip8 0.3.1; entry point chip8; import module glassvm_chip8; Python ≥3.12; glassvm.python_bundle protocol 2.0.0; provider reports bundle_version 0.3.0.",
+        "text": "glassvm-chip8 0.3.1; entry point chip8; import module glassvm_chip8; Python ≥3.12; glassvm.python_bundle protocol 2.0.0.",
         "sources": [
           "ch8-package",
           "ch8-provider"
         ]
       },
       "pico8": {
-        "text": "glassvm-pico8 0.3.1; entry point pico8; import module glassvm_pico8; Python ≥3.12; glassvm.python_bundle protocol 2.0.0; provider reports bundle_version 0.3.0.",
+        "text": "glassvm-pico8 0.3.1; entry point pico8; import module glassvm_pico8; Python ≥3.12; glassvm.python_bundle protocol 2.0.0.",
         "sources": [
           "pico-package",
           "pico-provider"
         ]
       },
       "tic80": {
-        "text": "glassvm-tic80 0.3.1; entry point tic80; import module glassvm_tic80; Python ≥3.12; glassvm.python_bundle protocol 2.0.0; provider reports bundle_version 0.3.0.",
+        "text": "glassvm-tic80 0.3.1; entry point tic80; import module glassvm_tic80; Python ≥3.12; glassvm.python_bundle protocol 2.0.0.",
         "sources": [
           "tic-package",
           "tic-provider"
