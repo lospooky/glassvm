@@ -1,6 +1,6 @@
 # GlassVM paper claim-to-evidence map
 
-**Status:** current release and paper evidence boundary, 2026-10-12
+**Status:** current release and paper evidence boundary, 2026-10-26
 
 This map separates claims supported by the clean in-tree implementation from
 claims that require independent release artifacts or paper-scale measurements.
@@ -11,14 +11,15 @@ standalone release evidence boundary.
 
 | Claim | What the release must show | Current evidence | Status |
 | --- | --- | --- | --- |
-| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8 is the baseline/reference implementation; PICO-8 and TIC-80 provide independently designed external validation specimens. Shared conformance and installed-wheel tests exercise the same prepared-run and facade paths across the three release bundles. Hexwell and Wyrd-16 are preserved on a separate parked branch and are outside this release denominator. | Architecture and three-machine behavior were exercised with GlassVM HEAD `28b02ec04fc525c1fdca886c01f9436167979d13` (working tree dirty only for experiment/docs changes at collection) and Machines `1aca8f625f141adb72b959e413a11fb9e371cf3e` (clean); current CPython 3.12/3.13/3.14 CI is green. The four 0.1.2 Python distributions were installed from the package index and exercised by the repeated measurement matrix. |
-| **C2 — Observation inversion.** An experiment requests the evidence it needs through an explicit contract. | Preparation resolves exact channel, event-kind, native, frame, snapshot, final-state, and capability prerequisites before execution; emission and derived outputs remain separate. | `ObservationRequest`, `PreparedObservation`, exact dependency closure, optional downgrade, bounded normalizers, typed frame/native/input-value channels, and `EvidenceReceipt` tests are exercised by shared conformance cases for every release bundle. The installed-wheel path checks preparation and separate result domains. | Preparation and evidence semantics are verified across all three bundles; the current 3.12/3.13/3.14 source-distribution-to-wheel and provider matrix is green. All three published 0.1.2 bundle wheels and the generic facade were exercised from package-index installs. |
-| **C3 — Practical selectable observation.** Observation cost is selectable, measurable, and suitable for long-running experimentation. | Measurements distinguish execution, normalization, sink, encoding, durable storage, memory, and file-count costs across observation selections and workloads. | Slice 5 records 135 published runs: nine exact observation recipes × three machines × five repetitions at 600 frames. Slice 6 now includes a clean 120-trial run-length matrix at one common source coordinate, in addition to the initial diagnostic matrix and CHIP-8 cleanup follow-up. Raw data, manifests, summaries, and plots are retained under [`experiments/measurements/`](experiments/measurements/). | On the common clean source pair and this WSL2 host, median peak RSS stayed within 1.5× between 600 and 600,000 frames for every machine/mode pair (three repetitions at shorter lengths; one at 600,000). This supports an observed-RSS statement scoped to the tested fixtures/configurations, revisions, and host—not a universal memory bound or cross-host performance claim. Allocator high-water was unavailable; persisted encoded evidence grew with emitted records. See [Slice 6](PAPER_RELEASE_SLICE_06.md). |
+| **C1 — Machine abstraction.** GlassVM separates machine semantics from experimental orchestration. | One unchanged caller prepares and runs materially different bundles; bundle-specific semantics stay behind the bundle contract. | CHIP-8 is the baseline/reference implementation; PICO-8 and TIC-80 are the independently designed external validation machines. All three published 0.3.1 distributions pass fresh package-index execution through the shared facade. The focused Garden and Relay runs exercise generic downstream consumers across the same three machines. Hexwell and Wyrd-16 remain outside this paper denominator. | The 0.3.1 release workflows passed and the focused clean-room consumer proof passed for facade-only, each provider, and all providers. Final paper-wide regeneration is still open. Provider self-reported `bundle_version` remains `0.3.0` inside the published `0.3.1` wheels; this metadata discrepancy is recorded in the checklist and must be corrected before evidence sealing. |
+| **C2 — Observation inversion.** An experiment requests the evidence it needs through an explicit contract. | Preparation resolves exact channel, event-kind, native, frame, snapshot, final-state, and capability prerequisites before execution; emission and derived outputs remain separate. | `ObservationRequest`, `PreparedObservation`, dependency closure, optional downgrade, bounded normalizers, typed evidence channels, and `EvidenceReceipt` are covered by shared conformance and release CI. The 0.3.1 installed-wheel consumer proof exercises preparation and separate execution/evidence/recorder/publication outcomes. | Contract/conformance coverage and 0.3.1 package-index execution are established. The focused Garden/Relay runs request and consume selected evidence; they do not replace the full observation matrix. Full 0.3.1 paper regeneration remains open. |
+| **C3 — Practical selectable observation.** Observation cost is selectable, measurable, and suitable for long-running experimentation. | Measurements distinguish execution, normalization, sink, encoding, durable storage, memory, and file-count costs across observation selections and workloads. | Existing Slice 5 and Slice 6 measurements retain their exact historical source/package coordinates, raw data, manifests, summaries, and plots under [`experiments/measurements/`](experiments/measurements/). Focused 0.3.1 Garden/Relay results are additional consumer demonstrations, not performance or long-run boundedness measurements. | The run-length RSS result is evidence for its recorded fixtures, configurations, revisions, and WSL2 host only. It has not been regenerated against the 0.3.1 release packages. Keep it labeled with its recorded source coordinates; do not present it as a 0.3.1 measurement or universal memory bound. Allocator high-water was unavailable, and persisted evidence grew with emitted records. See [Slice 6](PAPER_RELEASE_SLICE_06.md). |
 
-The machine-independent downstream analysis demonstration supports C2 and C3;
-it is not a separate GlassVM claim. Derived metrics belong to bundle-owned
-normalizers, while Refinery remains a consumer that scores or searches over
-their outputs.
+The downstream consumer demonstrations support the claim that callers can
+consume selected evidence without GlassVM trace reconstruction; they do not
+support the performance or storage-cost parts of C3. Derived metrics belong to
+bundle-owned normalizers, while Refinery remains a consumer that scores or
+searches over their outputs.
 
 Glass Relay adds a focused C1/C2 example of shared experimental evaluation:
 one Python consumer compares the same press/hold/release requirements across
@@ -27,13 +28,15 @@ It evaluates experiment-level requirements and introduces no machine-specific
 capability or translation semantics. The original reference/delayed/stuck
 cartridges are controls for the tester; matching measurements concern this
 task and configuration, not general machine equivalence or execution speed.
-The eighteen-run 0.3.0-wheel development matrix is documented in
+The eighteen-run 0.3.0-wheel development matrix is historical and documented in
 [`glass-relay-0.3.0/SUMMARY.md`](experiments/measurements/glass-relay-0.3.0/SUMMARY.md),
 with exact scope in [`glass_relay/README.md`](experiments/glass_relay/README.md).
 The focused `0.3.1` package run is recorded in
 [`glass-relay-0.3.1/SUMMARY.md`](experiments/measurements/glass-relay-0.3.1/SUMMARY.md).
-Both are scoped to their recorded package pins; full paper regeneration remains
-a separate gate.
+Its installed distributions are 0.3.1, while the providers report an internal
+`bundle_version` of 0.3.0. The run is useful focused evidence, but that
+metadata discrepancy must be corrected before it is treated as sealed release
+provenance. Full paper regeneration remains a separate gate.
 
 ## What the clean implementation establishes
 
@@ -63,9 +66,10 @@ The current publication workspace establishes these properties:
   archive itself. The current matrix performs this rebuild before exercising
   base-only, per-provider, and all-provider installations.
 
-These are architectural and conformance results. They do not by themselves
-establish cross-host performance, population-scale throughput, or package
-index availability.
+These are architectural and conformance results. The package-index checks
+establish availability for the recorded `0.3.1` artifacts, not future
+availability. They do not by themselves establish cross-host performance,
+population-scale throughput, or the still-pending full 0.3.1 paper run.
 
 ## Evidence required for the paper and release
 
@@ -73,12 +77,12 @@ index availability.
 | --- | --- | --- |
 | Shared-runner heterogeneous execution | C1 | A clean-room example whose caller is unchanged across CHIP-8, PICO-8, and TIC-80. |
 | Preparation and failure behavior | C2 | Required-prerequisite rejection, optional downgrade, dependency closure, typed input/configuration admission, and pre-`RunStarted` failure tests in every released bundle. |
-| Selective observation matrix | C2, C3 | [`experiments/measurements/`](experiments/measurements/) retains five repetitions for all nine exact recipes on CHIP-8, PICO-8, and TIC-80 at a 600-frame bound, including requested/fulfilled channels and separate receipts. |
-| Bounded online execution | C3 | The clean 120-trial, three-machine/four-mode/four-length matrix observed approximately flat peak RSS for every tested pair; source revisions, limits, raw results, and claim caveats are recorded in [Slice 6](PAPER_RELEASE_SLICE_06.md). This is empirical evidence for the measured conditions, not a universal guarantee. |
-| Recorder/storage cost | C3 | [`experiments/measurements/OBSERVATION_SUMMARY.md`](experiments/measurements/OBSERVATION_SUMMARY.md) reports per-channel logical/encoded bytes, block/segment/file counts, physical directory bytes, and publication outcomes for identical machine execution material. |
-| Downstream analysis | C2, C3 | Refinery or equivalent caller consuming selected normalized projections and capability outputs without requiring whole-run GlassVM materialization. |
-| Independent publication | C1, C2, C3 | Both repositories are public; the five machine-neutral GlassVM crates and all four Python distributions are available at `0.1.2`. Package-index-installed Python distributions executed successfully in the Slice 5 matrix. |
-| Paper regeneration | All | Versioned scripts regenerate every table and figure from public result files. |
+| Selective observation matrix | C2, C3 | The retained five-repetition, nine-recipe matrix is prior-version evidence. It records requested/fulfilled channels and separate receipts, but has not been regenerated against 0.3.1. |
+| Bounded online execution | C3 | The clean 120-trial, three-machine/four-mode/four-length matrix observed approximately flat peak RSS for every tested pair. Source revisions, limits, raw results, and claim caveats are recorded in [Slice 6](PAPER_RELEASE_SLICE_06.md). This is prior-source empirical evidence, not a 0.3.1 measurement or universal guarantee. |
+| Recorder/storage cost | C3 | [`experiments/measurements/OBSERVATION_SUMMARY.md`](experiments/measurements/OBSERVATION_SUMMARY.md) reports per-channel logical/encoded bytes, block/segment/file counts, physical directory bytes, and publication outcomes. Its recorded source/package coordinates govern the claims; the matrix has not been regenerated for 0.3.1. |
+| Downstream analysis | C2 | Glass Garden and Glass Relay are focused 0.3.1 downstream consumers of selected evidence. They do not establish observation performance or replace the full observation matrix. |
+| Independent publication | C1, C2, C3 | Both repositories are public; the five machine-neutral GlassVM crates and the facade, three provider, and selector Python distributions are published at `0.3.1`. Fresh 0.3.1 installs passed the focused consumer proof; provider-reported bundle versions remain stale as described above. |
+| Paper regeneration | All | The versioned runner and scripts are present. The complete 0.3.1 evidence regeneration and final source sealing have not been run. |
 
 ## Permitted claim language before those gates close
 
@@ -95,18 +99,20 @@ as the independent validation machines. Hexwell and Wyrd-16 are parked outside
 the current release branch and should not be counted as publication specimens.
 The checked-in baseline remains a host-specific regression artifact.
 
-They may state that measured peak RSS stayed approximately flat over the
-600–600,000-frame range for the three pinned workloads, four tested observation
-modes, source pair, and WSL2 host, while explicitly noting the single longest
-repetition and growth in persisted evidence. They must not generalize this to a
+The existing run-length result may be described only with its recorded source
+pair, workloads, four observation modes, WSL2 host, and repetition counts. It
+is not regenerated on the 0.3.1 packages, so do not attribute it to that release
+wave. Any final manuscript claim using it must preserve those coordinates and
+the single-repetition 600,000-frame endpoint. Do not generalize it to a
 universal memory bound, cross-host performance, population-scale throughput, or
 a completed machine-independent Refinery benchmark.
 
 ## Baseline boundary
 
-Optional local records under
+Optional historical local records under
 `baselines/20260818-pc-5900x-wsl2-amd-ryzen-9-5900x/` are a reproducible
-current-state regression baseline. They identify the host, toolchain, source
+baseline for their recorded collection state, not necessarily the current
+release. They identify the host, toolchain, source
 state, fixtures, configuration, observation recipe, result digest, runtime,
 RSS, and emitted-volume measurements for the recorded smoke matrix. Generated
 baseline data is intentionally not part of the clean source repository.

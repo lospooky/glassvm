@@ -2,6 +2,11 @@
 
 Goal: determine whether `lospooky/glassvm` and `lospooky/glassvm-machines` are ready to support the paper as a reproducible public artifact.
 
+Historical checklist sections retain the release pins and status recorded when
+those slices ran. The current package/evidence status is summarized in the
+`0.3.1 package pin update` section at the end; prior-version measurements are
+not relabeled as 0.3.1 results.
+
 Do not redesign architecture unless a checklist item exposes a concrete claim-breaking defect. Prefer evidence, tests, measurements, and release hardening over new abstractions.
 
 ## 1. Repository / release boundary
