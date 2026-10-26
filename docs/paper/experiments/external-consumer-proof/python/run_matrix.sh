@@ -43,10 +43,10 @@ run_case() {
 }
 
 run_case base --
-run_case chip8 glassvm-chip8==0.3.0 -- chip8
-run_case pico8 glassvm-pico8==0.3.0 -- pico8
-run_case tic80 glassvm-tic80==0.3.0 -- tic80
-run_case all glassvm-chip8==0.3.0 glassvm-pico8==0.3.0 \
-  glassvm-tic80==0.3.0 -- chip8 pico8 tic80
+run_case chip8 glassvm-chip8==0.3.1 -- chip8
+run_case pico8 glassvm-pico8==0.3.1 -- pico8
+run_case tic80 glassvm-tic80==0.3.1 -- tic80
+run_case all glassvm-chip8==0.3.1 glassvm-pico8==0.3.1 \
+  glassvm-tic80==0.3.1 -- chip8 pico8 tic80
 
 printf 'External Python proof outputs: %s\n' "$proof_root"

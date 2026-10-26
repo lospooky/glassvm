@@ -4,13 +4,13 @@ requires-python = ">=3.12"
 
 [[package]]
 name = "glassvm"
-version = "0.3.0"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/06/e7/5807e5ae7f91f2372d9968d3a05ce4a3fb013cb030344c159e92728a5c71/glassvm-0.3.0.tar.gz", hash = "sha256:9ad364b1a186d69e18dabb91fcd582b658692c431f1304c04ceb269a38964b8f", size = 10065, upload-time = "2026-10-12T20:19:39.139Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/8c/252cf6030442897b66257fb56c561747280974bbddefb69a9175a85e07a1/glassvm-0.3.1.tar.gz", hash = "sha256:893bb0a2e870e19affed0aed73042c0862f3a6742b42a55eedf94371196f3ead", size = 10066, upload-time = "2026-10-26T19:46:55.746Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/26/02/0f374f9cd10ae00987b65fdc32b3875c2b9cbc600e638e3b4c80f6abffab/glassvm-0.3.0-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:78e3456ee1d5a56857c3a2496f228487a8f955127e2589346cc52339dd8b6019", size = 310435, upload-time = "2026-10-12T20:19:34.877Z" },
-    { url = "https://files.pythonhosted.org/packages/01/c0/5c08c0493579c2ea7c4a16aef6e738828f1301f0aa3be8e440869ccd2550/glassvm-0.3.0-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:20b33f38b75f64ab084ad48bcee626b41cf71a55d82c04c59f79979e1cfd66ef", size = 310034, upload-time = "2026-10-12T20:19:36.241Z" },
-    { url = "https://files.pythonhosted.org/packages/72/23/e854d9d8a6ec572379522719d73e40ac15494249401b438ed51cde5d5eb5/glassvm-0.3.0-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:dad808c73fb8ab529612db118c6db8ac23258e01ce10cc4bcf3afb9e80d7709b", size = 310294, upload-time = "2026-10-12T20:19:37.668Z" },
+    { url = "https://files.pythonhosted.org/packages/74/9b/5552fea28a0341778f08d21e448ffcafc866b4332a748b58041fe475ea10/glassvm-0.3.1-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:3fdd9bcd6896e732d0720cc374b05a5dd2e0d3e27dd7a3c1da0f54188ec39283", size = 310406, upload-time = "2026-10-26T19:46:52.827Z" },
+    { url = "https://files.pythonhosted.org/packages/33/fc/5c6320cbec76aeb07658bd095fb6bb29c5b3b4f3d8bcb1d9d3c523756d7b/glassvm-0.3.1-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:ec77693800da1d5dff2a15ce1a0a2fa7e8648a6c87fb8f6d267e8d4096a6021d", size = 309998, upload-time = "2026-10-26T19:46:53.947Z" },
+    { url = "https://files.pythonhosted.org/packages/c9/56/870f562e7f5bf4c9d9fc593313e1df8686b6a26b46c1656949206d315fc7/glassvm-0.3.1-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:940726020f2222b2a04f57e59c4cbca6c196bcfe1352a96ef76d4cb49af06e57", size = 310360, upload-time = "2026-10-26T19:46:54.889Z" },
 ]
 
 [[package]]
@@ -22,4 +22,4 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "glassvm", specifier = "==0.3.0" }]
+requires-dist = [{ name = "glassvm", specifier = "==0.3.1" }]

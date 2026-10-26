@@ -584,6 +584,8 @@ The default assumption is that GlassVM architecture is frozen and the remaining 
 - [x] Publish the five GlassVM contract crates and generic facade at `0.3.1`.
 - [x] Publish the CHIP-8, PICO-8, TIC-80, and `glassvm-machines` distributions at `0.3.1`.
 - [x] Update the unified paper runner, its locked Python environment, external consumer proofs, and installed-provider version assertion to `0.3.1`.
+- [x] Run focused Glass Garden and Glass Relay checks using freshly installed `0.3.1` packages; preserve their separate results and source coordinates.
+- [ ] Correct the providers' self-reported `bundle_version` metadata, which still says `0.3.0` in the published `0.3.1` wheels, before sealing final evidence.
 - [ ] Regenerate the complete paper evidence set under the `0.3.1` package pin and seal its source coordinates.
 
 Existing `0.3.0` measurement directories remain unchanged and continue to

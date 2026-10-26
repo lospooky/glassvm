@@ -64,6 +64,11 @@ The ordered full pass is:
 6. the Python consumer sink-cost matrix;
 7. source-linked heterogeneity tables and a top-level run manifest.
 
+Focused package-index runs for Glass Garden and Glass Relay against the current
+`0.3.1` packages are recorded separately in
+[`measurements/glass-garden-0.3.1`](measurements/glass-garden-0.3.1/SUMMARY.md)
+and [`measurements/glass-relay-0.3.1`](measurements/glass-relay-0.3.1/SUMMARY.md).
+
 The full pass is intentionally substantial. It includes the 600,000-frame
 memory endpoint, isolated package-install tests, and repeated sink matrices.
 It is not run as part of the `check` command.
