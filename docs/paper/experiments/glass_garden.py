@@ -12,6 +12,7 @@ import argparse
 import html
 import importlib.metadata
 import json
+import math
 import platform
 import tomllib
 from collections import Counter
@@ -42,7 +43,7 @@ OBSERVATION_REQUEST = {
 
 
 class GlassGardenConsumer:
-    """Incrementally summarize frame-hash changes and normalized event kinds."""
+    """Incrementally summarize frame hashes and event counts by frame bucket."""
 
     def __init__(self, frame_limit: int) -> None:
         if frame_limit <= 0:
@@ -51,6 +52,9 @@ class GlassGardenConsumer:
         self.frames_per_bucket = [0] * BUCKET_COUNT
         self.comparisons_per_bucket = [0] * BUCKET_COUNT
         self.changes_per_bucket = [0] * BUCKET_COUNT
+        self.events_per_bucket = [0] * BUCKET_COUNT
+        self.events_without_frame = 0
+        self.events_outside_frame_window = 0
         self.event_kind_counts: Counter[str] = Counter()
         self.total_normalized_events = 0
         self.frame_count = 0
@@ -119,6 +123,19 @@ class GlassGardenConsumer:
             )
         self.event_kind_counts[kind] += 1
         self.total_normalized_events += 1
+        frame = record.get("frame")
+        if frame is None:
+            self.events_without_frame += 1
+        elif isinstance(frame, int) and not isinstance(frame, bool):
+            if frame < 0:
+                raise ValueError(f"event frame coordinate {frame} is outside the requested limit")
+            if frame >= self.frame_limit:
+                self.events_outside_frame_window += 1
+            else:
+                bucket = min(frame * BUCKET_COUNT // self.frame_limit, BUCKET_COUNT - 1)
+                self.events_per_bucket[bucket] += 1
+        else:
+            raise TypeError("normalized event frame coordinate must be an integer or null")
 
     @property
     def total_comparisons(self) -> int:
@@ -155,55 +172,92 @@ def _event_text(consumer: GlassGardenConsumer) -> str:
 
 
 def render_postcard(machine_id: str, consumer: GlassGardenConsumer) -> str:
-    """Render a static SVG whose fireflies encode literal hash-change rates."""
+    """Render a static SVG of frame changes and coordinate-bucketed events."""
 
     status = _evidence_status(consumer)
-    width, height = 1000, 390
-    left, step = 58, 46
+    width, height = 1000, 700
+    left, step = 66, 45.6
     fireflies: list[str] = []
-    labels: list[str] = []
+    trail_points: list[str] = []
+    bucket_labels: list[str] = []
     for index in range(BUCKET_COUNT):
         x = left + index * step
         comparisons = consumer.comparisons_per_bucket[index]
         changes = consumer.changes_per_bucket[index]
         rate = changes / comparisons if comparisons else 0.0
-        radius = 5 + 5 * rate
-        opacity = 0.18 + 0.78 * rate if comparisons else 0.14
-        start = index * consumer.frame_limit // BUCKET_COUNT
-        end = (index + 1) * consumer.frame_limit // BUCKET_COUNT - 1
+        radius = 5 + 6 * rate
+        opacity = 0.2 + 0.8 * rate if comparisons else 0.12
+        y = 284 + 20 * math.sin(index * 0.58) + 8 * math.sin(index * 0.23)
+        trail_points.append(f"{x:.1f},{y:.1f}")
         fireflies.append(
-            f'<path d="M{x} 163 Q{x - 5} 146 {x} 129" fill="none" '
-            f'stroke="#76a98b" stroke-width="2"/>'
-            f'<circle cx="{x}" cy="126" r="{radius + 7:.2f}" '
-            f'fill="#f4b942" opacity="{opacity * 0.34:.3f}"/>'
-            f'<circle cx="{x}" cy="126" r="{radius:.2f}" '
-            f'fill="#f4b942" opacity="{opacity:.3f}"/>'
-            f'<circle cx="{x}" cy="126" r="2" fill="#fff9d7"/>'
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius + 11:.2f}" '
+            f'fill="#ffd166" opacity="{opacity * 0.16:.3f}"/>'
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius + 4:.2f}" '
+            f'fill="#ffd166" opacity="{opacity * 0.34:.3f}"/>'
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius:.2f}" '
+            f'fill="#ffd166" opacity="{opacity:.3f}"/>'
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.2" fill="#fff9dc"/>'
         )
-        labels.append(
-            f'<text x="{x}" y="190" text-anchor="middle" font-family="sans-serif" '
-            f'font-size="10" fill="#718176">'
-            f"{start}–{end}</text>"
+        if index % 5 == 0:
+            bucket_labels.append(
+                f'<text x="{x:.1f}" y="331" text-anchor="middle" font-size="11" '
+                f'font-family="sans-serif" fill="#d8e4d6">'
+                f'{index * consumer.frame_limit // BUCKET_COUNT}</text>'
+            )
+
+    event_bars: list[str] = []
+    max_bucket_events = max(consumer.events_per_bucket, default=0)
+    for index, count in enumerate(consumer.events_per_bucket):
+        x = left + index * step
+        bar_height = 0 if max_bucket_events == 0 else 40 * count / max_bucket_events
+        base_y = 480
+        tip_y = base_y - bar_height
+        leaf_y = base_y - max(8, bar_height * 0.58)
+        label = f"{count} events in frame bucket {index}"
+        event_bars.append(
+            f'<path d="M{x:.1f} {base_y} Q{x - 5:.1f} {base_y - 19:.1f} '
+            f'{x:.1f} {tip_y:.1f}" fill="none" stroke="#63a995" stroke-width="3" '
+            f'stroke-linecap="round"/>'
+            f'<ellipse cx="{x - 6:.1f}" cy="{leaf_y:.1f}" rx="5.5" ry="2.8" fill="#63a995"/>'
+            f'<ellipse cx="{x + 6:.1f}" cy="{leaf_y - 6:.1f}" rx="5.5" ry="2.8" fill="#80c7a6"/>'
+            f'<circle cx="{x:.1f}" cy="{tip_y - 4:.1f}" r="3.2" fill="#ffd166"/>'
+            f'<circle cx="{x + 4:.1f}" cy="{tip_y:.1f}" r="3.2" fill="#f4a261"/>'
+            f'<circle cx="{x:.1f}" cy="{tip_y + 4:.1f}" r="3.2" fill="#ffd166"/>'
+            f'<circle cx="{x - 4:.1f}" cy="{tip_y:.1f}" r="3.2" fill="#f4a261"/>'
+            f'<circle cx="{x:.1f}" cy="{tip_y:.1f}" r="2.1" fill="#fff4c2"/>'
+            f'<text x="{x:.1f}" y="{tip_y - 9:.1f}" text-anchor="middle" '
+            f'font-size="9" font-family="sans-serif" fill="#586e67">{count}</text>'
+            f'<title>{label}</title>'
         )
+        if index % 5 == 0:
+            event_bars.append(
+                f'<text x="{x:.1f}" y="{base_y + 18}" text-anchor="middle" '
+                f'font-size="9" font-family="sans-serif" fill="#586e67">'
+                f'{index * consumer.frame_limit // BUCKET_COUNT}</text>'
+            )
 
     top_kinds = consumer.top_event_kinds()
     event_rows: list[str] = []
     max_count = max((count for _, count in top_kinds), default=1)
+    palette = ("#e76f51", "#2a9d8f", "#e9c46a", "#7589cf", "#bd78a8")
     for index, (kind, count) in enumerate(top_kinds):
-        y = 258 + index * 25
+        y = 605 + index * 17
         safe_kind = html.escape(kind, quote=True)
-        bar_width = 210 * count / max_count
+        bar_width = 280 * count / max_count
+        color = palette[index % len(palette)]
         event_rows.append(
-            f'<text x="60" y="{y}" font-family="monospace" font-size="12" '
+            f'<circle cx="62" cy="{y - 4}" r="5" fill="{color}"/>'
+            f'<text x="77" y="{y}" font-family="monospace" font-size="12" '
             f'fill="#35483e">{safe_kind}</text>'
-            f'<rect x="520" y="{y - 12}" width="{bar_width:.1f}" height="12" '
-            f'rx="6" fill="#76a98b"/>'
-            f'<text x="745" y="{y}" font-family="sans-serif" font-size="12" '
+            f'<rect x="520" y="{y - 13}" width="280" height="10" rx="5" fill="#e9eee7"/>'
+            f'<rect x="520" y="{y - 13}" width="{bar_width:.1f}" height="10" '
+            f'rx="5" fill="{color}"/>'
+            f'<text x="820" y="{y}" font-family="sans-serif" font-size="12" '
             f'fill="#35483e">{count}</text>'
         )
     if not event_rows:
         event_rows.append(
-            '<text x="60" y="258" font-family="monospace" font-size="12" '
+            '<text x="60" y="561" font-family="monospace" font-size="12" '
             'fill="#35483e">None</text>'
         )
 
@@ -225,18 +279,44 @@ def render_postcard(machine_id: str, consumer: GlassGardenConsumer) -> str:
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title description">
   <title id="title">Glass Garden — {html.escape(machine_id)} run postcard</title>
-  <desc id="description">Each firefly summarizes changed adjacent frame fingerprints divided by comparisons in its frame-coordinate bucket. Event kinds are counted separately.</desc>
-  <rect x="0" y="0" width="{width}" height="{height}" rx="24" fill="#fbf8ef"/>
-  <text x="48" y="52" font-family="sans-serif" font-size="28" font-weight="700" fill="#264c3d">Glass Garden</text>
-  <text x="49" y="78" font-family="sans-serif" font-size="15" font-weight="600" fill="#60796b">{html.escape(machine_id)}</text>
-  <rect x="754" y="34" width="196" height="34" rx="17" fill="{status_color}"/>
-  <text x="852" y="56" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#315541">{status_label}</text>
-  <text x="48" y="108" font-family="sans-serif" font-size="13" fill="#53685c">Frame-hash changes by frame coordinate — 20 fixed buckets</text>
-  <path d="M55 164 Q510 177 945 164" fill="none" stroke="#b7d0bd" stroke-width="3" stroke-linecap="round"/>
+  <desc id="description">A glowing marker represents the fraction of adjacent frame fingerprints that changed in each frame-coordinate bucket. The meadow plot counts normalized events by their frame coordinate. Event kinds are listed separately; channel ordering is not inferred.</desc>
+  <rect width="{width}" height="{height}" rx="28" fill="#f2f0e5"/>
+  <rect x="24" y="20" width="952" height="94" rx="22" fill="#183c3a"/>
+  <text x="52" y="58" font-family="sans-serif" font-size="28" font-weight="800" letter-spacing="1.5" fill="#f8f4e8">GLASS GARDEN</text>
+  <text x="54" y="87" font-family="sans-serif" font-size="14" font-weight="600" fill="#b9d3c3">{html.escape(machine_id)} · live emission postcard</text>
+  <rect x="750" y="43" width="194" height="38" rx="19" fill="{status_color}"/>
+  <text x="847" y="67" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#315541">{status_label}</text>
+
+  <rect x="24" y="130" width="226" height="68" rx="16" fill="#fffdf6"/>
+  <rect x="266" y="130" width="226" height="68" rx="16" fill="#fffdf6"/>
+  <rect x="508" y="130" width="226" height="68" rx="16" fill="#fffdf6"/>
+  <rect x="750" y="130" width="226" height="68" rx="16" fill="#fffdf6"/>
+  <text x="44" y="157" font-size="11" font-family="sans-serif" letter-spacing="1" fill="#718176">FRAME ARTIFACTS</text>
+  <text x="44" y="185" font-size="23" font-family="sans-serif" font-weight="700" fill="#183c3a">{consumer.frame_count}</text>
+  <text x="286" y="157" font-size="11" font-family="sans-serif" letter-spacing="1" fill="#718176">HASH PAIRS CHANGED</text>
+  <text x="286" y="185" font-size="23" font-family="sans-serif" font-weight="700" fill="#183c3a">{consumer.total_changes} / {consumer.total_comparisons}</text>
+  <text x="528" y="157" font-size="11" font-family="sans-serif" letter-spacing="1" fill="#718176">NORMALIZED EVENTS</text>
+  <text x="528" y="185" font-size="23" font-family="sans-serif" font-weight="700" fill="#183c3a">{consumer.total_normalized_events}</text>
+  <text x="770" y="157" font-size="11" font-family="sans-serif" letter-spacing="1" fill="#718176">FRAME BUCKETS</text>
+  <text x="770" y="185" font-size="23" font-family="sans-serif" font-weight="700" fill="#183c3a">{BUCKET_COUNT}</text>
+
+  <rect x="24" y="214" width="952" height="158" rx="20" fill="#203d3c"/>
+  <text x="50" y="245" font-size="13" font-family="sans-serif" font-weight="700" letter-spacing="1" fill="#d9e9d9">LIGHT TRAIL</text>
+  <path d="M{left:.1f} 284 {' '.join(trail_points[1:])}" fill="none" stroke="#80a995" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
   {''.join(fireflies)}
-  {''.join(labels)}
-  <text x="48" y="218" font-family="sans-serif" font-size="13" fill="#53685c">{consumer.total_changes} of {consumer.total_comparisons} adjacent fingerprint pairs changed ({changed_percent:.1f}%); {consumer.changed_buckets} buckets contained a change.</text>
-  <text x="48" y="244" font-family="sans-serif" font-size="14" font-weight="700" fill="#315541">Top normalized event kinds — counts only</text>
+  {''.join(bucket_labels)}
+  <text x="66" y="354" font-size="10" font-family="sans-serif" fill="#a9c4b5">{consumer.total_changes} of {consumer.total_comparisons} adjacent fingerprint pairs changed ({changed_percent:.1f}%) · frame coordinate</text>
+
+  <rect x="24" y="389" width="952" height="138" rx="20" fill="#fffdf6"/>
+  <text x="50" y="420" font-size="13" font-family="sans-serif" font-weight="700" letter-spacing="1" fill="#315541">EVENT MEADOW</text>
+  <text x="948" y="420" text-anchor="end" font-size="11" font-family="sans-serif" fill="#718176">events / frame bucket</text>
+  <path d="M48 480 H952" stroke="#d9e2d7" stroke-width="1"/>
+  {''.join(event_bars)}
+  <text x="948" y="515" text-anchor="end" font-size="10" font-family="sans-serif" fill="#718176">No frame coordinate: {consumer.events_without_frame} · Outside 0–{consumer.frame_limit - 1}: {consumer.events_outside_frame_window}</text>
+
+  <rect x="24" y="544" width="952" height="151" rx="20" fill="#fffdf6"/>
+  <text x="50" y="577" font-size="13" font-family="sans-serif" font-weight="700" letter-spacing="1" fill="#315541">NORMALIZED EVENT KINDS</text>
+  <text x="948" y="577" text-anchor="end" font-size="11" font-family="sans-serif" fill="#718176">most frequent kinds · exact counts</text>
   {''.join(event_rows)}
 </svg>
 '''
@@ -254,7 +334,7 @@ def render_summary(rows: list[dict[str, Any]], package_versions: dict[str, str])
         + ".",
         "Each bundle supplies its own declared default configuration. The caller supplies an empty input schedule and the shared 600-frame limit.",
         "",
-        "Each firefly summarizes the number of changed adjacent frame fingerprints divided by the number compared in that frame-coordinate bucket. A pair is attributed to the bucket of its later delivered frame artifact. Normalized event kinds are counted separately; no cross-channel ordering is inferred.",
+        "Each firefly summarizes changed adjacent frame fingerprints within its frame-coordinate bucket. The event meadow counts normalized events by their own frame coordinate; events without one are reported separately. No cross-channel ordering is inferred.",
         "",
         "| Machine | Frame buckets | Changed pairs (bucketed) | Top normalized event kinds | Evidence status | Postcard |",
         "| --- | --- | --- | --- | --- | --- |",
