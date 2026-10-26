@@ -22,10 +22,10 @@ The provider installs are intentionally separate from the generic facade
 dependency:
 
 ```sh
-glassvm==0.3.0
-glassvm-chip8==0.3.0
-glassvm-pico8==0.3.0
-glassvm-tic80==0.3.0
+glassvm==0.3.1
+glassvm-chip8==0.3.1
+glassvm-pico8==0.3.1
+glassvm-tic80==0.3.1
 ```
 
 Each successful provider run prepares typed configuration and an empty typed
@@ -38,7 +38,7 @@ title-only normalization is applied before its expected hash is checked.
 
 ## Rust consumer
 
-The isolated Cargo project names the five published GlassVM `0.3.0` crate
+The isolated Cargo project names the five published GlassVM `0.3.1` crate
 versions exactly, uses no path or Git dependencies, and includes a lockfile
 generated outside the GlassVM Cargo workspace:
 

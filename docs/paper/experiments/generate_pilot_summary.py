@@ -22,7 +22,7 @@ def render(results: list[dict]) -> str:
         "",
         "These short, eight-frame runs validate harness wiring and receipt separation;",
         "they are not performance or bounded-memory evidence. Each run used the",
-        "published 0.3.0 Python distributions in the locked paper environment.",
+        "published Python distributions in the locked paper environment.",
         "Recorder receipt schema 1.1.0 exposes per-channel persisted segment, record,",
         "block, logical-byte, and encoded-byte counters; the harness validates these",
         "against aggregate receipt totals without reading stored records.",

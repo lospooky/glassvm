@@ -121,7 +121,8 @@ report. Unit checks for attribution and uncertainty can run separately:
 python3 -m unittest discover -s docs/paper/experiments -p test_glass_relay.py
 ```
 
-The initial focused result is in
+The initial focused result, collected with the 0.3.0 packages, is in
 [`measurements/glass-relay-0.3.0`](../measurements/glass-relay-0.3.0/SUMMARY.md).
-It uses installed 0.3.0 wheels; source dirty state is recorded, so this is
-development validation rather than a final sealed paper artifact.
+It records a development run against those released wheels. The current
+`0.3.1` package run is recorded separately under
+[`measurements/glass-relay-0.3.1`](../measurements/glass-relay-0.3.1/SUMMARY.md).

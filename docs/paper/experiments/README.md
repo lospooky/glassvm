@@ -5,7 +5,7 @@ creates a disposable environment from scratch: a locked Python 3.12 environment
 with uv caching disabled, plus an isolated Cargo home and build target. This
 prevents an existing project venv, user site package, Cargo registry cache, or
 old target directory from satisfying a missing dependency accidentally. The
-runner binds the paper matrix to published GlassVM `0.3.0` wheels and crates,
+runner binds the paper matrix to published GlassVM `0.3.1` wheels and crates,
 checks the three pinned workload artifacts, and keeps generated measurements
 outside both source checkouts.
 
@@ -28,9 +28,9 @@ dependencies resolve from the locked package indexes without reusing uv cache.
 
 The companion machine checkout must be on its `paper-publication` branch: that
 branch contains the paper-only memory trial example; the release-facing
-machine implementation is synchronized from the `0.3.0` source release. The
-paper-run environment installs `glassvm==0.3.0` and all three provider bundles
-at `0.3.0` from PyPI. The runner verifies those exact installed versions and
+machine implementation is synchronized from the `0.3.1` source release. The
+paper-run environment installs `glassvm==0.3.1` and all three provider bundles
+at `0.3.1` from PyPI. The runner verifies those exact installed versions and
 entry-point discovery before collecting results.
 
 ## One-command regeneration
@@ -41,7 +41,7 @@ the full regeneration from clean source trees:
 ```sh
 python3 docs/paper/run_paper.py all \
   --machines-root ../glassvm-machines \
-  --results-root ../glassvm-paper-results/0.3.0-final
+  --results-root ../glassvm-paper-results/0.3.1-final
 ```
 
 The results root must be empty or absent. It is deliberately outside the two
@@ -53,7 +53,7 @@ a new results-root for a rerun or changed configuration.
 The ordered full pass is:
 
 1. preflight: locked package versions, installed providers, fixture digests,
-   a standalone Rust consumer linked only to published 0.3.0 crates.io crates,
+   a standalone Rust consumer linked only to published 0.3.1 crates.io crates,
    paper harness tests, and generated heterogeneity-table freshness;
 2. Glass Garden SVG postcards, Glass Relay's common behavioral protocol matrix,
    and external-consumer clean-room installs;
@@ -112,7 +112,7 @@ denominator remains separate from these original controlled specimens.
 Treat all performance values as specific to the recorded host, fixtures,
 configuration, package releases, and source coordinates. The existing
 measurement directories in this branch document prior runs and are immutable
-historical records; the `0.3.0-final` run writes a new, independent result set.
+historical records; the `0.3.1-final` run writes a new, independent result set.
 
 For claim scope, release-machine roles, and limitations, see
 [`../CLAIM_EVIDENCE_MAP.md`](../CLAIM_EVIDENCE_MAP.md) and

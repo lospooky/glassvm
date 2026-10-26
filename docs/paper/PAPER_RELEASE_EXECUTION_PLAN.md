@@ -1,6 +1,6 @@
 # GlassVM paper release execution plan
 
-Planning date: 2026-10-04. Refreshed: 2026-10-12.
+Planning date: 2026-10-04. Refreshed: 2026-10-26.
 
 This plan breaks down the remaining work in [PAPER_CHECKLIST.md](PAPER_CHECKLIST.md)
 into executable slices. The checklist remains the acceptance contract, and
@@ -42,9 +42,22 @@ has been reference-reviewed locally and retained in the evaluated subset.
 Nonzero depth remains unsupported. Depth/perspective and additional graphics
 features are not automatic next slices.
 
-## Planning snapshot
+## Current release pin: 0.3.1
 
-The following records the current source/release state after the `0.3.0` wave.
+The active paper runner and package-index consumer checks now target the
+published `0.3.1` wave. The prior `0.3.0` result directories remain historical
+evidence and are not relabeled as `0.3.1` measurements.
+
+| Area | 0.3.1 release state |
+| --- | --- |
+| GlassVM source/release | Tag `v0.3.1`, commit `f9c68f95bd579a002e1ed69a04b600fefcc90f8c`; all five contract crates and the generic Python facade are published. [Release workflow](https://github.com/lospooky/glassvm/actions/runs/40389448254) passed. |
+| Machine source/release | Tag `v0.3.1`, commit `a136f83cd5f44092e56eeb5678d56c35255f59cd`; CHIP-8, PICO-8, TIC-80, and the selector package are published. [Release workflow](https://github.com/lospooky/glassvm-machines/actions/runs/40390864736) passed, including clean sdist-to-wheel builds. |
+| Paper pins | The unified runner, Python lock, external Python consumer, external Rust consumer, and machine clean-room expectation target `0.3.1`. |
+| Regeneration | The full `0.3.1` paper run remains pending. Focused Glass Garden and Glass Relay package checks are recorded separately from the complete regeneration gate. |
+
+## Historical planning snapshot after 0.3.0
+
+The following records the source/release state captured after the `0.3.0` wave.
 The final measured-artifact coordinates are produced by the Slice 9 runner and
 recorded separately in `PAPER_ARTIFACT.md` after regeneration.
 

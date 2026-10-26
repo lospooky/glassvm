@@ -1,10 +1,10 @@
 [project]
 name = "glassvm-paper-runners"
-version = "0.3.0"
+version = "0.3.1"
 requires-python = ">=3.12"
 dependencies = [
-    "glassvm==0.3.0",
-    "glassvm-machines[all]==0.3.0",
+    "glassvm==0.3.1",
+    "glassvm-machines[all]==0.3.1",
     "matplotlib>=3.10,<4",
 ]
 

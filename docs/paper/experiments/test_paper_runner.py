@@ -16,7 +16,7 @@ SPEC.loader.exec_module(runner)
 
 class PaperRunnerTests(unittest.TestCase):
     def test_release_pin_and_machine_set_are_explicit(self) -> None:
-        self.assertEqual(runner.VERSION, "0.3.0")
+        self.assertEqual(runner.VERSION, "0.3.1")
         self.assertEqual(runner.MACHINES, ("chip8", "pico8", "tic80"))
         self.assertIn("glassvm-machines", runner.ALL_DISTRIBUTIONS)
 

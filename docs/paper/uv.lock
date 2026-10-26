@@ -150,39 +150,39 @@ wheels = [
 
 [[package]]
 name = "glassvm"
-version = "0.3.0"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/06/e7/5807e5ae7f91f2372d9968d3a05ce4a3fb013cb030344c159e92728a5c71/glassvm-0.3.0.tar.gz", hash = "sha256:9ad364b1a186d69e18dabb91fcd582b658692c431f1304c04ceb269a38964b8f", size = 10065, upload-time = "2026-10-12T20:19:39.139Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/8c/252cf6030442897b66257fb56c561747280974bbddefb69a9175a85e07a1/glassvm-0.3.1.tar.gz", hash = "sha256:893bb0a2e870e19affed0aed73042c0862f3a6742b42a55eedf94371196f3ead", size = 10066, upload-time = "2026-10-26T19:46:55.746Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/26/02/0f374f9cd10ae00987b65fdc32b3875c2b9cbc600e638e3b4c80f6abffab/glassvm-0.3.0-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:78e3456ee1d5a56857c3a2496f228487a8f955127e2589346cc52339dd8b6019", size = 310435, upload-time = "2026-10-12T20:19:34.877Z" },
-    { url = "https://files.pythonhosted.org/packages/01/c0/5c08c0493579c2ea7c4a16aef6e738828f1301f0aa3be8e440869ccd2550/glassvm-0.3.0-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:20b33f38b75f64ab084ad48bcee626b41cf71a55d82c04c59f79979e1cfd66ef", size = 310034, upload-time = "2026-10-12T20:19:36.241Z" },
-    { url = "https://files.pythonhosted.org/packages/72/23/e854d9d8a6ec572379522719d73e40ac15494249401b438ed51cde5d5eb5/glassvm-0.3.0-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:dad808c73fb8ab529612db118c6db8ac23258e01ce10cc4bcf3afb9e80d7709b", size = 310294, upload-time = "2026-10-12T20:19:37.668Z" },
+    { url = "https://files.pythonhosted.org/packages/74/9b/5552fea28a0341778f08d21e448ffcafc866b4332a748b58041fe475ea10/glassvm-0.3.1-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:3fdd9bcd6896e732d0720cc374b05a5dd2e0d3e27dd7a3c1da0f54188ec39283", size = 310406, upload-time = "2026-10-26T19:46:52.827Z" },
+    { url = "https://files.pythonhosted.org/packages/33/fc/5c6320cbec76aeb07658bd095fb6bb29c5b3b4f3d8bcb1d9d3c523756d7b/glassvm-0.3.1-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:ec77693800da1d5dff2a15ce1a0a2fa7e8648a6c87fb8f6d267e8d4096a6021d", size = 309998, upload-time = "2026-10-26T19:46:53.947Z" },
+    { url = "https://files.pythonhosted.org/packages/c9/56/870f562e7f5bf4c9d9fc593313e1df8686b6a26b46c1656949206d315fc7/glassvm-0.3.1-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:940726020f2222b2a04f57e59c4cbca6c196bcfe1352a96ef76d4cb49af06e57", size = 310360, upload-time = "2026-10-26T19:46:54.889Z" },
 ]
 
 [[package]]
 name = "glassvm-chip8"
-version = "0.3.0"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "glassvm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/09/6f/5021fef907f262973e1cc5e86d6306ff45812da5d86ff07ee2f4c9b28c01/glassvm_chip8-0.3.0.tar.gz", hash = "sha256:ad062e6437d0dbb01470e8a7ebd719027f91ffaa83ca10a041297676eeb577f6", size = 391734, upload-time = "2026-10-12T20:35:18.654Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c9/2c/42bdcd6d51f0fb30c140f30af3fd30218b7a5f9f620b371d4fed61b05d32/glassvm_chip8-0.3.1.tar.gz", hash = "sha256:7d4c8a0b37bf4453997858c25459f96d51fca79aae92b2504ae26c8372527206", size = 626283, upload-time = "2026-10-26T20:02:05.422Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/03/31/ad3e462cd7cace567a904218cf3633ef7164129dbc9ab0186db21577d502/glassvm_chip8-0.3.0-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:48de8526b32fc5ef084b73b2f141a6705a8c28c6648c96d5eb512004ef036e72", size = 1189617, upload-time = "2026-10-12T20:35:15.311Z" },
-    { url = "https://files.pythonhosted.org/packages/be/ca/89b0ff6778fc668ed070634b4ca6348648a92038de74ece4f650a96e1d08/glassvm_chip8-0.3.0-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:19ef95a14ac46e0721f37169c42c969500cadd4a707c9f0bdedfeb52e2bf6306", size = 1189253, upload-time = "2026-10-12T20:35:16.466Z" },
-    { url = "https://files.pythonhosted.org/packages/08/25/8d0878c4334d544561cba08d171b1c16bf2bf504a6ed70798d9b5f7f02e5/glassvm_chip8-0.3.0-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:12f84faddbe23c8741aac7a35e1f539165c8269369eb85cc97a1582800502cef", size = 1189114, upload-time = "2026-10-12T20:35:17.621Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/df/5a66bac45b7b861db3d1ebfe77392f91343cb64a5ef09ac35945fd46314b/glassvm_chip8-0.3.1-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:0a43fd9da6ed841cd2626fa570cee132107e8b82fbd663873c5039c1a73348c5", size = 1189838, upload-time = "2026-10-26T20:02:01.286Z" },
+    { url = "https://files.pythonhosted.org/packages/e7/f7/8b88771f4bd48147ce952aca8de8f7e6845fbdf654efc4aa478c3f0bc8f8/glassvm_chip8-0.3.1-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:75afdff4dc8910c3920883513a5dbbcb0cc8fc1ccb3d2cba74e2e63f61ca0c08", size = 1189405, upload-time = "2026-10-26T20:02:02.661Z" },
+    { url = "https://files.pythonhosted.org/packages/d1/80/351c88941374c67d963915feacf9db367f437c0180eed9dc1576b6255971/glassvm_chip8-0.3.1-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:9fbd25ac5ea5ddfe6edd1de3dc3675f829702df713dc1de34c22f4fc5c500ba8", size = 1189264, upload-time = "2026-10-26T20:02:04.187Z" },
 ]
 
 [[package]]
 name = "glassvm-machines"
-version = "0.3.0"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "glassvm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3d/1f/ad7287f137ec0bba06d515492c76fea2683e674eac2ca785fe4fe2ed1d99/glassvm_machines-0.3.0.tar.gz", hash = "sha256:7789be31005ad8085bb4c59759e1c6bebcb803e8c12ec733bea0ab2980e46357", size = 965, upload-time = "2026-10-12T20:37:09.086Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6f/3b/fd971081b0c943a7df5a33d0fd630483d98fe3a81f526f267336ff49198b/glassvm_machines-0.3.1.tar.gz", hash = "sha256:f10a13de76d1ffb2bc6ee6472a1107b97e0932890294116d1dd90c61846805ae", size = 1058, upload-time = "2026-10-26T20:03:24.052Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/36/2673aa24be1747aeec67211b09708937744467d256116fff72c6ad0ec539/glassvm_machines-0.3.0-py3-none-any.whl", hash = "sha256:7aa7b0fd7289f7921b69930b981381bea81ff49c39cb86ddbe69344ffc438182", size = 1693, upload-time = "2026-10-12T20:37:08.272Z" },
+    { url = "https://files.pythonhosted.org/packages/70/6e/1b1849c2fa173ffe17dc5f2e938300f3406083d2d260c0a574567f29a8dd/glassvm_machines-0.3.1-py3-none-any.whl", hash = "sha256:202bc19879a0bba96a876dde991637da267340a7686b177a11b288e378795418", size = 1844, upload-time = "2026-10-26T20:03:23.3Z" },
 ]
 
 [package.optional-dependencies]
@@ -194,7 +194,7 @@ all = [
 
 [[package]]
 name = "glassvm-paper-runners"
-version = "0.3.0"
+version = "0.3.1"
 source = { virtual = "." }
 dependencies = [
     { name = "glassvm" },
@@ -204,37 +204,37 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "glassvm", specifier = "==0.3.0" },
-    { name = "glassvm-machines", extras = ["all"], specifier = "==0.3.0" },
+    { name = "glassvm", specifier = "==0.3.1" },
+    { name = "glassvm-machines", extras = ["all"], specifier = "==0.3.1" },
     { name = "matplotlib", specifier = ">=3.10,<4" },
 ]
 
 [[package]]
 name = "glassvm-pico8"
-version = "0.3.0"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "glassvm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3d/4c/ee277b92edae315c59c211f8f5126c25622dbe8b02b741a13651752472ad/glassvm_pico8-0.3.0.tar.gz", hash = "sha256:4d040d3f295cff7c0f7cdb8b80f2d21d7ddadd391ee66ad5a64497ec7fba9fe0", size = 74962, upload-time = "2026-10-12T20:35:19.364Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/44/ff/b138ed0494234d894e723ea168ef36a138ff0f666dc3588afab81225bd14/glassvm_pico8-0.3.1.tar.gz", hash = "sha256:6861b17af361607e9cc80427f281c5d36fbdf6b094b9e134b2a260a7f16ff8f8", size = 325064, upload-time = "2026-10-26T20:02:06.328Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/35/23/bb24587a1c513857b188320443141963fba2665204d9dd644e9a2a90a8fe/glassvm_pico8-0.3.0-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:2a7895763c1822861d409eadffc3cb8b576f212527e0ee98f330d37b677dd4cd", size = 1491152, upload-time = "2026-10-12T20:35:15.61Z" },
-    { url = "https://files.pythonhosted.org/packages/a1/4c/c3c270d614b7d8993931848fda7f75af553ef9095d53dc9ca1cf31b4215a/glassvm_pico8-0.3.0-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:91b99d721184c1a874b202b8914c02c38478936d6624e32bb7276dbf01052131", size = 1490878, upload-time = "2026-10-12T20:35:16.763Z" },
-    { url = "https://files.pythonhosted.org/packages/b7/de/af362dd520780d61adab5f5f120bd67a0e4527a30329142a2f73dee79eb9/glassvm_pico8-0.3.0-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:816c271704d344b8e3b4eeeff74d8e774229159167c9fbef9d492be217440781", size = 1491453, upload-time = "2026-10-12T20:35:18.276Z" },
+    { url = "https://files.pythonhosted.org/packages/bb/48/bc859f409b06bc6cedbe8521848221ec91dc0a80671deeee6168ade8602a/glassvm_pico8-0.3.1-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:9375246ea4b63e68d1e756801dbef1183034e33d261dc1cc513ac3edca5b2464", size = 1517979, upload-time = "2026-10-26T20:02:01.908Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/a0/fc8dee158cf4130dba316d3db58f192ebbe08f00b62b2a778bcd28101c07/glassvm_pico8-0.3.1-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:6d3441725a956292ef48257ca02cbb94ca441ac3875d419f866445e05f0d3fb1", size = 1517443, upload-time = "2026-10-26T20:02:03.379Z" },
+    { url = "https://files.pythonhosted.org/packages/4e/a4/b2c1fdbab4d3fadff1424fa7dffbd9ee2ca7558983555bb33d15102e0943/glassvm_pico8-0.3.1-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:fbbc1ae6f32b7a2df10a9562e3487bc46d077f1c63d4524e76a3f9dde9271ad5", size = 1518309, upload-time = "2026-10-26T20:02:04.784Z" },
 ]
 
 [[package]]
 name = "glassvm-tic80"
-version = "0.3.0"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "glassvm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5d/a8/fe0cb12d40360015604a54d4b8de98db9c58e9ae56183d7cdb3df94ec1ad/glassvm_tic80-0.3.0.tar.gz", hash = "sha256:14b7cf8e02114af7a9ad1e17229a01b0195dcd2938ca60e407f8c426764a156c", size = 83062, upload-time = "2026-10-12T20:35:23.73Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6b/36/ad5500bc2fbab915f84d6077ad8f0c99d079ec48b9bc415e4bd32376462f/glassvm_tic80-0.3.1.tar.gz", hash = "sha256:d7816fb2ccb6f6f19095a39a6624636cf1ca4815daef4d878d9465e99f5b077a", size = 336908, upload-time = "2026-10-26T20:02:06.356Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/4c/9dc7fdaf6758f5f154476f57182f9e3686446a0af5f4887145c0f5a64682/glassvm_tic80-0.3.0-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:2ef6826a2a5fd08d54b9ac865ca921eb48f83e21fca15ec5603e3b6e07dd451f", size = 1350840, upload-time = "2026-10-12T20:35:19.39Z" },
-    { url = "https://files.pythonhosted.org/packages/35/af/ab987dfbd19c7d02a012cf9f61de2d1f8aa08f8014d246f2eb2769c7f8ce/glassvm_tic80-0.3.0-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:8511b9dc2eaa2d8e5649d140f87d0b9c356b20449e0321171a8ceff32fb62f3f", size = 1350489, upload-time = "2026-10-12T20:35:20.843Z" },
-    { url = "https://files.pythonhosted.org/packages/f6/26/e816235f983750d993d7d0ddeae2688a878a7d5a001f1ef25f8709daccfd/glassvm_tic80-0.3.0-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:904c3a32e90f215549c08f0713ba0bcd09f99ea05276d86e02bb6398a6b79940", size = 1351217, upload-time = "2026-10-12T20:35:22.35Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/f4/c26b0b1b1e5720d5210d820f66f09ad3cf6f77b7b6400781c75663b9dfeb/glassvm_tic80-0.3.1-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:f424b34df6c319ff6cb2be3863733ab2d1ec9ba2c222357a31dc4a0df81be3e0", size = 1369034, upload-time = "2026-10-26T20:02:01.666Z" },
+    { url = "https://files.pythonhosted.org/packages/c1/db/bf6fc6304e44e9096f5d73f5fe64d19bb08bc4be5051454c95bd1d32d99a/glassvm_tic80-0.3.1-cp313-cp313-manylinux_2_31_x86_64.whl", hash = "sha256:b573c6f3f5cef8cf9ab7abae09989f5464ca82142f91e56da71c8a5b5f531425", size = 1368606, upload-time = "2026-10-26T20:02:03.629Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/11/1505fed3cb6596d1b23b586c4f884df216f9b04811fa6a6bbddd2a39312d/glassvm_tic80-0.3.1-cp314-cp314-manylinux_2_31_x86_64.whl", hash = "sha256:902fae2053f419d5cacbeba9498a04bbe7418016fcf22299e9d91fedf556906b", size = 1369353, upload-time = "2026-10-26T20:02:05.009Z" },
 ]
 
 [[package]]

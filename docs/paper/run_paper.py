@@ -3,7 +3,7 @@
 
 Run with ``uv`` and CPython 3.12+. The entry point creates a disposable locked
 Python environment and isolated Cargo home/target for each invocation. Python
-collections use published 0.3.0 distributions; Rust contract dependencies are
+collections use published 0.3.1 distributions; Rust contract dependencies are
 resolved from crates.io, while paper-only machine trials are built from the
 companion machine checkout.
 """
@@ -33,8 +33,8 @@ UTC = timezone.utc
 PAPER_ROOT = Path(__file__).resolve().parent
 GLASSVM_ROOT = PAPER_ROOT.parents[1]
 DEFAULT_MACHINES_ROOT = GLASSVM_ROOT.parent / "glassvm-machines"
-DEFAULT_RESULTS_ROOT = GLASSVM_ROOT.parent / "glassvm-paper-results" / "0.3.0-final"
-VERSION = "0.3.0"
+DEFAULT_RESULTS_ROOT = GLASSVM_ROOT.parent / "glassvm-paper-results" / "0.3.1-final"
+VERSION = "0.3.1"
 MACHINES = ("chip8", "pico8", "tic80")
 PROVIDER_DISTRIBUTIONS = (
     "glassvm-chip8",
@@ -105,7 +105,7 @@ def require_release_packages() -> None:
     missing = set(MACHINES) - providers
     if missing:
         raise RuntimeError(
-            "installed 0.3.0 providers do not expose all paper machines: "
+            "installed 0.3.1 providers do not expose all paper machines: "
             + ", ".join(sorted(missing))
         )
 
@@ -190,7 +190,7 @@ def stage_check(args: argparse.Namespace) -> None:
         GLASSVM_ROOT,
     )
     command(
-        "compile the paper-only machine memory trial against the locked 0.3.0 contracts",
+        "compile the paper-only machine memory trial against the locked 0.3.1 contracts",
         [
             "cargo",
             "check",

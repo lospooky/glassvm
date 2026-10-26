@@ -30,7 +30,10 @@ task and configuration, not general machine equivalence or execution speed.
 The eighteen-run 0.3.0-wheel development matrix is documented in
 [`glass-relay-0.3.0/SUMMARY.md`](experiments/measurements/glass-relay-0.3.0/SUMMARY.md),
 with exact scope in [`glass_relay/README.md`](experiments/glass_relay/README.md).
-Final paper regeneration remains a separate gate.
+The focused `0.3.1` package run is recorded in
+[`glass-relay-0.3.1/SUMMARY.md`](experiments/measurements/glass-relay-0.3.1/SUMMARY.md).
+Both are scoped to their recorded package pins; full paper regeneration remains
+a separate gate.
 
 ## What the clean implementation establishes
 

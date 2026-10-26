@@ -578,3 +578,13 @@ Non-blocking improvements.
 Do not propose architectural expansion unless a RED item cannot be closed without it.
 
 The default assumption is that GlassVM architecture is frozen and the remaining work is evidence production, release sealing, and paper reproducibility.~~~~
+
+## 0.3.1 package pin update
+
+- [x] Publish the five GlassVM contract crates and generic facade at `0.3.1`.
+- [x] Publish the CHIP-8, PICO-8, TIC-80, and `glassvm-machines` distributions at `0.3.1`.
+- [x] Update the unified paper runner, its locked Python environment, external consumer proofs, and installed-provider version assertion to `0.3.1`.
+- [ ] Regenerate the complete paper evidence set under the `0.3.1` package pin and seal its source coordinates.
+
+Existing `0.3.0` measurement directories remain unchanged and continue to
+describe the packages and source state used when they were collected.

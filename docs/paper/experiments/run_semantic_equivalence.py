@@ -19,7 +19,7 @@ from pathlib import Path
 from run_trial import machine_configuration, observation_request
 
 MACHINES = ("chip8", "pico8", "tic80")
-VERSION = "0.3.0"
+VERSION = "0.3.1"
 CHANNEL_FOR_KIND = {
     "event": "normalized_events",
     "native_evidence": "native_evidence",
