@@ -113,9 +113,7 @@ class GlassGardenConsumer:
         self.frame_count += 1
 
     def _observe_event(self, record: dict[str, Any]) -> None:
-        kind = record.get("kind")
-        if not isinstance(kind, str) or not kind:
-            raise ValueError("normalized event has no canonical kind")
+        kind = canonical_event_kind(record.get("kind"))
         if kind not in self.event_kind_counts and len(self.event_kind_counts) >= MAX_EVENT_KIND_COUNTERS:
             raise ValueError(
                 f"normalized event kind count exceeded the fixed limit "
@@ -153,6 +151,20 @@ class GlassGardenConsumer:
         return sorted(
             self.event_kind_counts.items(), key=lambda pair: (-pair[1], pair[0])
         )[:TOP_EVENT_KINDS]
+
+
+def canonical_event_kind(value: object) -> str:
+    """Render core string kinds and schema-qualified extension kinds."""
+    if isinstance(value, str) and value:
+        return value
+    if (
+        isinstance(value, dict)
+        and set(value) == {"extension"}
+        and isinstance(value["extension"], str)
+        and value["extension"]
+    ):
+        return f"extension:{value['extension']}"
+    raise ValueError("normalized event has no canonical kind")
 
 
 def _evidence_status(consumer: GlassGardenConsumer) -> str:

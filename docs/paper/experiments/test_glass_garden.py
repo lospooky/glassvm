@@ -48,11 +48,23 @@ class GlassGardenTests(unittest.TestCase):
 
     def test_event_kind_counts_are_bounded_and_top_n_is_deterministic(self):
         consumer = glass_garden.GlassGardenConsumer(frame_limit=20)
-        for kind in ("event.b", "event.a", "event.a", "event.c", "event.a"):
+        for kind in (
+            "event.b",
+            "event.a",
+            "event.a",
+            "event.c",
+            "event.a",
+            {"extension": "glassvm.graphics_activity"},
+        ):
             consumer.emit_batch([{"kind": "event", "record": {"kind": kind}}])
         self.assertEqual(
             consumer.top_event_kinds(),
-            [("event.a", 3), ("event.b", 1), ("event.c", 1)],
+            [
+                ("event.a", 3),
+                ("event.b", 1),
+                ("event.c", 1),
+                ("extension:glassvm.graphics_activity", 1),
+            ],
         )
 
         consumer.event_kind_counts = glass_garden.Counter(
