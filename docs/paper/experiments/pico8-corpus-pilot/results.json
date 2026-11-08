@@ -1,0 +1,531 @@
+{
+  "source_url": "https://downloads.seans.site/tweetcarts-2017/tweetcarts-2017-source.zip",
+  "source_archive_sha256": "e45625ca2dc880476fb2dba0a8cbc539f5cd7108f231705b4c71f715373e5ff7",
+  "source_entry_count": 124,
+  "selection": "consecutive IDs 51 through 80, chosen before testing",
+  "run": {
+    "frames": 10,
+    "timeout_seconds": 4,
+    "workers": 3,
+    "configuration": {
+      "schema": {
+        "id": "pico8.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "instruction_budget": {
+            "Unsigned": 500000
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          }
+        }
+      }
+    },
+    "input_schedule": {
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "entries": []
+    },
+    "observation": {
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "guarantee": "summary",
+      "normalized_events": {
+        "events": "none",
+        "access_detail": "none",
+        "state_diffs": false
+      },
+      "capabilities": [],
+      "native_evidence": {
+        "enabled": false,
+        "all": false,
+        "kinds": []
+      },
+      "frames": {
+        "capture": "hashes"
+      },
+      "snapshots": {
+        "capture": "none"
+      },
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "budgets": {},
+      "overflow": "fail"
+    },
+    "python": "3.12.13",
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "glassvm": "0.3.1",
+    "glassvm_pico8": "0.3.1"
+  },
+  "trials": [
+    {
+      "name": "tweetcart51.p8",
+      "sha256": "e5f098ba1b9a700381009157d2b4d99dc435a9e8359ccf9a46819c956680c98b",
+      "bytes": 37053,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:5: attempt to call a nil value (global 'circ')\nstack traceback:\n\t[C]: in global 'circ'\n\t[string \"cartridge\"]:5: in main chunk"
+      },
+      "elapsed_seconds": 0.07
+    },
+    {
+      "name": "tweetcart52.p8",
+      "sha256": "8b056c81427353402097828078955875737f3d063cf157392ba724f9c8ffd633",
+      "bytes": 37078,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: bad argument #5: error converting Lua nil to i32 (expected number or string coercible to number)\nstack traceback:\n\t[C]: in function 'sspr'\n\t[string \"cartridge\"]:2: in main chunk\n"
+      },
+      "elapsed_seconds": 0.069
+    },
+    {
+      "name": "tweetcart53.p8",
+      "sha256": "4c0438ae51a6916ff4454f751534d37ee5896fa56f2968f6e90f3d98e0c9dffc",
+      "bytes": 37068,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:9: in main chunk\n"
+      },
+      "elapsed_seconds": 0.073
+    },
+    {
+      "name": "tweetcart54.p8",
+      "sha256": "b36c2b727d3e6ae31b812ad522547878689094ac8393007976c6689d83a16566",
+      "bytes": 37056,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:9: attempt to call a nil value (global 'circ')\nstack traceback:\n\t[C]: in global 'circ'\n\t[string \"cartridge\"]:9: in main chunk"
+      },
+      "elapsed_seconds": 0.068
+    },
+    {
+      "name": "tweetcart55.p8",
+      "sha256": "8df15ef63af58ae0253b5e4f10671a0abb94d7b59c16ad51b5201d84a913ea10",
+      "bytes": 37065,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:8: attempt to call a nil value (global 'circ')\nstack traceback:\n\t[C]: in global 'circ'\n\t[string \"cartridge\"]:8: in main chunk"
+      },
+      "elapsed_seconds": 0.066
+    },
+    {
+      "name": "tweetcart56.p8",
+      "sha256": "0034f61dce322670248e248c0c9911ac64eb3cbcec2d424741b09a3dd729170e",
+      "bytes": 37074,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:8: in main chunk\n"
+      },
+      "elapsed_seconds": 0.108
+    },
+    {
+      "name": "tweetcart57.p8",
+      "sha256": "9841097101092748647853958b857e53b739ae666c6d1093da99a1ef74282aff",
+      "bytes": 37051,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:6: in main chunk\n"
+      },
+      "elapsed_seconds": 0.069
+    },
+    {
+      "name": "tweetcart58.p8",
+      "sha256": "720083b3960ac6ce2c6a2b23cfb90076916ac0af266e55695d27d7c2c8a99d7e",
+      "bytes": 37069,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:8: in main chunk\n"
+      },
+      "elapsed_seconds": 0.069
+    },
+    {
+      "name": "tweetcart59.p8",
+      "sha256": "684eea6330bc9fd928f86540d1212052425447e53169007d540a0161243c5de8",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: error converting Lua number to i64 (out of range)\nstack traceback:\n\t[C]: in function 'bxor'\n\t[string \"cartridge\"]:8: in main chunk\n"
+      },
+      "elapsed_seconds": 0.066
+    },
+    {
+      "name": "tweetcart60.p8",
+      "sha256": "6a86d6e24377cb307ca6b568f4e4ce9245bb65f2665488ac22a1a8eeb65b76c4",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:8: in main chunk\n"
+      },
+      "elapsed_seconds": 0.078
+    },
+    {
+      "name": "tweetcart61.p8",
+      "sha256": "55540a478faec9ab5f283f1282d6e9b3cfefe0e97474b96117cdbbe8ed8f945c",
+      "bytes": 37076,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: bad argument #1: error converting Lua number to i32 (out of range)\nstack traceback:\n\t[C]: in function 'line'\n\t[string \"cartridge\"]:6: in main chunk\n"
+      },
+      "elapsed_seconds": 0.065
+    },
+    {
+      "name": "tweetcart62.p8",
+      "sha256": "2b1133dfadfcc8c3fc0c23f644391e106059c49a6702b498bd62d6d85bc4bc2c",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:8: in main chunk\n"
+      },
+      "elapsed_seconds": 0.076
+    },
+    {
+      "name": "tweetcart63.p8",
+      "sha256": "ee8ee4077e1ae4ddaf08058abdef0ac9249396853d8a050387a41f33c18ff862",
+      "bytes": 37080,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: bad argument #5: error converting Lua nil to i32 (expected number or string coercible to number)\nstack traceback:\n\t[C]: in function 'sspr'\n\t[string \"cartridge\"]:1: in main chunk\n"
+      },
+      "elapsed_seconds": 0.069
+    },
+    {
+      "name": "tweetcart64.p8",
+      "sha256": "d36e8a16e42dde3a991dfdb209905ac37fa1769a311c62ea02481b71abf4f29c",
+      "bytes": 37062,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: bad argument #5: error converting Lua nil to i32 (expected number or string coercible to number)\nstack traceback:\n\t[C]: in function 'sspr'\n\t[string \"cartridge\"]:4: in main chunk\n"
+      },
+      "elapsed_seconds": 0.071
+    },
+    {
+      "name": "tweetcart65.p8",
+      "sha256": "12b84dd9ae95de9502c6421e9f29fe7819529c86b9a8423c3088583cfe826bec",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: bad argument #5: error converting Lua nil to i32 (expected number or string coercible to number)\nstack traceback:\n\t[C]: in function 'sspr'\n\t[string \"cartridge\"]:2: in main chunk\n"
+      },
+      "elapsed_seconds": 0.081
+    },
+    {
+      "name": "tweetcart66.p8",
+      "sha256": "6b0932d45a82796877758f18a09f5a1d9283975680e39a9465fe95e88849add6",
+      "bytes": 37072,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:4: in main chunk\n"
+      },
+      "elapsed_seconds": 0.082
+    },
+    {
+      "name": "tweetcart67.p8",
+      "sha256": "f86e210f07ad43f9e36256f839a1b330831c6f000789c7a53a3fb71af80adf8b",
+      "bytes": 37060,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:4: attempt to call a nil value (global 'circ')\nstack traceback:\n\t[C]: in global 'circ'\n\t[string \"cartridge\"]:4: in main chunk"
+      },
+      "elapsed_seconds": 0.076
+    },
+    {
+      "name": "tweetcart68.p8",
+      "sha256": "4440f8d24b4afff20419ceca9225af39ab66cdce97667282739e598fd7dc5992",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:5: in main chunk\n"
+      },
+      "elapsed_seconds": 0.074
+    },
+    {
+      "name": "tweetcart69.p8",
+      "sha256": "18d101319d60712947c19441dda971e4e4490cbe163f498b4d8831ad5ef801ac",
+      "bytes": 37067,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:3: in main chunk\n"
+      },
+      "elapsed_seconds": 0.098
+    },
+    {
+      "name": "tweetcart70.p8",
+      "sha256": "ce011c505ac14998cbf65f6096f66fe360fb60652d6a8c9dade820931f11df92",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:2: unexpected symbol near '='"
+      },
+      "elapsed_seconds": 0.066
+    },
+    {
+      "name": "tweetcart71.p8",
+      "sha256": "c4f704cf638e73bdea5543c3cce5acaa62b12da7e3e33b08f9b2dc73956bec39",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: bad argument #5: error converting Lua nil to i32 (expected number or string coercible to number)\nstack traceback:\n\t[C]: in function 'sspr'\n\t[string \"cartridge\"]:4: in main chunk\n"
+      },
+      "elapsed_seconds": 0.062
+    },
+    {
+      "name": "tweetcart72.p8",
+      "sha256": "dcab903d7ccc8b5c1c4b4cfd78cfa9816fc34ca1b59282031fdf1abcadca6ab9",
+      "bytes": 37068,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:4: attempt to call a nil value (global 'circ')\nstack traceback:\n\t[C]: in global 'circ'\n\t[string \"cartridge\"]:4: in main chunk"
+      },
+      "elapsed_seconds": 0.062
+    },
+    {
+      "name": "tweetcart73.p8",
+      "sha256": "563faadebe9c9f06731a41f19193189feb1ca2d98767d7a2ff9565568d0fa991",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:3: in main chunk\n"
+      },
+      "elapsed_seconds": 0.219
+    },
+    {
+      "name": "tweetcart74.p8",
+      "sha256": "b46ed3ddfbe05143532a998dce124461c4ed60a48e6d9ee52fb006b393d49f31",
+      "bytes": 37073,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: bad argument #2: error converting Lua number to i64 (out of range)\nstack traceback:\n\t[C]: in function 'memcpy'\n\t[string \"cartridge\"]:6: in main chunk\n"
+      },
+      "elapsed_seconds": 0.303
+    },
+    {
+      "name": "tweetcart75.p8",
+      "sha256": "d15a756bd42b50ed8f0f5ff572ff930805afa35f85f8873f29493dfdd5e579e9",
+      "bytes": 37075,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:5: in main chunk\n"
+      },
+      "elapsed_seconds": 0.072
+    },
+    {
+      "name": "tweetcart76.p8",
+      "sha256": "3fb7b4e64078cef0cd3ff48446ba0b9a5af2db81a4c06bf089faf3495658fbb1",
+      "bytes": 37074,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: bad argument #5: error converting Lua number to i64 (out of range)\nstack traceback:\n\t[C]: in function 'rect'\n\t[string \"cartridge\"]:7: in main chunk\n"
+      },
+      "elapsed_seconds": 0.083
+    },
+    {
+      "name": "tweetcart77.p8",
+      "sha256": "6721ce6d2d0e750bd5c1f90244a571ac43f13e9e0c0bf2e0f16817edecb5191c",
+      "bytes": 37072,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:9: attempt to call a nil value (global 'circfill')\nstack traceback:\n\t[C]: in global 'circfill'\n\t[string \"cartridge\"]:9: in main chunk"
+      },
+      "elapsed_seconds": 0.068
+    },
+    {
+      "name": "tweetcart78.p8",
+      "sha256": "166d6d9c87610c4abcd3d1e47fcea0b9b96cd76a4fbe6d26a91e559c9ecfb9dc",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:6: in main chunk\n"
+      },
+      "elapsed_seconds": 0.073
+    },
+    {
+      "name": "tweetcart79.p8",
+      "sha256": "c9315040758be71626115a1142852f084f0b6572aea86045a70fa2e9d340359d",
+      "bytes": 37079,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:6: attempt to call a nil value (global 'circ')\nstack traceback:\n\t[C]: in global 'circ'\n\t[string \"cartridge\"]:6: in main chunk"
+      },
+      "elapsed_seconds": 0.069
+    },
+    {
+      "name": "tweetcart80.p8",
+      "sha256": "366c73e99490bd9bfa2a0cbca8d9dca9e59021bc078da74c20f00b0bbcd90b38",
+      "bytes": 37078,
+      "direct_input_or_stat_call_scan": false,
+      "exit_code": 0,
+      "stderr": "",
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: PICO-8 instruction budget exhausted\nstack traceback:\n\t[string \"cartridge\"]:10: in main chunk\n"
+      },
+      "elapsed_seconds": 0.071
+    }
+  ]
+}

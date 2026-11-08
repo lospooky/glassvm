@@ -1,0 +1,1321 @@
+{
+  "source": "https://huggingface.co/datasets/thomasgauthier/unlicense-pico8",
+  "parquet_sha256": "d04ded01d0ab2d96ec81560cad7213a14c03da9e5d1bd81ae3945edaa3b470f2",
+  "source_revision": "main (resolve to commit before freeze)",
+  "records": [
+    {
+      "title": "Sneaky Stealy",
+      "author": "Ironchest Games",
+      "source_url": "https://ironchestgames.itch.io/sneaky-stealy",
+      "cartname": "sneakystealy.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "576b620d8fd682f3c1a63d6ba9fe46fb385090d6ef65ad6005f4af8553b1f3df",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:922: unexpected symbol near 'and'"
+      }
+    },
+    {
+      "title": "PICO-CRATE",
+      "author": "Harmony Monroe",
+      "source_url": "https://harmonymonroe.itch.io/pico-crate",
+      "cartname": "crate.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC-SA 4.0",
+      "sha256": "37ae8e84e763bf4dbba839910f0b12624e7c593767bc208fba31df364a69e430",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:1181: attempt to call a nil value (global 'menuitem')\nstack traceback:\n\t[C]: in global 'menuitem'\n\t[string \"cartridge\"]:1181: in main chunk"
+      }
+    },
+    {
+      "title": "Virtuous Vanquisher of Evil",
+      "author": "Ironchest Games",
+      "source_url": "https://ironchestgames.itch.io/virtuous-vanquisher-of-evil",
+      "cartname": "epicevilender.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "163cb737caf01f6c662fccbfe6af538c2521ee47474a3e22b5c683ba4e19867b",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:1245: unexpected symbol near 'and'"
+      }
+    },
+    {
+      "title": "Cat Nap",
+      "author": "molly-cactus",
+      "source_url": "https://molly-cactus.itch.io/cat-nap",
+      "cartname": "cat.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC 4.0",
+      "sha256": "8a578ccc6fa064c209aab44f5da08fed4f730321bac3e81f64ec48d0435f3ee5",
+      "direct_input_calls": true,
+      "result": {
+        "status": "returned",
+        "frames_received": 0,
+        "distinct_fingerprints": 0,
+        "machine_execution": {
+          "result": {
+            "message": "PICO-8 _draw failed: runtime error: [string \"cartridge\"]:324: attempt to call a nil value (global 'map')\nstack traceback:\n\t[C]: in global 'map'\n\t[string \"cartridge\"]:324: in function '_draw'"
+          },
+          "status": "failed"
+        },
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 0
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 3,
+          "failure": null,
+          "items_delivered": 2,
+          "logical_bytes_delivered": 136081,
+          "peak_batch_items": 1,
+          "peak_batch_logical_bytes": 135964,
+          "sink_count": 1,
+          "status": "complete"
+        }
+      }
+    },
+    {
+      "title": "Click!",
+      "author": "Claus",
+      "source_url": "https://caranha.itch.io/click",
+      "cartname": "click.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "93e9913780c077d8d9abe43e073a135f21b7e4507b2fb3b489e0bfa505976a93",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:101: unexpected symbol near '<\\240>'"
+      }
+    },
+    {
+      "title": "Blood of Vladula jr.",
+      "author": "Slumma",
+      "source_url": "https://slumma.itch.io/blood-of-vladula-jr",
+      "cartname": "vladula.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY 4.0",
+      "sha256": "4d55789cbdaf6c8c7352e466ee2a2aba5905d25aa3f398e71a4fc5fc1418b944",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:7: malformed number near '8do'"
+      }
+    },
+    {
+      "title": "MineStorm Pico",
+      "author": "A-TOM",
+      "source_url": "https://a-tom-games.itch.io/minestorm-pico",
+      "cartname": "minestormpico.p8",
+      "code_license": "Unlicense",
+      "asset_license": "N/A",
+      "sha256": "68fe73656b47ab6dd9abbe3ff8d26b3d712e40e8412672e0bbb568741aa1fbb0",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:15: attempt to call a nil value (global 'cartdata')\nstack traceback:\n\t[C]: in global 'cartdata'\n\t[string \"cartridge\"]:15: in main chunk"
+      }
+    },
+    {
+      "title": "FLIP OUT",
+      "author": "SLOMOBO",
+      "source_url": "https://slomobo.itch.io/flip-out",
+      "cartname": "flipout_web.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "1b5c69d1180f4b304f3476d6e111468ac9d4ce054bddb84c7c966829f80fb611",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:103: ')' expected near 'if'"
+      }
+    },
+    {
+      "title": "The Excuse Machine",
+      "author": "ManofPixels",
+      "source_url": "https://manofpixels.itch.io/the-excuse-machine",
+      "cartname": "excuses.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC-SA 4.0",
+      "sha256": "db4f1af3fc9bad5e68bfed7dd9cade2b798aee4411e8b3b6bd864e848f58484d",
+      "direct_input_calls": true,
+      "result": {
+        "status": "returned",
+        "frames_received": 10,
+        "distinct_fingerprints": 1,
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 10,
+              "frames": 10,
+              "termination": "frame_limit"
+            }
+          },
+          "status": "completed"
+        },
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 4790
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 10,
+              "logical_bytes": 4790,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 13,
+          "logical_bytes_delivered": 35367,
+          "peak_batch_items": 10,
+          "peak_batch_logical_bytes": 28717,
+          "sink_count": 1,
+          "status": "complete"
+        }
+      }
+    },
+    {
+      "title": "kfkgfxfcgzz",
+      "author": "rotbrain",
+      "source_url": "https://rotbrain.itch.io/kfkgfxfcgzz",
+      "cartname": "kfkgfxfcgzz.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "1dc76a42ca6815cd8b427db81c54eac1106879d406a6eb02d0d3cfedac59399b",
+      "direct_input_calls": true,
+      "result": {
+        "status": "returned",
+        "frames_received": 0,
+        "distinct_fingerprints": 0,
+        "machine_execution": {
+          "result": {
+            "message": "PICO-8 _update failed: runtime error: [string \"cartridge\"]:127: attempt to call a nil value (global 'all')\nstack traceback:\n\t[C]: in global 'all'\n\t[string \"cartridge\"]:127: in function '_update'"
+          },
+          "status": "failed"
+        },
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 0
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 3,
+          "failure": null,
+          "items_delivered": 2,
+          "logical_bytes_delivered": 45138,
+          "peak_batch_items": 1,
+          "peak_batch_logical_bytes": 45021,
+          "sink_count": 1,
+          "status": "complete"
+        }
+      }
+    },
+    {
+      "title": "Track and Field",
+      "author": "ManofPixels",
+      "source_url": "https://manofpixels.itch.io/track-and-field",
+      "cartname": "run.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC 4.0",
+      "sha256": "6bd0adf661d486239bf0f532d0a562b089837dcf820c835271fc32fb53515351",
+      "direct_input_calls": true,
+      "result": {
+        "status": "returned",
+        "frames_received": 0,
+        "distinct_fingerprints": 0,
+        "machine_execution": {
+          "result": {
+            "message": "PICO-8 _draw failed: runtime error: [string \"cartridge\"]:10: attempt to call a nil value (global 'map')\nstack traceback:\n\t[C]: in global 'map'\n\t[string \"cartridge\"]:10: in function 'draw_title'\n\t[string \"cartridge\"]:108: in function '_draw'"
+          },
+          "status": "failed"
+        },
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 0
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 3,
+          "failure": null,
+          "items_delivered": 2,
+          "logical_bytes_delivered": 88462,
+          "peak_batch_items": 1,
+          "peak_batch_logical_bytes": 88345,
+          "sink_count": 1,
+          "status": "complete"
+        }
+      }
+    },
+    {
+      "title": "L-G-Bee-T +",
+      "author": "pixienop",
+      "source_url": "https://pixienop.itch.io/l-g-bee-t",
+      "cartname": "lgbeet.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "d9faa291a46dbd6b8b1e5c79cf4341531cc0ee1229681fdd6cdcfee3eee3e71f",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:1191: unexpected symbol near '<\\226>'"
+      }
+    },
+    {
+      "title": "Electric Massacre",
+      "author": "TLAlice",
+      "source_url": "https://tlalice.itch.io/electric-massacre",
+      "cartname": "mj.p8",
+      "code_license": "Unlicense",
+      "asset_license": "N/A",
+      "sha256": "087525168713cebcda669b373bed430f07d2a3c48b3df9c7b8b519e344e0304b",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:132: unexpected symbol near '<\\226>'"
+      }
+    },
+    {
+      "title": "dotdot",
+      "author": "zep",
+      "source_url": "https://zep.itch.io/dotdot",
+      "cartname": "dotdot.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC-ND 4.0",
+      "sha256": "d2883d5d0b6ef9787be0cc82004cc1138b395e4621e3967dba43c998344f1b96",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:4: unexpected symbol near '<\\226>'"
+      }
+    },
+    {
+      "title": "Abduction",
+      "author": "ManofPixels",
+      "source_url": "https://manofpixels.itch.io/abduction",
+      "cartname": "abduct.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC 4.0",
+      "sha256": "160d0cea8dda73b7bddd9f11312bd7bbe01c2155efe4c3528690d37e4c03749f",
+      "direct_input_calls": true,
+      "result": {
+        "status": "returned",
+        "frames_received": 10,
+        "distinct_fingerprints": 1,
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 10,
+              "frames": 10,
+              "termination": "frame_limit"
+            }
+          },
+          "status": "completed"
+        },
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 4790
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 10,
+              "logical_bytes": 4790,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 13,
+          "logical_bytes_delivered": 96407,
+          "peak_batch_items": 10,
+          "peak_batch_logical_bytes": 89757,
+          "sink_count": 1,
+          "status": "complete"
+        }
+      }
+    },
+    {
+      "title": "Coffee Catch",
+      "author": "ManofPixels",
+      "source_url": "https://manofpixels.itch.io/coffee-catch",
+      "cartname": "coffee_catch.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC-SA 4.0",
+      "sha256": "8ba1394b9f3b0e197f92b03572abaee3806b773942e848441a5bf096f962aa9a",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:179: unexpected symbol near 'then'"
+      }
+    },
+    {
+      "title": "MRTR555",
+      "author": "thykka",
+      "source_url": "https://thykka.itch.io/mrtr555",
+      "cartname": "mrtr555.p8",
+      "code_license": "Unlicense",
+      "asset_license": "N/A",
+      "sha256": "f9bbda39970a61662c6fcd17668b88edebbade6f4fd8179e83ead4dadebe78b5",
+      "direct_input_calls": false,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:1: label 'r' already defined on line 1"
+      }
+    },
+    {
+      "title": "Paper Plane Game",
+      "author": "pixienop",
+      "source_url": "https://pixienop.itch.io/paper-plane-game",
+      "cartname": "paper-plane-game.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "630f91381c7e638bb1718f60bfb8fe9afd241be66bb3e01b003f66eef4726ab8",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:226: invalid escape sequence near '\"\\^'"
+      }
+    },
+    {
+      "title": "Wildfire",
+      "author": "Calle Englund",
+      "source_url": "https://notcalle.itch.io/wildfire",
+      "cartname": "wildfire.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "ea0c0589000b509ac60905db6369ca544f41a35fe6d9df5c0b8829881573af56",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:252: 'then' expected near 'c'"
+      }
+    },
+    {
+      "title": "Starry Night",
+      "author": "Efraitor_",
+      "source_url": "https://efraitor.itch.io/starrynight",
+      "cartname": "starrynight.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC-SA 4.0",
+      "sha256": "4967321393c9c9e5852eee68ccaf9f6f6dfb711f1b55f7ec05fb3cc08ce9f9e3",
+      "direct_input_calls": false,
+      "result": {
+        "status": "returned",
+        "frames_received": 0,
+        "distinct_fingerprints": 0,
+        "machine_execution": {
+          "result": {
+            "message": "PICO-8 _draw failed: runtime error: [string \"cartridge\"]:11: attempt to call a nil value (global 'mapdraw')\nstack traceback:\n\t[C]: in global 'mapdraw'\n\t[string \"cartridge\"]:11: in function '_title'\n\t[string \"cartridge\"]:424: in function '_draw'"
+          },
+          "status": "failed"
+        },
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 0
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 3,
+          "failure": null,
+          "items_delivered": 2,
+          "logical_bytes_delivered": 242616,
+          "peak_batch_items": 1,
+          "peak_batch_logical_bytes": 242499,
+          "sink_count": 1,
+          "status": "complete"
+        }
+      }
+    },
+    {
+      "title": "Snake Battle",
+      "author": "TLAlice",
+      "source_url": "https://tlalice.itch.io/snake-battle",
+      "cartname": "snake_battle.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "94750a93e5776a8b68cc54deae988eab1469046eed0747e8ba6a328956df9dae",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:137: unexpected symbol near '<\\226>'"
+      }
+    },
+    {
+      "title": "Flappy Pico",
+      "author": "Blake",
+      "source_url": "https://blakers.itch.io/flappy-pico",
+      "cartname": "flappy_pico.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC-SA 4.0",
+      "sha256": "9a45a4a6bbd046e9661777c8ab0096e2ad7c917d8c8818816b2de2bf3e0d2cc2",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: runtime error: [string \"cartridge\"]:8: attempt to call a nil value (global 'cartdata')\nstack traceback:\n\t[C]: in global 'cartdata'\n\t[string \"cartridge\"]:8: in main chunk"
+      }
+    },
+    {
+      "title": "Obsessive",
+      "author": "Mighty Pirate",
+      "source_url": "https://mighty-pirate.itch.io/obsessive",
+      "cartname": "obsessive.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "1a1a22829bb59cd5fe80927d24277e0b07a747ea9c6608c3aaf821c016025505",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:59: unexpected symbol near '<\\226>'"
+      }
+    },
+    {
+      "title": "EarthApple",
+      "author": "UpperC",
+      "source_url": "https://upperc.itch.io/earthapple",
+      "cartname": "earthapple.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "2678809e9b3adb5febefb87ae653630d8e21a621e353a27e5962d356da76cd2f",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:499: unexpected symbol near '<\\226>'"
+      }
+    },
+    {
+      "title": "Sheep Puzzle",
+      "author": "rainwarrior",
+      "source_url": "https://rainwarrior.itch.io/sheep-puzzle",
+      "cartname": "sheep.puzzle.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "7e64b94ca85e6cf2881dd799770645d13d06bcf53f82ecec2b0211194c9ff044",
+      "direct_input_calls": true,
+      "result": {
+        "status": "returned",
+        "frames_received": 0,
+        "distinct_fingerprints": 0,
+        "machine_execution": {
+          "result": {
+            "message": "PICO-8 _draw failed: runtime error: [string \"cartridge\"]:257: attempt to call a nil value (global 'map')\nstack traceback:\n\t[C]: in global 'map'\n\t[string \"cartridge\"]:257: in function '_draw'"
+          },
+          "status": "failed"
+        },
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 0
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 3,
+          "failure": null,
+          "items_delivered": 2,
+          "logical_bytes_delivered": 83590,
+          "peak_batch_items": 1,
+          "peak_batch_logical_bytes": 83473,
+          "sink_count": 1,
+          "status": "complete"
+        }
+      }
+    },
+    {
+      "title": "Frogger | TweetTweetJam9",
+      "author": "Kieron Scott",
+      "source_url": "https://ryancavendell.itch.io/frogger-tweettweetjam9",
+      "cartname": "tweet_frogger.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-SA 4.0",
+      "sha256": "23d5954df749b3310e9fd32eac51691ada6e14a2880f8f8c6ea9a6945e114cde",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:1: malformed number near '9y'"
+      }
+    },
+    {
+      "title": "Erilaz Runoz Waritu",
+      "author": "Heartful Rune",
+      "source_url": "https://heartful-rune.itch.io/erilaz-runoz-waritu",
+      "cartname": "runes.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC0 v1.0",
+      "sha256": "78738d1d12f9cc4019312466140394a2fb69c84587aa6cd0a20db3ac41eacaaa",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:221: invalid escape sequence near '\"\\^'"
+      }
+    },
+    {
+      "title": "Red Light Green Light",
+      "author": "ManofPixels",
+      "source_url": "https://manofpixels.itch.io/rlgl",
+      "cartname": "rlgl.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY-NC 4.0",
+      "sha256": "6ba9ae17cda1105fe08e5fd6c3306061e4d4b065a1e4fcf845b24ad01f8fedcb",
+      "direct_input_calls": true,
+      "result": {
+        "status": "returned",
+        "frames_received": 10,
+        "distinct_fingerprints": 1,
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 10,
+              "frames": 10,
+              "termination": "frame_limit"
+            }
+          },
+          "status": "completed"
+        },
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 4820
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 10,
+              "logical_bytes": 4820,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 13,
+          "logical_bytes_delivered": 40074,
+          "peak_batch_items": 10,
+          "peak_batch_logical_bytes": 33394,
+          "sink_count": 1,
+          "status": "complete"
+        }
+      }
+    },
+    {
+      "title": "Pico-8 Community Game 2022 (Beta)",
+      "author": "Pico-8 Community Games, icegoat9, Peteksi, lassehonnens, Kieron Scott, 2DArray, Yolwoocle, luchak",
+      "source_url": "https://pico-8-community-games.itch.io/pico8-community-game-2022-beta",
+      "cartname": "commgame_2022_beta.p8",
+      "code_license": "Unlicense",
+      "asset_license": "CC-BY 4.0",
+      "sha256": "5f094e15143982d6abf7f4594ec25bccaa11614f2724152c07301d011f305f6a",
+      "direct_input_calls": true,
+      "result": {
+        "status": "exception",
+        "phase": "execution",
+        "type": "ValueError",
+        "message": "PICO-8 Lua load failed: syntax error: [string \"cartridge\"]:1: malformed number near '0en'"
+      }
+    }
+  ]
+}
