@@ -6,10 +6,10 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 import subprocess
 import sys
 import time
-import tomllib
 from pathlib import Path
 
 
@@ -37,11 +37,17 @@ def git_value(root: Path, *args: str) -> str:
 
 
 def package_version(path: Path, section: str) -> str:
-    with path.open("rb") as manifest_file:
-        manifest = tomllib.load(manifest_file)
-    if section == "workspace":
-        return manifest["workspace"]["package"]["version"]
-    return manifest[section]["version"]
+    text = path.read_text(encoding="utf-8")
+    section_name = "workspace.package" if section == "workspace" else section
+    section_match = re.search(
+        rf"(?ms)^\[{re.escape(section_name)}\]\s*(.*?)(?=^\[|\Z)", text
+    )
+    if section_match is None:
+        raise SystemExit(f"{path} is missing [{section_name}]")
+    version_match = re.search(r'(?m)^version\s*=\s*"([^"]+)"\s*$', section_match.group(1))
+    if version_match is None:
+        raise SystemExit(f"{path} is missing a literal version in [{section_name}]")
+    return version_match.group(1)
 
 
 def verify_versions(machines_root: Path) -> None:
