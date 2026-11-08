@@ -2,14 +2,16 @@
 
 Updated: 2026-11-08
 
-Status: planning recorded; case-level matrix drafted, not frozen. Author
-approved three cleared workloads per machine for CE1 and resolved zero-item
-receipt semantics. The recorder-finalization/publication outcome split is
-implemented and build-checked; F8-F/F8-P failure triggers are not yet approved
-or run. No S1–S6 campaign trials have run under this plan.
+Status: case-level matrix drafted, not frozen. The scoped F1–F10 trigger and
+conformance checks have been exercised; F4 covers the fallible Rust emission
+path, F5 covers external process kill, and F10 does not claim silent-drop or
+expected-count detection. The recorder/evidence and finalization/publication
+outcome repairs are implemented and verified. E1 repetition trials and all
+S1–S6 campaign trials remain unrun under this plan. Author-approved CE1
+workload count and zero-item receipt semantics are recorded below.
 A separate exploratory TIC-80 cart screen was run on 2026-11-08; its results
 and rights limitations are recorded in
-`experiments/tic80-corpus-pilot/README.md`. Q2–Q6 are resolved. Q1 has a
+`experiments/tic80-corpus-pilot/README.md`. Q2–Q10 are resolved. Q1 has a
 provisional CHIP-8 cohort recommendation; public-corpus screening is preferred
 before the final freeze.
 
