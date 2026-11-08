@@ -1,0 +1,737 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/lib.rs (target/debug/deps/chip8_bundle-6ce49b78cbb7df4f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/contract.rs (target/debug/deps/contract-74d51f79128357d8)
+
+running 7 tests
+test contract_declares_typed_artifact_and_per_key_inputs ... ok
+test removed_whole_run_metric_capabilities_are_not_advertised ... ok
+test capability_outputs_and_receipts_survive_the_chip8_sink_wrapper ... ok
+test frame_capture_mode_is_independent_of_frame_completion_events ... ok
+test prepared_run_consumes_typed_schedule_and_emits_independent_frames ... ok
+test incompatible_snapshot_version_is_rejected_explicitly ... ok
+test session_snapshot_restores_resumable_execution_state ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running unittests src/lib.rs (target/debug/deps/chip8_core-2d7fec5f65147de2)
+
+running 78 tests
+test configuration::tests::named_quirk_presets_resolve ... ok
+test execution::tests::cpu_evaluation_rejects_cuda_only_frame_hash_capture ... ok
+test machine::coverage::tests::max_stack_depth ... ok
+test machine::coverage::tests::memory_write_tracking ... ok
+test machine::coverage::tests::opcode_class_counts ... ok
+test execution::tests::evaluate_loop_rom ... ok
+test machine::coverage::tests::records_unique_pcs_and_edges ... ok
+test execution::tests::evaluate_batch_returns_all ... ok
+test execution::tests::scripted_cycle_policy_uses_the_engine_effective_frame_rate ... ok
+test machine::instruction::tests::add_byte_no_carry ... ok
+test machine::coverage::tests::reset_clears_all ... ok
+test machine::instruction::tests::add_carry ... ok
+test machine::instruction::tests::add_i_vx ... ok
+test machine::instruction::tests::add_no_carry ... ok
+test machine::instruction::tests::and_regs ... ok
+test machine::instruction::tests::call_and_ret ... ok
+test machine::instruction::tests::cls_clears_display ... ok
+test machine::instruction::tests::bcd ... ok
+test machine::instruction::tests::draw_collision ... ok
+test machine::instruction::tests::draw_event_preserves_operand_coordinates_when_vf_is_an_operand ... ok
+test machine::instruction::tests::draw_uses_consecutive_sprite_bytes_for_each_selected_plane ... ok
+test machine::instruction::tests::dxy0_draws_a_real_16_by_16_sprite_in_lores ... ok
+test machine::instruction::tests::halt ... ok
+test machine::instruction::tests::jp_v0 ... ok
+test machine::instruction::tests::hires_toggle ... ok
+test machine::instruction::tests::jp_vx_schip ... ok
+test machine::instruction::tests::ld_st_vx ... ok
+test machine::instruction::tests::ld_i ... ok
+test machine::instruction::tests::ld_vx_dt ... ok
+test machine::instruction::tests::jump ... ok
+test machine::instruction::tests::ld_vx_vy ... ok
+test machine::instruction::tests::ld_dt_vx ... ok
+test machine::instruction::tests::or_regs ... ok
+test machine::instruction::tests::load_mem ... ok
+test machine::instruction::tests::rnd_masked ... ok
+test machine::instruction::tests::save_load_flags ... ok
+test machine::instruction::tests::scroll_down_clears_top ... ok
+test machine::instruction::tests::se_byte_no_skip ... ok
+test machine::instruction::tests::se_reg_skip ... ok
+test machine::instruction::tests::shl_vy_source ... ok
+test machine::instruction::tests::ld_vx_byte ... ok
+test machine::instruction::tests::se_byte_skip ... ok
+test machine::instruction::tests::shr_carries_out_bit ... ok
+test machine::instruction::tests::skip_key_pressed ... ok
+test machine::instruction::tests::shr_schip_mode ... ok
+test machine::instruction::tests::shr_vy_source ... ok
+test machine::instruction::tests::timers_decrement ... ok
+test machine::instruction::tests::wait_for_key ... ok
+test machine::instruction::tests::xochip_save_load_range ... ok
+test machine::instruction::tests::ld_font ... ok
+test machine::instruction::tests::skip_key_not_pressed ... ok
+test machine::instruction::tests::sne_byte_skip ... ok
+test machine::instruction::tests::sne_regs_skip ... ok
+test machine::instruction::tests::store_mem_inc_i ... ok
+test machine::instruction::tests::store_mem_no_inc_i ... ok
+test machine::instruction::tests::sub_borrow ... ok
+test machine::instruction::tests::sub_no_borrow ... ok
+test machine::randomness::tests::different_seeds_differ ... ok
+test machine::randomness::tests::restore_from_state ... ok
+test machine::instruction::tests::xor_regs ... ok
+test machine::randomness::tests::same_seed_same_sequence ... ok
+test machine::replay::tests::recorder_diff_press_release ... ok
+test machine::instruction::tests::vf_reset_on_or ... ok
+test machine::randomness::tests::zero_seed_does_not_get_stuck ... ok
+test machine::instruction::tests::xochip_audio_load_reports_a_memory_fault_instead_of_panicking ... ok
+test machine::instruction::tests::xochip_reverse_range_preserves_vx_to_vy_order ... ok
+test machine::replay::tests::playback_rejects_the_wrong_rom_before_running ... ok
+test machine::replay::tests::recorder_empty_when_no_changes ... ok
+test trace::tests::frame_coordinates_timer_deltas_and_draining_are_exact ... ok
+test trace::tests::key_wait_transitions_do_not_fabricate_instruction_opcodes ... ok
+test trace::tests::recording_is_disabled_by_default_and_non_interfering ... ok
+test trace::tests::reset_clears_records_and_preserves_recording_mode ... ok
+test trace::tests::captures_exact_before_and_after_for_every_memory_write_instruction ... ok
+test trace::tests::captures_fx65_and_draw_memory_reads ... ok
+test trace::tests::records_exact_context_native_event_boundaries_and_compact_state ... ok
+test machine::instruction::tests::subn_no_borrow ... ok
+test trace::tests::captures_xo_range_long_operand_and_audio_memory_reads ... ok
+test emulator::tests::ordinary_execution_discards_per_step_events_and_keeps_scalar_counts ... ok
+
+test result: ok. 78 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/artifact.rs (target/debug/deps/artifact-8babce24d9497c38)
+
+running 1 test
+test validates_native_rom_bounds ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/determinism.rs (target/debug/deps/determinism-2b4b13551757a2ec)
+
+running 1 test
+test repeated_native_runs_are_identical ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/emulation.rs (target/debug/deps/emulation-c98eb52b5a83d7f5)
+
+running 1 test
+test boots_and_steps_the_canonical_rom ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/snapshot.rs (target/debug/deps/snapshot-c40790b43f458821)
+
+running 1 test
+test native_snapshot_restores_machine_state ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/chip8_verifier-903d1f40a6aaf03d)
+
+running 72 tests
+test analysis::tests::clean_chip8_rom_no_validity_errors ... ok
+test analysis::tests::explicit_set_vf_emits_w008 ... ok
+test analysis::tests::extension_level_ordering ... ok
+test analysis::tests::hires_classifies_as_superchip ... ok
+test analysis::tests::jump_offset_emits_w004 ... ok
+test analysis::tests::mov_to_vf_emits_w008 ... ok
+test analysis::tests::or_followed_by_vf_read_emits_w006 ... ok
+test analysis::tests::plain_cls_jump_is_chip8 ... ok
+test analysis::tests::save_regs_followed_by_set_i_no_w003 ... ok
+test analysis::tests::save_regs_no_set_i_after_emits_w003 ... ok
+test analysis::tests::scroll_up_classifies_as_xochip ... ok
+test analysis::tests::set_i_long_classifies_as_xochip ... ok
+test analysis::tests::set_other_reg_no_w008 ... ok
+test analysis::tests::shift_x_ne_y_emits_w002 ... ok
+test analysis::tests::shift_x_eq_y_no_w002 ... ok
+test analysis::tests::syscall_emits_e008 ... ok
+test analysis::tests::unknown_opcode_emits_e004 ... ok
+test artifact::tests::empty_file_emits_e001 ... ok
+test artifact::tests::missing_file_emits_e000 ... ok
+test artifact::tests::even_clean_rom_no_diags ... ok
+test rules::disassembly::tests::decode_add_reg ... ok
+test artifact::tests::odd_length_emits_w001 ... ok
+test artifact::tests::rom_bytes_at_correct_offset ... ok
+test rules::disassembly::tests::decode_bcd ... ok
+test rules::disassembly::tests::decode_audio ... ok
+test rules::disassembly::tests::decode_big_font ... ok
+test rules::disassembly::tests::decode_call ... ok
+test rules::disassembly::tests::decode_load_range ... ok
+test rules::disassembly::tests::decode_load_regs ... ok
+test rules::disassembly::tests::decode_cls ... ok
+test rules::disassembly::tests::decode_lores ... ok
+test rules::disassembly::tests::decode_pitch ... ok
+test rules::disassembly::tests::decode_draw ... ok
+test rules::disassembly::tests::decode_plane ... ok
+test rules::disassembly::tests::decode_rand ... ok
+test rules::disassembly::tests::decode_ret ... ok
+test rules::disassembly::tests::clobbers_vf_on_vip_set ... ok
+test rules::disassembly::tests::decode_set_i ... ok
+test rules::disassembly::tests::decode_save_range ... ok
+test artifact::tests::xo_rom_above_classic_limit_loads_without_truncation ... ok
+test rules::disassembly::tests::decode_save_regs ... ok
+test rules::disassembly::tests::decode_skip_key ... ok
+test rules::disassembly::tests::decode_hires ... ok
+test rules::disassembly::tests::decode_jump ... ok
+test rules::disassembly::tests::is_not_skip_for_others ... ok
+test rules::disassembly::tests::decode_scroll_down ... ok
+test rules::disassembly::tests::disassemble_sequence ... ok
+test rules::disassembly::tests::is_skip_for_skip_ops ... ok
+test rules::disassembly::tests::decode_shr_vip_style ... ok
+test rules::disassembly::tests::unknown_opcode ... ok
+test rules::disassembly::tests::writes_vf_as_flag_set ... ok
+test structure::tests::call_and_ret_marks_return_site_reachable ... ok
+test rules::disassembly::tests::decode_skip_eq_imm ... ok
+test rules::disassembly::tests::decode_font_char ... ok
+test rules::disassembly::tests::next_addr_long ... ok
+test structure::tests::exit_terminates_reachability ... ok
+test rules::disassembly::tests::next_addr_normal ... ok
+test structure::tests::indirect_jump_emits_w005 ... ok
+test rules::disassembly::tests::decode_skip_no_key ... ok
+test structure::tests::jump_below_rom_base_emits_e005 ... ok
+test structure::tests::jump_beyond_rom_end_emits_e006 ... ok
+test rules::disassembly::tests::next_addr_preserves_the_end_of_xochip_memory_sentinel ... ok
+test structure::tests::jump_to_odd_addr_emits_e007 ... ok
+test structure::tests::single_jump_loop_is_fully_reachable ... ok
+test structure::tests::skip_instruction_both_branches_reachable ... ok
+test rules::disassembly::tests::decode_set_imm ... ok
+test rules::disassembly::tests::decode_scroll_up ... ok
+test structure::tests::call_discovered_after_ret_still_marks_return_site_reachable ... ok
+test structure::tests::dead_code_after_unconditional_jump ... ok
+test rules::disassembly::tests::decode_set_i_long ... ok
+test artifact::tests::too_large_emits_e002 ... ok
+test structure::tests::call_depth_is_independent_of_hash_iteration_order ... ok
+
+test result: ok. 72 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/analysis.rs (target/debug/deps/analysis-816167476a0854ad)
+
+running 1 test
+test analyzes_the_canonical_rom_without_execution ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/verification.rs (target/debug/deps/verification-8f0457c205a7ad77)
+
+running 2 tests
+test rejects_an_empty_artifact_with_a_diagnostic ... ok
+test accepts_xochip_roms_and_long_i_above_the_classic_ceiling ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_chip8-d78638473c58630f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_machine_conformance-e607f40d7a3b96af)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/artifact_admission.rs (target/debug/deps/artifact_admission-05220d831f832332)
+
+running 6 tests
+test declared_alignment_is_enforced_without_inventing_byte_alignment_failures ... ok
+test a_different_machine_contract_cannot_prepare_the_artifact_identity ... ok
+test every_bundle_rejects_artifacts_above_its_declared_hard_limit ... ok
+test malformed_and_below_minimum_artifacts_fail_during_preparation ... ok
+test structured_formats_reject_unsupported_artifacts_and_raw_domains_remain_total ... ok
+test named_fixtures_prepare_with_the_selected_bundle_schema ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/boundedness.rs (target/debug/deps/boundedness-7a88dd4536e69123)
+
+running 4 tests
+test native_event_budget_is_hard_and_channel_local_for_every_bundle ... ok
+test normalized_event_budget_is_hard_and_does_not_change_machine_outcome ... ok
+test frame_budget_rejects_an_oversized_record_without_overrunning_the_channel ... ok
+test snapshot_budget_is_independent_and_hard_for_every_bundle ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/configuration_limits.rs (target/debug/deps/configuration_limits-602e74b33210ee69)
+
+running 6 tests
+test wrong_configuration_schema_fails_during_preparation_for_every_bundle ... ok
+test unknown_fields_wrong_types_and_out_of_range_values_fail_during_preparation ... ok
+test bundle_limit_catalogs_are_explicitly_empty_and_reject_nonempty_requests ... ok
+test common_execution_controls_are_preserved_and_identity_bearing ... ok
+test defaults_and_partial_submissions_resolve_canonically_for_every_bundle ... ok
+test declared_step_limits_bound_execution_in_each_bundle_step_domain ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/conformance.rs (target/debug/deps/conformance-956904ad22b26987)
+
+running 4 tests
+test required_unknown_capability_fails_before_execution_preparation ... ok
+test optional_unknown_capability_is_explicitly_unavailable ... ok
+test observation_changes_do_not_change_prepared_execution_identity ... ok
+test one_machine_independent_runner_prepares_and_executes_all_clean_core_bundles ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/derived_capabilities.rs (target/debug/deps/derived_capabilities-7962f4045cf02dcf)
+
+running 4 tests
+test catalogs_declare_exact_bounded_reducer_prerequisites ... ok
+test every_published_capability_produces_one_canonical_output_and_receipt ... ok
+test visual_summaries_are_invariant_between_hash_and_full_frame_capture ... ok
+test online_reducer_outputs_remain_fixed_shape_over_longer_runs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.78s
+
+     Running tests/durable_publication.rs (target/debug/deps/durable_publication-ab98d7fc4208de6e)
+
+running 2 tests
+test file_backed_lifecycle_does_not_require_whole_run_materialization ... ok
+test all_release_bundles_publish_selective_channels_with_separate_receipts_and_round_trips ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s
+
+     Running tests/frames_continuation.rs (target/debug/deps/frames_continuation-9ccf4b3a6558ea5c)
+
+running 3 tests
+test frame_artifacts_are_independent_of_normalized_frame_events_for_release_bundles ... ok
+test incompatible_snapshot_versions_are_rejected_for_all_bundles ... ok
+test state_only_snapshots_continue_in_a_fresh_session_for_all_bundles ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+
+     Running tests/graphics_activity.rs (target/debug/deps/graphics_activity-614baf9203b08802)
+
+running 4 tests
+test shared_schema_counts_api_calls_not_pixels_or_initialization_or_reads ... ok
+test graphics_uses_normalized_budget_without_redefining_machine_success ... ok
+test selectors_are_independent_from_frame_completion_and_frame_artifacts ... ok
+test continuation_does_not_retain_or_recount_historical_graphics ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/layout.rs (target/debug/deps/layout-2374e4dc4f81a429)
+
+running 2 tests
+test each_publication_bundle_has_the_expected_release_crates_and_fixture ... ok
+test publication_layout_names_the_three_release_bundles ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/maturity.rs (target/debug/deps/maturity-606bfc9e657bc4c5)
+
+running 5 tests
+test current_release_gate_accepts_the_verified_publication_inventory ... ok
+test release_gate_accepts_only_an_inventory_without_open_entries ... ok
+test release_gate_rejects_empty_duplicate_unknown_and_evidence_free_inventories ... ok
+test maturity_inventory_names_every_bundle_and_dimension_once ... ok
+test verified_entries_always_name_their_evidence ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/observation_channels.rs (target/debug/deps/observation_channels-5833ac4dfc70cf3a)
+
+running 5 tests
+test required_missing_prerequisites_fail_and_optional_roots_downgrade ... ok
+test native_capabilities_require_their_exact_selected_kind_and_schema ... ok
+test semantic_capabilities_require_every_declared_event_kind_and_frame_mode ... ok
+test shared_transitive_dependencies_resolve_once_without_optional_escalation ... ok
+test requested_and_omitted_channels_are_independent_for_every_bundle ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/paper_workloads.rs (target/debug/deps/paper_workloads-02e958795af0cdbd)
+
+running 1 test
+test public_zero_input_cartridges_reach_the_same_600_frame_observation_contract ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.53s
+
+     Running tests/prohibited_surface.rs (target/debug/deps/prohibited_surface-a33c1f26e495a893)
+
+running 1 test
+test publication_sources_exclude_removed_contract_surfaces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/registry.rs (target/debug/deps/registry-f61aa46f3eb7f8ac)
+
+running 3 tests
+test registry_rejects_duplicate_publication_bundle_ids ... ok
+test registry_contains_only_the_three_release_bundles ... ok
+test publication_bundles_have_slim_contracts_and_canonical_catalogs ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/runtime_activity.rs (target/debug/deps/runtime_activity-c52828cec74ef52c)
+
+running 4 tests
+test input_api_activity_is_selective_bounded_and_uses_the_shared_schema ... ok
+test exact_selectors_have_shared_schemas_and_only_real_runtime_activity ... ok
+test continuation_observes_only_new_frames_and_budget_failure_is_evidence_only ... ok
+test selected_activity_changes_neither_frame_content_nor_resumable_machine_state ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running tests/runtime_inputs.rs (target/debug/deps/runtime_inputs-f60f27410bb4e1b2)
+
+running 5 tests
+test live_delivery_is_advertised_and_scoped_only_by_chip8 ... ok
+test invalid_schedules_fail_during_preparation_for_every_bundle ... ok
+test schedules_resolve_by_ordinal_independently_of_caller_order ... ok
+test enabling_the_value_channel_without_a_selector_emits_no_values ... ok
+test application_events_and_selected_values_share_source_identity ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_pico8-9f273872e6cd6295)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_tic80-d0485cfa95afb21e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/pico8_bundle-2efe7c99a1c5a37c)
+
+running 1 test
+test emulator_session::tests::disabled_native_evidence_never_constructs_its_payload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/preparation.rs (target/debug/deps/preparation-be6b5bbcc4455585)
+
+running 10 tests
+test invalid_artifact_fails_during_preparation ... ok
+test invalid_configuration_fails_during_preparation ... ok
+test undeclared_input_fails_during_preparation ... ok
+test contract_and_preparation_are_clean ... ok
+test input_value_capability_receives_only_negotiated_values ... ok
+test prepared_execution_uses_the_negotiated_contract ... ok
+test native_execution_summary_requires_and_produces_native_evidence ... ok
+test full_frame_capture_uses_the_typed_full_representation ... ok
+test frame_artifacts_are_independent_of_frame_events ... ok
+test normalized_visual_capability_receives_both_selected_channels ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/services.rs (target/debug/deps/services-70185dae9c68a48a)
+
+running 4 tests
+test malformed_artifacts_are_reported_at_the_public_service_boundary ... ok
+test static_services_compile_but_never_execute_cartridge_code ... ok
+test unsupported_apis_and_numeric_semantics_remain_explicit ... ok
+test public_bundle_exposes_native_analyzer_and_verifier ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/snapshot.rs (target/debug/deps/snapshot-2d6e972d5ca6f5eb)
+
+running 3 tests
+test session_snapshot_contains_state_but_no_observation_history ... ok
+test incompatible_snapshot_version_is_rejected_explicitly ... ok
+test state_only_snapshot_restores_and_continues_without_history ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests src/lib.rs (target/debug/deps/pico8_core-9ad378ead50e1d0d)
+
+running 29 tests
+test machine::cartridge::tests::binary_p8scii_source_is_not_rejected_as_utf8 ... ok
+test machine::cartridge::tests::empty_text_cart_receives_documented_default_audio_data ... ok
+test machine::cartridge::tests::invalid_gfx_characters_decode_as_colour_zero ... ok
+test machine::cartridge::tests::explicit_rom_format_resolves_magic_prefix_collisions ... ok
+test machine::cartridge::tests::legacy_compressed_code_is_supported ... ok
+test machine::cartridge::tests::malformed_pxa_returns_error_instead_of_unwinding ... ok
+test machine::cartridge::tests::parses_minimal_text_cart_and_materializes_assets ... ok
+test machine::cartridge::tests::rejects_non_cartridge_bytes ... ok
+test machine::cartridge::tests::png_requires_documented_carrier_geometry ... ok
+test machine::cartridge::tests::screen_pixels_use_pico8_nibble_order ... ok
+test machine::cartridge::tests::text_sfx_and_music_convert_to_memory_layout ... ok
+test machine::cartridge::tests::text_source_limit_counts_characters_not_utf8_bytes ... ok
+test machine::lua_runtime::tests::runtime_is_send ... ok
+test machine::lua_runtime::tests::snapshot_has_documented_ram_size ... ok
+test machine::lua_runtime::tests::instruction_hook_terminates_runaway_cart ... ok
+test machine::lua_runtime::tests::executes_callbacks_and_draws_into_screen_memory ... ok
+test machine::lua_runtime::tests::scalar_counters_match_snapshot_without_copying_machine_state ... ok
+test machine::lua_runtime::tests::sandbox_removes_host_access_alternate_rng_and_catchable_budget_paths ... ok
+test machine::lua_runtime::tests::update60_time_and_stat_use_sixty_hertz ... ok
+test machine::lua_runtime::tests::failed_frame_discards_rng_activity_and_replaced_callbacks_are_counted_at_dispatch ... ok
+test machine::lua_runtime::tests::palette_and_transparency_affect_sprite_blits_deterministically ... ok
+test machine::lua_runtime::tests::input_api_activity_counts_successful_queries_only_when_selected ... ok
+test machine::lua_runtime::tests::lua_function_activity_counts_lua_calls_only_when_selected ... ok
+test machine::lua_runtime::tests::input_and_seeded_randomness_are_deterministic ... ok
+test machine::lua_runtime::tests::callback_globals_can_be_replaced_during_execution ... ok
+test machine::lua_runtime::tests::huge_native_ranges_are_bounded_to_machine_memory_and_display ... ok
+test machine::lua_runtime::tests::activity_is_optional_fixed_size_and_does_not_change_rng_or_machine_state ... ok
+test machine::cartridge::tests::source_png_and_rom_fixtures_decode_equivalently ... ok
+test machine::cartridge::tests::png_hash_mismatch_is_rejected ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/artifact.rs (target/debug/deps/artifact-feb6b32cff7d5410)
+
+running 1 test
+test loads_the_native_text_cartridge ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/determinism.rs (target/debug/deps/determinism-0fdbba5c75570336)
+
+running 1 test
+test repeated_native_runs_are_identical ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/emulation.rs (target/debug/deps/emulation-d76e543b00d39bb1)
+
+running 1 test
+test executes_a_native_callback_frame ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/snapshot.rs (target/debug/deps/snapshot-70f16e04ec09bd07)
+
+running 1 test
+test native_snapshot_captures_complete_visible_machine_state ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/pico8_verifier-76ea365c28077673)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/analysis.rs (target/debug/deps/analysis-7fd98174ae1f1bf4)
+
+running 1 test
+test analyzes_native_smoke_cartridge ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/verification.rs (target/debug/deps/verification-2ddd6eead437d7e9)
+
+running 1 test
+test invalid_artifact_is_a_native_error_report ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/tic80_bundle-a5496a2ee0da036f)
+
+running 1 test
+test emulator_session::tests::disabled_native_evidence_never_constructs_its_payload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/preparation.rs (target/debug/deps/preparation-8bcb47095265f060)
+
+running 10 tests
+test invalid_artifact_fails_during_preparation ... ok
+test invalid_configuration_fails_during_preparation ... ok
+test undeclared_input_fails_during_preparation ... ok
+test contract_and_preparation_are_clean ... ok
+test prepared_execution_uses_the_negotiated_contract ... ok
+test native_trace_summary_requires_and_produces_native_evidence ... ok
+test input_value_capability_receives_the_selected_gamepad_value ... ok
+test full_frame_capture_uses_the_typed_full_representation ... ok
+test frame_artifacts_are_independent_of_frame_events ... ok
+test normalized_visual_capability_receives_frame_input_and_trace_events ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/services.rs (target/debug/deps/services-d2140e7b0e314757)
+
+running 5 tests
+test malformed_artifacts_are_reported_at_the_public_service_boundary ... ok
+test syntactically_invalid_lua_is_rejected_without_execution ... ok
+test static_services_compile_but_never_execute_cartridge_code ... ok
+test unsupported_languages_and_runtime_configuration_fail_explicitly ... ok
+test public_bundle_exposes_native_analyzer_and_verifier ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/snapshot.rs (target/debug/deps/snapshot-1045e59f83e31c1f)
+
+running 3 tests
+test session_snapshot_contains_state_but_no_observation_history ... ok
+test incompatible_snapshot_version_is_rejected_explicitly ... ok
+test state_only_snapshot_restores_and_continues_without_history ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running unittests src/lib.rs (target/debug/deps/tic80_core-dfbed3d796cf8e9b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/artifact.rs (target/debug/deps/artifact-931fa1f7e65b4c4d)
+
+running 3 tests
+test parses_code_and_asset_chunks ... ok
+test parses_the_upstream_binary_cartridge ... ok
+test cartridge_and_decompressed_source_limits_fail_closed ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/determinism.rs (target/debug/deps/determinism-1cb3384ef46ed862)
+
+running 4 tests
+test explicit_reseeding_preserves_lua_arguments_results_and_cached_aliases ... ok
+test host_entropy_reseeding_fails_explicitly_during_loading_boot_or_frame ... ok
+test repeated_native_runs_are_identical ... ok
+test configured_rng_seed_covers_loading_boot_frames_and_continuation ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/emulation.rs (target/debug/deps/emulation-ffa1d58f608ce431)
+
+running 24 tests
+test boots_the_official_upstream_lua_demo ... ok
+test failed_callbacks_do_not_leak_rng_counts_into_the_next_frame ... ok
+test gamepad_queries_match_held_pressed_and_repeat_semantics ... ok
+test clipped_clear_maps_color_once_and_negative_colorkey_keeps_color_fifteen ... ok
+test bdr_runs_after_tic_and_selects_palette_per_display_scanline ... ok
+test lua_function_activity_counts_lua_functions_but_not_host_api_bindings ... ok
+test tic_and_bdr_globals_can_be_replaced_between_frames ... ok
+test input_api_activity_counts_successful_queries_only_when_selected ... ok
+test ttri_rejects_depth_parameters_until_depth_buffer_semantics_are_implemented ... ok
+test trace_selection_preserves_text_validation_coercion_and_counts ... ok
+test palette_map_swaps_drawn_colors_and_stays_local_to_each_vram_bank ... ok
+test map_remap_receives_cell_coordinates_and_applies_tile_transforms ... ok
+test map_wraps_lookup_and_callback_coordinates_at_native_boundaries ... ok
+test graphics_primitives_match_pixel_coordinates_clipping_and_default_clear ... ok
+test sprites_maps_and_video_banks_match_memory_and_composition_semantics ... ok
+test executes_a_real_cartridge_frame_and_exposes_native_events_and_rgba ... ok
+test sprite_scale_flip_rotation_and_composite_layout_match_reference ... ok
+test textured_triangles_sample_image_map_and_other_vbank_with_clip_and_colorkey ... ok
+test instruction_and_memory_limits_fail_closed ... ok
+test activity_counts_real_dispatch_and_rng_calls_without_changing_execution ... ok
+test graphics_counter_is_opt_in_per_frame_and_includes_border_and_nested_api_calls ... ok
+test selecting_native_events_avoids_unrequested_objects_without_changing_execution ... ok
+test circle_spans_match_pixel_coverage_with_clipping_palette_maps_and_both_video_banks ... ok
+test packed_rectangles_match_pixel_writes_with_clipping_palette_maps_and_both_video_banks ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running tests/snapshot.rs (target/debug/deps/snapshot-212a2c345a3ad6dc)
+
+running 2 tests
+test native_snapshot_restores_hidden_lua_state_by_replay ... ok
+test directly_deserialized_native_snapshot_rejects_unknown_fields ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/tic80_verifier-9d560d7e20b6df81)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/analysis.rs (target/debug/deps/analysis-d552e5e5273eb3c8)
+
+running 1 test
+test analyzes_the_upstream_tic_cartridge_without_executing_it ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/verification.rs (target/debug/deps/verification-c5d76f54302891a2)
+
+running 5 tests
+test rejects_non_lua_language_without_executing_the_cart ... ok
+test rejects_lua_that_names_tic_but_does_not_compile ... ok
+test accepts_conventional_top_level_declaration_and_assignment_without_execution ... ok
+test quoted_and_commented_near_matches_are_not_callback_evidence ... ok
+test local_nested_table_and_malformed_declarations_are_not_global_callback_evidence ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests chip8_bundle
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests chip8_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests chip8_verifier
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_chip8
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_machine_conformance
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_pico8
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_tic80
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests pico8_bundle
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests pico8_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests pico8_verifier
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tic80_bundle
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tic80_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tic80_verifier
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

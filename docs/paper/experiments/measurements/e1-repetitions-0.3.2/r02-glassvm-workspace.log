@@ -1,0 +1,208 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/debug/deps/glassvm-dab0cf18a810f169)
+
+running 8 tests
+test tests::canonical_provider_rejects_missing_execute_operation ... ok
+test tests::canonical_provider_requires_both_canonical_operations ... ok
+test tests::execution_result_accepts_runs_without_a_requested_file_recorder ... ok
+test tests::execution_result_keeps_all_outcome_domains_separate ... ok
+test tests::execution_result_rejects_publication_without_finalized_recorder ... ok
+test tests::legacy_protocol_name_is_rejected_without_fallback ... ok
+test tests::wrong_protocol_version_is_rejected ... ok
+test tests::zero_providers_is_valid ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_core-2275912d84254214)
+
+running 72 tests
+test canonical::tests::bytes_text_and_arrays_have_distinct_cbor_shapes ... ok
+test bundle::tests::slim_machine_contract_validates_artifact_inputs_and_live_service_consistency ... ok
+test canonical::tests::canonical_maps_use_encoded_key_length_then_bytes ... ok
+test canonical::tests::floats_are_binary64_signed_zero_is_normalized_and_nonfinite_values_fail ... ok
+test canonical::tests::schema_refs_encode_explicit_id_and_version_fields ... ok
+test canonical::tests::signed_integer_boundaries_use_canonical_negative_encoding ... ok
+test configuration::tests::configuration_resolves_defaults_and_rejects_unknown_or_invalid_fields ... ok
+test configuration::tests::execution_limits_are_declared_validated_and_canonicalized ... ok
+test configuration::tests::explicit_default_and_omission_produce_equal_prepared_configuration ... ok
+test emission::tests::allow_incomplete_skips_overflow_and_emits_receipt ... ok
+test emission::tests::capability_output_bytes_are_hard_budgeted_before_forwarding ... ok
+test emission::tests::budget_fail_produces_failed_receipt_without_forwarding_overflow ... ok
+test emission::tests::frame_budget_is_accounted_independently_from_normalized_events ... ok
+test emission::tests::input_value_budget_is_accounted_on_its_own_channel ... ok
+test emission::tests::published_receipt_preserves_capabilities_and_rejects_duplicates ... ok
+test emission::tests::receipt_publication_failure_is_reflected_in_sink_accounting ... ok
+test emission::tests::rust_sink_event_error_is_recorded_as_evidence_failure ... ok
+test emission::tests::snapshot_envelope_detects_length_payload_and_schema_tampering ... ok
+test identity::tests::canonical_segmented_ids_accept_only_the_locked_grammar ... ok
+test identity::tests::canonical_segmented_ids_reject_noncanonical_deserialization ... ok
+test event::tests::event_round_trip_preserves_envelope_and_extensions ... ok
+test identity::tests::live_input_instances_start_at_zero_and_allocate_monotonically ... ok
+test input::tests::coordinate_descriptors_allow_frame_without_step ... ok
+test input::tests::coordinate_policies_require_matching_versioned_boundaries ... ok
+test input::tests::empty_schedule_is_an_explicit_valid_no_input_contract ... ok
+test input::tests::family_membership_is_explicit_and_resolves_in_canonical_id_order ... ok
+test input::tests::input_catalog_rejects_duplicate_ids_and_empty_delivery_modes ... ok
+test input::tests::schedule_shape_rejects_duplicate_ordinals_and_malformed_payloads ... ok
+test input::tests::input_value_evidence_is_schema_qualified_and_validated ... ok
+test input::tests::schedules_reject_duplicate_ordinals_and_payload_schema_mismatches ... ok
+test input::tests::schedules_resolve_by_ordinal_not_caller_insertion_order ... ok
+test normalizer::tests::normalizer_marks_missing_optional_capabilities_without_failing_evidence ... ok
+test normalizer::tests::normalizer_capability_receipts_reach_the_budgeted_evidence_receipt ... ok
+test normalizer::tests::normalizer_failure_is_reflected_in_the_evidence_receipt ... ok
+test normalizer::tests::normalizer_observes_borrowed_emissions_and_emits_at_finalize ... ok
+test live_input::tests::accepted_inputs_allocate_ids_at_zero_and_use_actual_coordinates ... ok
+test live_input::tests::admission_rejects_non_live_inputs_and_schema_mismatches_without_consuming_ids ... ok
+test live_input::tests::coordinate_mismatch_is_rejected_before_instance_allocation ... ok
+test observation_contract::tests::complete_normalized_requires_all_events ... ok
+test observation::tests::envelope_validation_remains_fail_closed ... ok
+test normalizer::tests::prepared_optional_downgrade_reaches_the_evidence_receipt ... ok
+test observation::tests::canonical_observation_request_round_trips_inside_execution_request ... ok
+test observation_contract::tests::native_kinds_cannot_be_requested_when_native_channel_is_disabled ... ok
+test normalizer::tests::normalizer_receives_only_the_explicit_final_snapshot ... ok
+test live_input::tests::service_binding_rejects_live_runs_without_a_capability_but_allows_scheduled_only_runs ... ok
+test observation_contract::tests::oracle_ready_profile_requests_explicit_validation_inputs ... ok
+test observation::tests::execution_request_rejects_unknown_observation_fields ... ok
+test observation_contract::tests::prepared_observation_does_not_treat_periodic_snapshots_as_final_state_access ... ok
+test observation_contract::tests::prepared_observation_expands_input_families_to_sorted_concrete_ids ... ok
+test observation_contract::tests::named_profiles_expand_to_valid_requests ... ok
+test observation_contract::tests::prepared_observation_marks_optional_missing_event_kind_with_reason ... ok
+test observation_contract::tests::prepared_observation_rejects_missing_required_capability_before_execution ... ok
+test observation_contract::tests::prepared_observation_marks_optional_missing_input_selector_unavailable ... ok
+test observation_contract::tests::prepared_observation_rejects_missing_required_normalized_event_kind ... ok
+test observation_contract::tests::prepared_observation_merges_shared_dependency_requirement_strength ... ok
+test observation_contract::tests::prepared_observation_merges_shared_prerequisite_strength ... ok
+test observation_contract::tests::prepared_observation_propagates_optional_transitive_dependency_failure ... ok
+test observation_contract::tests::prepared_observation_rejects_missing_required_native_event_kind ... ok
+test observation_contract::tests::summary_request_is_minimal_and_round_trips ... ok
+test observation_contract::tests::prepared_observation_downgrades_optional_capability_with_unsatisfied_frame_dependency ... ok
+test observation_contract::tests::prepared_observation_resolves_capability_and_native_dependency_closure ... ok
+test preparation::tests::schedule_entries_are_identity_ordered_by_ordinal ... ok
+test observation_contract::tests::prepared_observation_resolves_exact_native_frame_snapshot_and_final_state_prerequisites ... ok
+test preparation::tests::invalid_artifact_and_configuration_fail_before_preparation ... ok
+test observation_contract::tests::prepared_observation_keeps_missing_optional_capability_explicitly_unavailable ... ok
+test observation_contract::tests::prepared_observation_rejects_missing_required_snapshot_and_final_state_access ... ok
+test replay::tests::event_projection_fingerprint_is_run_neutral_and_incremental ... ok
+test preparation::tests::execution_request_provenance_is_the_identity_computed_by_preparation ... ok
+test preparation::tests::preparation_rejects_unknown_inputs_invalid_coordinates_and_bad_payloads ... ok
+test observation_contract::tests::prepared_observation_rejects_required_input_value_channel_without_selection ... ok
+test preparation::tests::preparation_resolves_defaults_schedule_interface_and_empty_limits ... ok
+test preparation::tests::identity_excludes_observation_and_changes_for_execution_inputs ... ok
+
+test result: ok. 72 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/prohibited_surface.rs (target/debug/deps/prohibited_surface-55f5f4c71c142498)
+
+running 1 test
+test publication_sources_exclude_removed_contract_surfaces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_normalizer_contract-4d383dc44227bb32)
+
+running 5 tests
+test tests::capability_ids_use_canonical_segmented_names ... ok
+test tests::catalogs_reject_duplicate_or_malformed_capabilities ... ok
+test tests::input_value_selectors_reject_duplicates_and_noncanonical_order ... ok
+test tests::input_value_selectors_require_nonempty_canonical_unique_lists ... ok
+test tests::requests_and_catalogs_round_trip ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_query-da17ebdc35cacb79)
+
+running 14 tests
+test tests::capability_evidence_view_rejects_duplicate_receipt_ids ... ok
+test tests::control_target_mismatch_is_a_boundary_and_never_scans_ahead ... ok
+test tests::dynamic_cfg_uses_observed_anchors_and_control_only_as_classification ... ok
+test tests::explicit_causes_must_be_prior_and_in_trace ... ok
+test tests::capability_evidence_view_keeps_outputs_and_receipts_separate ... ok
+test tests::extension_kinds_remain_distinct_in_filtered_counts ... ok
+test tests::filters_validate_ranges_spaces_and_optional_coordinates ... ok
+test tests::last_writer_is_width_insensitive_ordered_and_space_safe ... ok
+test tests::partial_traces_do_not_invent_last_writer_edges ... ok
+test tests::state_diffs_preserve_write_order_coordinates_and_null ... ok
+test tests::query_engine_projects_one_trace_consistently ... ok
+test tests::typed_queries_round_trip_deterministically ... ok
+test tests::temporal_graph_preserves_gaps_missing_coordinates_and_regressions ... ok
+test tests::validation_rejects_wrong_schema_identity_and_order_but_accepts_gaps ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_recorder-c0e9fd1873708a57)
+
+running 29 tests
+test python_sink::batching_tests::batches_respect_item_bound_and_preserve_order ... ok
+test python_sink::batching_tests::capability_callbacks_flush_pending_emissions_first ... ok
+test python_sink::batching_tests::byte_limit_flushes_and_oversized_valid_record_is_singleton ... ok
+test tests::durable_capability_output_requires_canonical_id ... ok
+test python_sink::batching_tests::invalid_zero_batch_limits_are_rejected ... ok
+test tests::evidence_failure_does_not_make_a_persisted_recorder_failure ... ok
+test python_sink::batching_tests::every_core_emission_maps_to_its_typed_owned_record ... ok
+test tests::finalization_requires_published_evidence_receipt ... ok
+test tests::hard_segment_limits_are_validated_as_bounds ... ok
+test tests::python_execution_serializes_machine_evidence_sink_recorder_and_publication_separately ... ok
+test tests::file_segment_rejects_record_larger_than_block_limit ... ok
+test tests::input_value_evidence_obeys_hard_recorder_limits ... ok
+test tests::file_segment_without_footer_is_not_read_as_complete ... ok
+test tests::recorder_creation_failure_does_not_interrupt_execution_or_evidence_delivery ... ok
+test tests::file_run_returns_separate_partial_outcomes_when_execution_fails ... ok
+test tests::file_segment_round_trip_streams_records_and_footer ... ok
+test tests::file_run_without_evidence_receipt_cannot_publish ... ok
+test tests::file_segment_round_trip_preserves_input_value_payloads ... ok
+test tests::interrupted_file_run_stays_staged_and_is_not_resumed ... ok
+test tests::recorder_write_limit_failure_does_not_interrupt_execution_or_evidence_delivery ... ok
+test tests::recorder_finalization_failure_keeps_execution_evidence_and_partial_staging_distinct ... ok
+test tests::python_callback_failures_preserve_independent_outcomes_and_staging ... ok
+test tests::file_run_publishes_input_value_channel_and_round_trips_it ... ok
+test tests::requested_frame_channel_with_zero_artifacts_is_complete_without_claiming_occurrence ... ok
+test tests::file_run_can_publish_complete_storage_for_failed_evidence ... ok
+test tests::public_python_consumer_can_trigger_publication_collision_after_finalization ... ok
+test tests::file_run_publishes_multichannel_segments_by_atomic_rename ... ok
+test tests::evidence_budget_fail_and_allow_incomplete_have_distinct_file_run_outcomes ... ok
+test tests::python_and_reference_recorder_sinks_coexist_in_all_supported_modes ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running unittests src/lib.rs (target/debug/deps/glassvm_registry-2362f6a05b3262bb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_normalizer_contract
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_query
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_recorder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests glassvm_registry
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

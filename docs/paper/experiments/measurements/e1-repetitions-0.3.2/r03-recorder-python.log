@@ -1,0 +1,50 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/debug/deps/glassvm_recorder-aae9c32b2b4469f6)
+
+running 37 tests
+test python_sink::batching_tests::batches_respect_item_bound_and_preserve_order ... ok
+test python_sink::batching_tests::capability_callbacks_flush_pending_emissions_first ... ok
+test python_sink::batching_tests::byte_limit_flushes_and_oversized_valid_record_is_singleton ... ok
+test python_sink::batching_tests::invalid_zero_batch_limits_are_rejected ... ok
+test python_sink::batching_tests::every_core_emission_maps_to_its_typed_owned_record ... ok
+test tests::durable_capability_output_requires_canonical_id ... ok
+test tests::evidence_failure_does_not_make_a_persisted_recorder_failure ... ok
+test tests::finalization_requires_published_evidence_receipt ... ok
+test tests::hard_segment_limits_are_validated_as_bounds ... ok
+test tests::python_execution_serializes_machine_evidence_sink_recorder_and_publication_separately ... ok
+test tests::file_segment_rejects_record_larger_than_block_limit ... ok
+test tests::input_value_evidence_obeys_hard_recorder_limits ... ok
+test tests::file_segment_without_footer_is_not_read_as_complete ... ok
+test tests::recorder_creation_failure_does_not_interrupt_execution_or_evidence_delivery ... ok
+test tests::file_segment_round_trip_streams_records_and_footer ... ok
+test tests::file_segment_round_trip_preserves_input_value_payloads ... ok
+test tests::file_run_returns_separate_partial_outcomes_when_execution_fails ... ok
+test tests::file_run_without_evidence_receipt_cannot_publish ... ok
+test tests::interrupted_file_run_stays_staged_and_is_not_resumed ... ok
+test python_sink::batching_tests::bounded_bridge_exposes_all_channels_to_a_third_party_style_consumer ... ok
+test python_sink::batching_tests::python_callback_exception_is_reported_with_identity_and_no_retry ... ok
+test python_sink::batching_tests::python_callbacks_keep_emissions_outputs_and_receipts_distinct ... ok
+test python_sink::batching_tests::python_fanout_reuses_one_owned_batch_value ... ok
+test python_sink::batching_tests::batching_adapter_preserves_nested_python_sink_identity ... ok
+test tests::recorder_write_limit_failure_does_not_interrupt_execution_or_evidence_delivery ... ok
+test tests::actual_python_callback_failure_is_not_mislabeled_as_machine_or_recorder_failure ... ok
+test tests::recorder_finalization_failure_keeps_execution_evidence_and_partial_staging_distinct ... ok
+test tests::external_process_kill_before_receipt_leaves_unpublished_staging_only ... ok
+test tests::python_callback_failures_preserve_independent_outcomes_and_staging ... ok
+test tests::public_python_consumer_can_trigger_publication_collision_after_finalization ... ok
+test tests::file_run_can_publish_complete_storage_for_failed_evidence ... ok
+test tests::requested_frame_channel_with_zero_artifacts_is_complete_without_claiming_occurrence ... ok
+test tests::file_run_publishes_input_value_channel_and_round_trips_it ... ok
+test tests::evidence_budget_fail_and_allow_incomplete_have_distinct_file_run_outcomes ... ok
+test tests::actual_python_consumer_coexists_with_published_reference_recorder ... ok
+test tests::file_run_publishes_multichannel_segments_by_atomic_rename ... ok
+test tests::python_and_reference_recorder_sinks_coexist_in_all_supported_modes ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+   Doc-tests glassvm_recorder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

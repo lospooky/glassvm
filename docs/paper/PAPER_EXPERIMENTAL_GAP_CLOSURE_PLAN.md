@@ -6,9 +6,11 @@ Status: case-level matrix drafted, not frozen. The scoped F1–F10 trigger and
 conformance checks have been exercised; F4 covers the fallible Rust emission
 path, F5 covers external process kill, and F10 does not claim silent-drop or
 expected-count detection. The recorder/evidence and finalization/publication
-outcome repairs are implemented and verified. E1 repetition trials and all
-S1–S6 campaign trials remain unrun under this plan. Author-approved CE1
-workload count and zero-item receipt semantics are recorded below.
+outcome repairs are implemented and verified. Three repeated source-level E1
+fault/accounting and machine-conformance suite runs pass at package version
+0.3.2; these are test repetitions, not new measured workload trials. S1–S6
+campaign trials remain unrun under this plan. Author-approved CE1 workload
+count and zero-item receipt semantics are recorded below.
 A separate exploratory TIC-80 cart screen was run on 2026-11-08; its results
 and rights limitations are recorded in
 `experiments/tic80-corpus-pilot/README.md`. Q2–Q10 are resolved. Q1 has a
@@ -113,20 +115,27 @@ delivery, recorder finalization, and publication.
 
 | Case | Coverage | Status |
 | --- | --- | --- |
-| F1 | Required unsupported capability and unsupported evidence kinds | Existing core preparation tests verified; E1 repetitions pending |
-| F2 | Optional capability with an unsatisfied prerequisite | Existing core preparation tests verified; E1 repetitions pending |
-| F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Existing core conformance tests verified; E1 repetitions pending |
-| F3 | Python callback exception at a deterministic boundary | Existing recorder/Python tests verified; E1 repetitions pending |
-| F4 | Rust sink error at a deterministic boundary | Ordinary emission rejection verified. Capability callbacks have no fallible Rust signature; F3 covers fallible Python callbacks. |
-| F5 | Graceful interruption and process kill before recorder finalization, where supported | Approved external-kill subprocess harness verified; graceful stop is unsupported by the current session interface |
-| F6 | Budget exhaustion under each supported overflow policy | Focused end-to-end file-run checks verified for `Fail` and `AllowIncomplete`; E1 repetitions pending |
-| F7 | Published finalized physical recording with incomplete evidence, where permitted | Existing recorder test verified; E1 repetitions pending |
-| F8-C | Recorder creation failure | Public filesystem trigger verified; recorder failure remains separate from completed machine/evidence paths |
-| F8-W | Recorder write failure during execution | Public hard-limit trigger verified; recorder failure remains separate from completed machine/evidence paths |
-| F8-F | Recorder finalization failure | Approved test-only trigger verified after channel closure and before recorder-receipt write; staging remains inspectable |
-| F8-P | Publication failure after finalization | Public destination-collision trigger verified; finalized receipt is preserved |
-| F9 | Controlled machine/session execution fault | Existing file-run test verified; E1 repetitions pending |
-| F10 | Missing, suppressed, or interrupted expected evidence | Zero-frame channel and budget truncation checks verified. No expected-count or silent-drop claim is made. |
+| F1 | Required unsupported capability and unsupported evidence kinds | Core preparation assertions passed in all three repeated suite runs |
+| F2 | Optional capability with an unsatisfied prerequisite | Core preparation assertions passed in all three repeated suite runs |
+| F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Core dependency-closure assertions passed in all three repeated suite runs |
+| F3 | Python callback exception at a deterministic boundary | Python-enabled recorder assertions passed in all three repeated suite runs |
+| F4 | Rust sink error at a deterministic boundary | Core ordinary-emission failure assertions passed in all three repeated suite runs; capability callbacks have no fallible Rust signature |
+| F5 | Graceful interruption and process kill before recorder finalization, where supported | External-kill subprocess assertion passed in all three repeated suite runs; graceful stop is unsupported by the current session interface |
+| F6 | Budget exhaustion under each supported overflow policy | `Fail` and `AllowIncomplete` file-run assertions passed in all three repeated suite runs |
+| F7 | Published finalized physical recording with incomplete evidence, where permitted | Recorder/evidence separation assertions passed in all three repeated suite runs |
+| F8-C | Recorder creation failure | Public filesystem-trigger assertions passed in all three repeated suite runs |
+| F8-W | Recorder write failure during execution | Public hard-limit-trigger assertions passed in all three repeated suite runs |
+| F8-F | Recorder finalization failure | Approved test-only-trigger assertions passed in all three repeated suite runs; staging remains inspectable |
+| F8-P | Publication failure after finalization | Public destination-collision assertions passed in all three repeated suite runs; finalized receipt is preserved |
+| F9 | Controlled machine/session execution fault | File-run execution-failure assertions passed in all three repeated suite runs; machine conformance suites also passed for all three bundles |
+| F10 | Missing, suppressed, or interrupted expected evidence | Zero-frame and budget-truncation assertions passed in all three repeated suite runs. No expected-count or silent-drop claim is made. |
+
+The repetitions are source-level conformance checks recorded in
+[`experiments/measurements/e1-repetitions-0.3.2/SUMMARY.md`](experiments/measurements/e1-repetitions-0.3.2/SUMMARY.md).
+Each repetition ran the GlassVM workspace suite, the recorder's Python-enabled
+suite, and the complete machine workspace suite in separate Cargo processes.
+This verifies the test assertions repeatedly; it is not a separate runtime
+fault-injection study using submitted machine programs.
 
 - [ ] Choose public-API mechanisms first and document any test-only hooks.
 - [ ] Specify expected attribution for each stage of recorder failure.
