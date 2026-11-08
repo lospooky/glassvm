@@ -131,7 +131,7 @@ class ProviderDiscoveryTests(unittest.TestCase):
                 "evidence_fulfillment": {"status": "complete"},
                 "python_sink_delivery": {"status": "not_requested"},
                 "recorder_finalization": {"status": "not_requested"},
-                "publication": {"status": "not_published"},
+                "publication": {"status": "not_requested"},
                 "published_run": None,
             }
 

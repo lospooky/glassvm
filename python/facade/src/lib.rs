@@ -311,7 +311,7 @@ fn validate_execution_result(value: &Value) -> Result<(), String> {
         .get("published_run")
         .ok_or_else(|| "bundle execution result is missing published_run".to_owned())?;
     match publication_status {
-        "published" => {
+        "published" | "published_with_warning" => {
             if recorder_status != "finalized" {
                 return Err(
                     "published run requires finalized recorder outcome and a run reference".into(),
@@ -331,7 +331,18 @@ fn validate_execution_result(value: &Value) -> Result<(), String> {
                 );
             }
         }
-        "not_published" if published_run.is_null() => {}
+        "not_requested" if recorder_status == "not_requested" && published_run.is_null() => {}
+        "not_attempted" if published_run.is_null() => {}
+        "not_published" if recorder_status == "finalized" && published_run.is_null() => {}
+        "not_requested" => {
+            return Err(
+                "not-requested publication requires no recorder and no published-run reference"
+                    .into(),
+            );
+        }
+        "not_attempted" => {
+            return Err("unattempted publication cannot carry a published-run reference".into());
+        }
         "not_published" => {
             return Err("unpublished outcome cannot carry a published-run reference".into());
         }
@@ -676,7 +687,7 @@ mod tests {
             "evidence_fulfillment": {"status": "complete"},
             "python_sink_delivery": {"status": "complete"},
             "recorder_finalization": {"status": "not_requested"},
-            "publication": {"status": "not_published"},
+            "publication": {"status": "not_requested"},
             "published_run": null
         });
         validate_execution_result(&value).expect("Python-only execution has explicit outcomes");
