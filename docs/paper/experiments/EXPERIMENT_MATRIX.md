@@ -49,7 +49,7 @@ proposal and the user's explicit approval before implementation.
 | F2-D | Exercise required/optional dependency closure, shared prerequisites, transitive dependencies, and an optional dependency failure. | Resolved prerequisite set and unavailable reasons; optional dependency does not escalate to global required failure. | **Existing core conformance tests verified**; E1 repetitions pending |
 | F3 | Raise from a Python consumer on an ordinary emission batch, capability output, and capability receipt. | Python delivery failure is structured and separate from machine execution, evidence, recorder, and publication outcomes. | **Existing recorder/Python tests verified**; E1 repetitions pending |
 | F4 | Return a Rust sink error at an ordinary emission. | The budgeted evidence receipt records the rejected channel/item and failure; session code receives the sink error. | **Ordinary emission verified.** Scope follows the fallible Rust `emit()` boundary; capability callback failures are covered by Python F3. |
-| F5 | Terminate the process before recorder finalization, including graceful stop and external kill. | Supervisor records exit/partial directory; returned outcomes are absent after kill and are not fabricated. | **Open:** `EmulatorSession` has no graceful-stop operation; an external-kill subprocess harness needs a concrete proposal/approval |
+| F5 | Externally kill a child process while its Python consumer is blocked at `RunFinished`, before evidence/recorder receipts and finalization. | The child returns no fabricated result; partial staging remains inspectable and no published run exists. | **Approved external-kill harness verified.** Graceful stop is unsupported by the current `EmulatorSession` interface. |
 | F6 | Exhaust one evidence budget under each supported overflow policy (`Fail`, `AllowIncomplete`). | `Fail` and `Truncated` paths, affected channel, observed bytes/items, machine result, and publication reported independently. | **Focused file-run trigger verified** for both policies; E1 repetitions pending |
 | F7 | Complete recording while evidence fulfillment is incomplete. | Complete `RecorderReceipt` may coexist with incomplete/failed `EvidenceReceipt`; publication follows the actual publication gate. | **Existing recorder test verified**; E1 repetitions pending |
 | F8-C | Make recorder creation fail through a filesystem parent-path collision. | Execution/evidence status up to the failure point; recorder and publication outcomes remain distinct. | **Public trigger verified:** execution and Python delivery complete; recorder reports failure and publication is not attempted |
@@ -79,7 +79,7 @@ recorder format or staging recovery semantics changed.
 
 Formatting and `cargo check` for `glassvm_recorder` and the Python facade pass.
 `cargo fmt --all -- --check` and `cargo test -p glassvm_recorder
---all-features` pass as well (36 tests). The core all-features suite passes
+--all-features` pass as well (37 tests). The core all-features suite passes
 (72 unit tests plus its prohibited-surface integration check).
 The focused F8-P public-trigger test passes: a synchronous online consumer
 creates the requested destination on `RunFinished`, after which staging

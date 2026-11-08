@@ -3029,6 +3029,115 @@ mod tests {
         std::fs::remove_dir_all(parent).unwrap();
     }
 
+    #[cfg(feature = "python")]
+    #[test]
+    fn external_process_kill_before_receipt_leaves_unpublished_staging_only() {
+        use std::process::{Command, Stdio};
+        use std::time::{Duration, Instant};
+
+        const CHILD_FLAG: &str = "GLASSVM_F5_EXTERNAL_KILL_CHILD";
+        const MARKER_ENV: &str = "GLASSVM_F5_EXTERNAL_KILL_MARKER";
+        const PUBLISHED_ENV: &str = "GLASSVM_F5_EXTERNAL_KILL_PUBLISHED";
+
+        if std::env::var_os(CHILD_FLAG).is_some() {
+            use pyo3::prelude::*;
+            use pyo3::types::PyModule;
+
+            Python::initialize();
+            let marker = std::env::var(MARKER_ENV).expect("parent provides ready marker");
+            let code = format!(
+                "import pathlib, time\nclass Consumer:\n    def emit_batch(self, batch):\n        if any(item.get('kind') == 'run_finished' for item in batch):\n            pathlib.Path({marker:?}).write_text('at RunFinished', encoding='utf-8')\n            while True: time.sleep(30)\n    def record_capability_outputs(self, outputs): pass\n    def record_capability_receipts(self, receipts): pass\n"
+            );
+            let code = std::ffi::CString::new(code).unwrap();
+            let consumer = Python::attach(|py| {
+                PyModule::from_code(py, code.as_c_str(), c"f5_child.py", c"f5_child")
+                    .unwrap()
+                    .getattr("Consumer")
+                    .unwrap()
+                    .call0()
+                    .unwrap()
+                    .unbind()
+            });
+            let consumer =
+                PythonCallbackConsumer::new(vec![(Some("external-kill-child".into()), consumer)]);
+            let published_path = PathBuf::from(
+                std::env::var(PUBLISHED_ENV).expect("parent provides published path"),
+            );
+            let request = successful_request("external-kill-child");
+            let mut session = SuccessfulSession {
+                request: request.clone(),
+            };
+            let _ = FileRunSession::run_with_sinks(
+                &mut session,
+                &request,
+                Some(FileRecorderRequest {
+                    published_path,
+                    limits: limits(),
+                    fail_finalization_after_channel_close: false,
+                }),
+                VersionStamp::from("test-v1"),
+                vec![(Some("external-kill-child".into()), Box::new(consumer))],
+                PythonBatchPolicy::default(),
+            );
+            panic!("child should be terminated while its consumer blocks at RunFinished");
+        }
+
+        let parent = temporary_run_root("external-kill-parent");
+        std::fs::create_dir_all(&parent).unwrap();
+        let marker = parent.join("consumer-ready");
+        let published_path = parent.join("published-run");
+        let executable = std::env::current_exe().unwrap();
+        let mut child = Command::new(executable)
+            .args([
+                "--exact",
+                "tests::external_process_kill_before_receipt_leaves_unpublished_staging_only",
+                "--nocapture",
+            ])
+            .env(CHILD_FLAG, "1")
+            .env(MARKER_ENV, &marker)
+            .env(PUBLISHED_ENV, &published_path)
+            .stdout(Stdio::null())
+            .stderr(Stdio::inherit())
+            .spawn()
+            .unwrap();
+
+        let timeout = Instant::now() + Duration::from_secs(20);
+        while !marker.exists() {
+            if let Some(status) = child.try_wait().unwrap() {
+                std::fs::remove_dir_all(&parent).unwrap();
+                panic!("child exited before the consumer barrier: {status}");
+            }
+            if Instant::now() >= timeout {
+                let _ = child.kill();
+                let _ = child.wait();
+                std::fs::remove_dir_all(&parent).unwrap();
+                panic!("timed out waiting for the RunFinished consumer barrier");
+            }
+            std::thread::sleep(Duration::from_millis(10));
+        }
+
+        child.kill().unwrap();
+        let status = child.wait().unwrap();
+        assert!(
+            !status.success(),
+            "externally killed child cannot return success"
+        );
+        assert!(!published_path.exists());
+        assert_inspectable_staging(&parent);
+        let staging_run = std::fs::read_dir(parent.join(".staging"))
+            .unwrap()
+            .next()
+            .unwrap()
+            .unwrap()
+            .path();
+        assert!(staging_run.join("manifest.json").is_file());
+        assert!(staging_run.join("normalized").is_dir());
+        assert!(!staging_run.join("evidence-receipt.json").exists());
+        assert!(!staging_run.join("recorder-receipt.json").exists());
+
+        std::fs::remove_dir_all(parent).unwrap();
+    }
+
     fn run_with_failing_consumer(
         run_id: &str,
         failure_point: ConsumerFailurePoint,
