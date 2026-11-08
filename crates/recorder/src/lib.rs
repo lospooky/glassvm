@@ -978,6 +978,8 @@ pub struct FileRunRecorder {
     next_segment_index: BTreeMap<ReferenceChannel, u64>,
     channel_stats: BTreeMap<ReferenceChannel, ChannelRecorderStats>,
     evidence_receipt: Option<EvidenceReceipt>,
+    #[cfg(test)]
+    fail_finalization_after_channel_close: bool,
 }
 
 /// Live emission adapter for the staged file recorder. It prepares the
@@ -990,6 +992,8 @@ pub struct FileEmissionSink {
     limits: RecorderLimits,
     recorder: Option<FileRunRecorder>,
     failure: Option<SinkError>,
+    #[cfg(test)]
+    fail_finalization_after_channel_close: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1038,6 +1042,8 @@ pub struct FileRunResult {
 pub struct FileRecorderRequest {
     pub published_path: PathBuf,
     pub limits: RecorderLimits,
+    #[cfg(test)]
+    fail_finalization_after_channel_close: bool,
 }
 
 struct FileEmissionFinish {
@@ -1227,6 +1233,8 @@ impl FileRunSession {
             Some(FileRecorderRequest {
                 published_path: published_path.as_ref().to_path_buf(),
                 limits,
+                #[cfg(test)]
+                fail_finalization_after_channel_close: false,
             }),
             machine_version,
             Vec::new(),
@@ -1246,11 +1254,19 @@ impl FileRunSession {
     ) -> Result<FileRunResult, SinkError> {
         let observation = &request.observation;
         let file = recorder.map(|recorder| {
-            FileEmissionSink::new(
+            let file = FileEmissionSink::new(
                 recorder.published_path,
                 machine_version.clone(),
                 recorder.limits,
-            )
+            );
+            #[cfg(test)]
+            let file = {
+                let mut file = file;
+                file.fail_finalization_after_channel_close =
+                    recorder.fail_finalization_after_channel_close;
+                file
+            };
+            file
         });
         let inner = RunEmissionSink {
             file,
@@ -1359,6 +1375,8 @@ impl FileEmissionSink {
             limits,
             recorder: None,
             failure: None,
+            #[cfg(test)]
+            fail_finalization_after_channel_close: false,
         }
     }
 
@@ -1446,10 +1464,16 @@ impl FileEmissionSink {
             requested_channels,
             limits: self.limits.clone(),
         };
-        self.recorder = Some(
-            FileRunRecorder::create(&self.published_path, manifest)
-                .map_err(|error| SinkError::new(error.to_string()))?,
-        );
+        let recorder = FileRunRecorder::create(&self.published_path, manifest)
+            .map_err(|error| SinkError::new(error.to_string()))?;
+        #[cfg(test)]
+        let recorder = {
+            let mut recorder = recorder;
+            recorder.fail_finalization_after_channel_close =
+                self.fail_finalization_after_channel_close;
+            recorder
+        };
+        self.recorder = Some(recorder);
         Ok(())
     }
 
@@ -1540,6 +1564,8 @@ impl FileRunRecorder {
             next_segment_index: BTreeMap::new(),
             channel_stats: BTreeMap::new(),
             evidence_receipt: None,
+            #[cfg(test)]
+            fail_finalization_after_channel_close: false,
         })
     }
 
@@ -1594,6 +1620,12 @@ impl FileRunRecorder {
         let channels: Vec<_> = self.active.keys().cloned().collect();
         for channel in channels {
             self.close_channel(&channel)?;
+        }
+        #[cfg(test)]
+        if self.fail_finalization_after_channel_close {
+            return Err(RecorderError::new(
+                "injected recorder finalization failure after channel closure",
+            ));
         }
         let channels: Vec<_> = self
             .channel_stats
@@ -2517,6 +2549,7 @@ mod tests {
             .map(|published_path| FileRecorderRequest {
                 published_path: published_path.clone(),
                 limits: limits(),
+                fail_finalization_after_channel_close: false,
             });
         let result = FileRunSession::run_with_sinks(
             &mut session,
@@ -2549,6 +2582,7 @@ mod tests {
             Some(FileRecorderRequest {
                 published_path: published_path.clone(),
                 limits: limits(),
+                fail_finalization_after_channel_close: false,
             }),
             VersionStamp::from("test-v1"),
             vec![(Some("collision-trigger".into()), Box::new(consumer))],
@@ -2598,6 +2632,7 @@ mod tests {
             Some(FileRecorderRequest {
                 published_path,
                 limits: limits(),
+                fail_finalization_after_channel_close: false,
             }),
             VersionStamp::from("test-v1"),
             vec![(
@@ -2664,6 +2699,7 @@ mod tests {
             Some(FileRecorderRequest {
                 published_path,
                 limits: tiny_limits,
+                fail_finalization_after_channel_close: false,
             }),
             VersionStamp::from("test-v1"),
             vec![(
@@ -2708,6 +2744,78 @@ mod tests {
                 .iter()
                 .any(|emission| matches!(emission, OwnedEmission::RunFinished(_)))
         );
+
+        std::fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn recorder_finalization_failure_keeps_execution_evidence_and_partial_staging_distinct() {
+        let parent = temporary_run_root("recorder-finalize-failure");
+        std::fs::create_dir_all(&parent).unwrap();
+        let published_path = parent.join("published-run");
+        let request = successful_request("recorder-finalize-failure");
+        let mut session = SuccessfulSession {
+            request: request.clone(),
+        };
+        let captured = Arc::new(std::sync::Mutex::new(Vec::new()));
+
+        let result = FileRunSession::run_with_sinks(
+            &mut session,
+            &request,
+            Some(FileRecorderRequest {
+                published_path,
+                limits: limits(),
+                fail_finalization_after_channel_close: true,
+            }),
+            VersionStamp::from("test-v1"),
+            vec![(
+                Some("capture".into()),
+                Box::new(CapturePythonConsumer(Arc::clone(&captured))),
+            )],
+            PythonBatchPolicy::default(),
+        )
+        .expect("recorder finalization failure is a structured outcome");
+
+        assert!(matches!(
+            result.machine_execution,
+            MachineExecutionOutcome::Completed(_)
+        ));
+        assert_eq!(result.evidence_fulfillment.status, EvidenceStatus::Complete);
+        assert_eq!(
+            result.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::Complete
+        );
+        assert!(matches!(
+            result.recorder_finalization,
+            RecorderFinalizationOutcome::Failed { ref message }
+                if message.contains("injected recorder finalization failure")
+        ));
+        assert!(matches!(
+            result.publication,
+            PublicationOutcome::NotAttempted { .. }
+        ));
+        assert!(result.published.is_none());
+        let captured = captured.lock().unwrap();
+        assert!(
+            captured
+                .iter()
+                .any(|emission| matches!(emission, OwnedEmission::EvidenceReceipt(_)))
+        );
+        assert!(
+            captured
+                .iter()
+                .any(|emission| matches!(emission, OwnedEmission::RunFinished(_)))
+        );
+
+        assert_inspectable_staging(&parent);
+        let staging_run = std::fs::read_dir(parent.join(".staging"))
+            .unwrap()
+            .next()
+            .unwrap()
+            .unwrap()
+            .path();
+        assert!(staging_run.join("evidence-receipt.json").is_file());
+        assert!(!staging_run.join("recorder-receipt.json").exists());
 
         std::fs::remove_dir_all(parent).unwrap();
     }
@@ -2768,6 +2876,7 @@ mod tests {
             .map(|published_path| FileRecorderRequest {
                 published_path: published_path.clone(),
                 limits: limits(),
+                fail_finalization_after_channel_close: false,
             });
         let result = FileRunSession::run_with_sinks(
             &mut session,
@@ -3033,6 +3142,7 @@ mod tests {
             Some(FileRecorderRequest {
                 published_path,
                 limits: limits(),
+                fail_finalization_after_channel_close: false,
             }),
             VersionStamp::from("test-v1"),
             vec![(Some("external-consumer".into()), Box::new(consumer))],
@@ -3121,6 +3231,7 @@ mod tests {
             Some(FileRecorderRequest {
                 published_path,
                 limits: limits(),
+                fail_finalization_after_channel_close: false,
             }),
             VersionStamp::from("test-v1"),
             vec![(Some("failing-consumer".into()), Box::new(consumer))],
