@@ -1012,8 +1012,11 @@ pub enum RecorderFinalizationOutcome {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "status", content = "details", rename_all = "snake_case")]
 pub enum PublicationOutcome {
-    Published,
+    NotRequested,
+    NotAttempted { reason: String },
     NotPublished { reason: String },
+    Published,
+    PublishedWithWarning { warning: String },
 }
 
 #[derive(Debug, Serialize)]
@@ -1023,7 +1026,8 @@ pub struct FileRunResult {
     pub python_sink_delivery: PythonSinkDeliveryOutcome,
     pub recorder_finalization: RecorderFinalizationOutcome,
     pub publication: PublicationOutcome,
-    /// A handle exists only after recorder finalization and atomic publication.
+    /// A handle exists only after recorder finalization and successful atomic
+    /// rename, including when the post-rename directory sync reports a warning.
     #[serde(skip)]
     pub published: Option<PublishedFileRun>,
 }
@@ -1034,6 +1038,99 @@ pub struct FileRunResult {
 pub struct FileRecorderRequest {
     pub published_path: PathBuf,
     pub limits: RecorderLimits,
+}
+
+struct FileEmissionFinish {
+    recorder_finalization: RecorderFinalizationOutcome,
+    publication: PublicationOutcome,
+    published: Option<PublishedFileRun>,
+}
+
+/// A recording whose channels and receipt are finalized in staging but whose
+/// publication gate has not yet been attempted.
+#[derive(Debug)]
+pub struct FinalizedStagingRun {
+    staging_path: PathBuf,
+    published_path: PathBuf,
+    recorder_receipt: RecorderReceipt,
+}
+
+impl FinalizedStagingRun {
+    pub fn recorder_receipt(&self) -> &RecorderReceipt {
+        &self.recorder_receipt
+    }
+
+    /// Validate the finalized staging directory, then publish it by atomic
+    /// rename. A handle is created only after the rename succeeds.
+    pub fn publish(self) -> PublicationResult {
+        let recorder_receipt = self.recorder_receipt.clone();
+        let contents = match validate_run_contents(&self.staging_path) {
+            Ok(contents) => contents,
+            Err(error) => {
+                return PublicationResult {
+                    recorder_receipt,
+                    outcome: PublicationOutcome::NotPublished {
+                        reason: format!("finalized staging validation failed: {error}"),
+                    },
+                    published: None,
+                };
+            }
+        };
+        if contents.recorder_receipt != self.recorder_receipt {
+            return PublicationResult {
+                recorder_receipt,
+                outcome: PublicationOutcome::NotPublished {
+                    reason: "finalized staging receipt changed before publication".into(),
+                },
+                published: None,
+            };
+        }
+
+        if let Err(error) = fs::rename(&self.staging_path, &self.published_path) {
+            return PublicationResult {
+                recorder_receipt,
+                outcome: PublicationOutcome::NotPublished {
+                    reason: error.to_string(),
+                },
+                published: None,
+            };
+        }
+
+        let published = PublishedFileRun {
+            root: self.published_path.clone(),
+            manifest: contents.manifest,
+            evidence_receipt: contents.evidence_receipt,
+            recorder_receipt: contents.recorder_receipt,
+        };
+        let parent_sync = self
+            .published_path
+            .parent()
+            .ok_or_else(|| RecorderError::new("published run path has no parent directory"))
+            .and_then(sync_directory);
+        match parent_sync {
+            Ok(()) => PublicationResult {
+                recorder_receipt,
+                outcome: PublicationOutcome::Published,
+                published: Some(published),
+            },
+            Err(error) => PublicationResult {
+                recorder_receipt,
+                outcome: PublicationOutcome::PublishedWithWarning {
+                    warning: format!(
+                        "atomic publication succeeded, but syncing the parent directory failed: {error}"
+                    ),
+                },
+                published: Some(published),
+            },
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct PublicationResult {
+    pub recorder_receipt: RecorderReceipt,
+    pub outcome: PublicationOutcome,
+    pub published: Option<PublishedFileRun>,
 }
 
 struct RunEmissionSink {
@@ -1156,12 +1253,12 @@ impl FileRunSession {
                     } else {
                         RecorderFinalizationOutcome::NotRequested
                     },
-                    publication: PublicationOutcome::NotPublished {
-                        reason: if inner.file.is_some() {
-                            "recorder was not finalized".into()
-                        } else {
-                            "file recorder was not requested".into()
-                        },
+                    publication: if inner.file.is_some() {
+                        PublicationOutcome::NotAttempted {
+                            reason: "execution did not reach recorder finalization".into(),
+                        }
+                    } else {
+                        PublicationOutcome::NotRequested
                     },
                     published: None,
                 });
@@ -1186,12 +1283,12 @@ impl FileRunSession {
                     } else {
                         RecorderFinalizationOutcome::NotRequested
                     },
-                    publication: PublicationOutcome::NotPublished {
-                        reason: if inner.file.is_some() {
-                            "recorder was not finalized".into()
-                        } else {
-                            "file recorder was not requested".into()
-                        },
+                    publication: if inner.file.is_some() {
+                        PublicationOutcome::NotAttempted {
+                            reason: "evidence receipt emission failed".into(),
+                        }
+                    } else {
+                        PublicationOutcome::NotRequested
                     },
                     published: None,
                 });
@@ -1207,37 +1304,19 @@ impl FileRunSession {
                 evidence_fulfillment: evidence,
                 python_sink_delivery,
                 recorder_finalization: RecorderFinalizationOutcome::NotRequested,
-                publication: PublicationOutcome::NotPublished {
-                    reason: "file recorder was not requested".into(),
-                },
+                publication: PublicationOutcome::NotRequested,
                 published: None,
             });
         };
-        match file_sink.finish() {
-            Ok(published) => {
-                let recorder = published.recorder_receipt().clone();
-                Ok(FileRunResult {
-                    machine_execution: execution,
-                    evidence_fulfillment: evidence,
-                    python_sink_delivery,
-                    recorder_finalization: RecorderFinalizationOutcome::Finalized(recorder),
-                    publication: PublicationOutcome::Published,
-                    published: Some(published),
-                })
-            }
-            Err(error) => Ok(FileRunResult {
-                machine_execution: execution,
-                evidence_fulfillment: evidence,
-                python_sink_delivery,
-                recorder_finalization: RecorderFinalizationOutcome::Failed {
-                    message: error.to_string(),
-                },
-                publication: PublicationOutcome::NotPublished {
-                    reason: "recorder finalization failed".into(),
-                },
-                published: None,
-            }),
-        }
+        let finish = file_sink.finish();
+        Ok(FileRunResult {
+            machine_execution: execution,
+            evidence_fulfillment: evidence,
+            python_sink_delivery,
+            recorder_finalization: finish.recorder_finalization,
+            publication: finish.publication,
+            published: finish.published,
+        })
     }
 }
 
@@ -1256,14 +1335,51 @@ impl FileEmissionSink {
         }
     }
 
-    pub fn finish(self) -> Result<PublishedFileRun, SinkError> {
+    fn finish(self) -> FileEmissionFinish {
         if let Some(error) = self.failure {
-            return Err(error);
+            return FileEmissionFinish {
+                recorder_finalization: RecorderFinalizationOutcome::Failed {
+                    message: error.to_string(),
+                },
+                publication: PublicationOutcome::NotAttempted {
+                    reason: "recorder finalization failed before publication".into(),
+                },
+                published: None,
+            };
         }
-        self.recorder
-            .ok_or_else(|| SinkError::new("file sink did not receive RunStarted"))?
-            .finalize()
-            .map_err(|error| SinkError::new(error.to_string()))
+        let Some(recorder) = self.recorder else {
+            return FileEmissionFinish {
+                recorder_finalization: RecorderFinalizationOutcome::Failed {
+                    message: "file sink did not receive RunStarted".into(),
+                },
+                publication: PublicationOutcome::NotAttempted {
+                    reason: "recorder finalization did not produce a staged run".into(),
+                },
+                published: None,
+            };
+        };
+        let staged = match recorder.finalize_staging() {
+            Ok(staged) => staged,
+            Err(error) => {
+                return FileEmissionFinish {
+                    recorder_finalization: RecorderFinalizationOutcome::Failed {
+                        message: error.to_string(),
+                    },
+                    publication: PublicationOutcome::NotAttempted {
+                        reason: "recorder finalization failed".into(),
+                    },
+                    published: None,
+                };
+            }
+        };
+        let publication = staged.publish();
+        FileEmissionFinish {
+            recorder_finalization: RecorderFinalizationOutcome::Finalized(
+                publication.recorder_receipt.clone(),
+            ),
+            publication: publication.outcome,
+            published: publication.published,
+        }
     }
 
     fn start(&mut self, request: &glassvm_core::ExecutionRequest) -> Result<(), SinkError> {
@@ -1444,7 +1560,7 @@ impl FileRunRecorder {
         Ok(())
     }
 
-    pub fn finalize(mut self) -> Result<PublishedFileRun, RecorderError> {
+    pub fn finalize_staging(mut self) -> Result<FinalizedStagingRun, RecorderError> {
         let evidence_receipt = self.evidence_receipt.clone().ok_or_else(|| {
             RecorderError::new("cannot finalize recorder before publishing evidence receipt")
         })?;
@@ -1514,13 +1630,11 @@ impl FileRunRecorder {
         receipt.validate().map_err(RecorderError::new)?;
         write_json_file(&self.staging_path.join("recorder-receipt.json"), &receipt)?;
         sync_directory(&self.staging_path)?;
-        fs::rename(&self.staging_path, &self.published_path).map_err(io_error)?;
-        let parent = self
-            .published_path
-            .parent()
-            .ok_or_else(|| RecorderError::new("published run path has no parent directory"))?;
-        sync_directory(parent)?;
-        PublishedFileRun::open(&self.published_path)
+        Ok(FinalizedStagingRun {
+            staging_path: self.staging_path,
+            published_path: self.published_path,
+            recorder_receipt: receipt,
+        })
     }
 
     fn open_channel(&mut self, channel: ReferenceChannel) -> Result<(), RecorderError> {
@@ -1564,53 +1678,66 @@ pub struct PublishedFileRun {
     recorder_receipt: RecorderReceipt,
 }
 
+struct ValidatedRunContents {
+    manifest: ReferenceRunManifest,
+    evidence_receipt: EvidenceReceipt,
+    recorder_receipt: RecorderReceipt,
+}
+
+fn validate_run_contents(root: &Path) -> Result<ValidatedRunContents, RecorderError> {
+    let manifest: ReferenceRunManifest = read_json_file(&root.join("manifest.json"))?;
+    manifest.validate().map_err(RecorderError::new)?;
+    let evidence_receipt: EvidenceReceipt = read_json_file(&root.join("evidence-receipt.json"))?;
+    validate_evidence_identity(&evidence_receipt, &manifest).map_err(RecorderError::new)?;
+    let recorder_receipt: RecorderReceipt = read_json_file(&root.join("recorder-receipt.json"))?;
+    if !recorder_receipt.is_publishable() {
+        return Err(RecorderError::new(
+            "run is not finalized with a publishable recorder receipt",
+        ));
+    }
+    if recorder_receipt.evidence_status != evidence_receipt.status {
+        return Err(RecorderError::new(
+            "recorder receipt evidence status does not match evidence receipt",
+        ));
+    }
+    let mut segment_count = 0u64;
+    for channel in ReferenceChannel::all() {
+        let actual_count = count_segment_files(root, &channel)?;
+        let recorded_count = recorder_receipt
+            .channels
+            .iter()
+            .find(|entry| entry.channel == channel)
+            .map_or(0, |entry| entry.stats.segment_count);
+        if actual_count != recorded_count {
+            return Err(RecorderError::new(format!(
+                "published {channel:?} segment count does not match recorder receipt"
+            )));
+        }
+        segment_count = segment_count
+            .checked_add(actual_count)
+            .ok_or_else(|| RecorderError::new("published segment count overflowed"))?;
+    }
+    if segment_count != recorder_receipt.segment_count {
+        return Err(RecorderError::new(
+            "published segment count does not match recorder receipt",
+        ));
+    }
+    Ok(ValidatedRunContents {
+        manifest,
+        evidence_receipt,
+        recorder_receipt,
+    })
+}
+
 impl PublishedFileRun {
     pub fn open(path: impl AsRef<Path>) -> Result<Self, RecorderError> {
         let root = path.as_ref().to_path_buf();
-        let manifest: ReferenceRunManifest = read_json_file(&root.join("manifest.json"))?;
-        manifest.validate().map_err(RecorderError::new)?;
-        let evidence_receipt: EvidenceReceipt =
-            read_json_file(&root.join("evidence-receipt.json"))?;
-        validate_evidence_identity(&evidence_receipt, &manifest).map_err(RecorderError::new)?;
-        let recorder_receipt: RecorderReceipt =
-            read_json_file(&root.join("recorder-receipt.json"))?;
-        if !recorder_receipt.is_publishable() {
-            return Err(RecorderError::new(
-                "run is not finalized with a publishable recorder receipt",
-            ));
-        }
-        if recorder_receipt.evidence_status != evidence_receipt.status {
-            return Err(RecorderError::new(
-                "recorder receipt evidence status does not match evidence receipt",
-            ));
-        }
-        let mut segment_count = 0u64;
-        for channel in ReferenceChannel::all() {
-            let actual_count = count_segment_files(&root, &channel)?;
-            let recorded_count = recorder_receipt
-                .channels
-                .iter()
-                .find(|entry| entry.channel == channel)
-                .map_or(0, |entry| entry.stats.segment_count);
-            if actual_count != recorded_count {
-                return Err(RecorderError::new(format!(
-                    "published {channel:?} segment count does not match recorder receipt"
-                )));
-            }
-            segment_count = segment_count
-                .checked_add(actual_count)
-                .ok_or_else(|| RecorderError::new("published segment count overflowed"))?;
-        }
-        if segment_count != recorder_receipt.segment_count {
-            return Err(RecorderError::new(
-                "published segment count does not match recorder receipt",
-            ));
-        }
+        let contents = validate_run_contents(&root)?;
         Ok(Self {
             root,
-            manifest,
-            evidence_receipt,
-            recorder_receipt,
+            manifest: contents.manifest,
+            evidence_receipt: contents.evidence_receipt,
+            recorder_receipt: contents.recorder_receipt,
         })
     }
 
@@ -1834,8 +1961,8 @@ mod tests {
             recorder_finalization: RecorderFinalizationOutcome::NotFinalized {
                 reason: "execution did not reach recorder finalization".into(),
             },
-            publication: PublicationOutcome::NotPublished {
-                reason: "recorder was not finalized".into(),
+            publication: PublicationOutcome::NotAttempted {
+                reason: "execution did not reach recorder finalization".into(),
             },
             published: None,
         };
@@ -1846,7 +1973,7 @@ mod tests {
         assert_eq!(encoded["python_sink_delivery"]["status"], "failed");
         assert_eq!(encoded["python_sink_delivery"]["failure"]["sink_index"], 1);
         assert_eq!(encoded["recorder_finalization"]["status"], "not_finalized");
-        assert_eq!(encoded["publication"]["status"], "not_published");
+        assert_eq!(encoded["publication"]["status"], "not_attempted");
         assert!(encoded.get("published").is_none());
     }
 
@@ -1932,7 +2059,7 @@ mod tests {
         ));
         assert!(matches!(
             result.publication,
-            PublicationOutcome::NotPublished { .. }
+            PublicationOutcome::NotAttempted { .. }
         ));
         assert!(result.published.is_none());
         assert_eq!(
@@ -2450,10 +2577,17 @@ mod tests {
                 RecorderFinalizationOutcome::NotRequested
             ));
         }
-        assert!(matches!(
-            result.publication,
-            PublicationOutcome::NotPublished { .. }
-        ));
+        if recorder_requested {
+            assert!(matches!(
+                result.publication,
+                PublicationOutcome::NotAttempted { .. }
+            ));
+        } else {
+            assert!(matches!(
+                result.publication,
+                PublicationOutcome::NotRequested
+            ));
+        }
         assert!(result.published.is_none());
     }
 
@@ -2553,7 +2687,7 @@ mod tests {
         ));
         assert!(matches!(
             python_only.publication,
-            PublicationOutcome::NotPublished { .. }
+            PublicationOutcome::NotRequested
         ));
         assert_eq!(python_captures[0].lock().unwrap().len(), 4);
 
@@ -2776,7 +2910,7 @@ mod tests {
         ));
         assert!(matches!(
             result.publication,
-            PublicationOutcome::NotPublished { .. }
+            PublicationOutcome::NotAttempted { .. }
         ));
         assert!(result.published.is_none());
         Python::attach(|py| {
@@ -3027,7 +3161,9 @@ mod tests {
             .publish_evidence_receipt(evidence_receipt(&manifest, EvidenceStatus::Complete))
             .unwrap();
 
-        let published = recorder.finalize().unwrap();
+        let publication = recorder.finalize_staging().unwrap().publish();
+        assert!(matches!(publication.outcome, PublicationOutcome::Published));
+        let published = publication.published.unwrap();
         assert!(published_path.is_dir());
         assert!(!staging_path.exists());
         assert_eq!(
@@ -3096,7 +3232,9 @@ mod tests {
             .publish_evidence_receipt(evidence_receipt(&manifest, EvidenceStatus::Complete))
             .unwrap();
 
-        let published = recorder.finalize().unwrap();
+        let publication = recorder.finalize_staging().unwrap().publish();
+        assert!(matches!(publication.outcome, PublicationOutcome::Published));
+        let published = publication.published.unwrap();
         assert_eq!(
             published
                 .segment_paths(ReferenceChannel::InputValueEvidence)
@@ -3139,7 +3277,7 @@ mod tests {
         let manifest = manifest(limits(), &[ReferenceChannel::Frames]);
         let recorder = FileRunRecorder::create(&published_path, manifest).unwrap();
         let staging_path = recorder.staging_path().to_path_buf();
-        let error = recorder.finalize().unwrap_err();
+        let error = recorder.finalize_staging().unwrap_err();
         assert!(error.to_string().contains("publishing evidence receipt"));
         assert!(staging_path.is_dir());
         assert!(!published_path.exists());
@@ -3157,7 +3295,9 @@ mod tests {
             .publish_evidence_receipt(evidence_receipt(&manifest, EvidenceStatus::Failed))
             .unwrap();
 
-        let published = recorder.finalize().unwrap();
+        let publication = recorder.finalize_staging().unwrap().publish();
+        assert!(matches!(publication.outcome, PublicationOutcome::Published));
+        let published = publication.published.unwrap();
         assert_eq!(
             published.recorder_receipt().status,
             RecorderStatus::Complete
