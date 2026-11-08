@@ -119,10 +119,10 @@ delivery, recorder finalization, and publication.
 | F5 | Graceful interruption and process kill before recorder finalization, where supported | Planned |
 | F6 | Budget exhaustion under each supported overflow policy | Planned |
 | F7 | Published finalized physical recording with incomplete evidence, where permitted | Planned |
-| F8-C | Recorder creation failure | Planned |
-| F8-W | Recorder write failure during execution | Planned |
-| F8-F | Recorder finalization failure | Paused pending separation of recorder finalization from publication |
-| F8-P | Publication failure after finalization | Paused pending separation of recorder finalization from publication |
+| F8-C | Recorder creation failure | Public filesystem trigger verified; recorder failure remains separate from completed machine/evidence paths |
+| F8-W | Recorder write failure during execution | Public hard-limit trigger verified; recorder failure remains separate from completed machine/evidence paths |
+| F8-F | Recorder finalization failure | Paused pending an explicitly approved deterministic trigger |
+| F8-P | Publication failure after finalization | Public destination-collision trigger verified; finalized receipt is preserved |
 | F9 | Controlled machine/session execution fault | Planned |
 | F10 | Missing, suppressed, or interrupted expected evidence | Zero-item channel may be complete when delivery succeeds; receipt alone does not prove occurrence. Suppression injection needs an approved hook. |
 
@@ -310,7 +310,7 @@ Figure 4 clarifications found in the harness await retained-run verification:
 | Q4 | Timing host | **Resolved:** use the usual WSL2 host. Record host details for E5 and E6. | Before timing trials |
 | Q5 | Test-only hooks and wrappers | **Resolved:** allowed with explicit user confirmation for each proposed hook or wrapper and appropriate commits. Report production changes first. | Confirmation before each hook |
 | Q6 | Does a contract defect pause the whole campaign or only the affected path? | **Resolved:** pause the affected path and report immediately; continue independent work. | E1 execution |
-| Q7 | How should E1 handle the combined recorder-finalization/publication result? | **Resolved and implemented:** finalize the staged recording separately, publish by atomic rename, and report post-rename sync problems as publication warnings. | Failure-trigger method for F8-F/F8-P still needs an approved proposal |
+| Q7 | How should E1 handle the combined recorder-finalization/publication result? | **Resolved and implemented:** finalize the staged recording separately, publish by atomic rename, and report post-rename sync problems as publication warnings. Recorder create/write failures are also latched separately from evidence delivery and machine execution. | F8-C/F8-W/F8-P public triggers verified; obtain explicit approval for an F8-F test-only trigger |
 | Q8 | Does a requested channel with zero items prove that the behavior did not occur? | **Resolved:** no. A channel may be complete if its delivery path completed with zero items; the receipt accounts for fulfillment, not occurrence. Suppression detection needs an explicit test condition. | F10 matrix and any proposed hook |
 
 Proposed defaults are not author decisions. Resolve mandatory gates before
@@ -330,6 +330,7 @@ input-value/snapshot support, belong in the S0 API audit.
 | 2026-11-08 | Planning | Author set CE1's target at three cleared workloads per machine and confirmed a zero-item requested channel can be complete when delivery succeeds; a receipt does not establish behavior occurrence. | CE1 workload count and F10 semantics recorded in `experiments/EXPERIMENT_MATRIX.md` | Verify three specimens per machine; propose any suppression hook for approval |
 | 2026-11-08 | Planning audit | Proposed a two-stage recorder finalization/publication boundary after finding that the current combined `finalize()` path cannot classify post-rename failures independently. No code changed. | Q7 and paused F8-F/F8-P in this document | Author review before repair implementation |
 | 2026-11-08 | Recorder outcome repair | Split finalized staging from atomic publication, retained finalized receipts on publication failure, and represented post-rename sync failure as published with a warning. Updated Python result validation for `not_requested`, `not_attempted`, and `published_with_warning`. Formatting and crate/facade builds pass; tests and fault trials were not run. | `crates/recorder/src/lib.rs`, `python/facade/src/lib.rs` | Propose deterministic F8 failure triggers for explicit approval; then resume E1 cases |
+| 2026-11-08 | Recorder/evidence separation and public triggers | Latched recorder create/write failures inside the shared fan-out so they do not become evidence-delivery failures or interrupt machine execution. Verified F8-C using a filesystem parent-path blocker, F8-W using the smallest valid recorder block limit, and F8-P using an online consumer that creates the publish destination at `RunFinished`. Recorder all-features suite passes (33 tests), formatting passes, and the Python facade check passes. | `crates/recorder/src/lib.rs`, `experiments/EXPERIMENT_MATRIX.md` | Propose the exact F8-F test-only hook for explicit approval |
 | 2026-11-08 | Planning | Author selected the existing Glass Relay reference carts for E7's input-driven cases. | E7 fixture decision recorded | Verify supported combinations and nonempty evidence before measurement |
 | 2026-11-08 | Planning | Drafted a case-level coverage matrix and parameter proposal for E1/E2/E3/E4/E5/E6/E7/CE1. No campaign trials or new hooks were run or added. | `experiments/EXPERIMENT_MATRIX.md` | Resolve freeze gates; pause F8-F/F8-P pending outcome-boundary decision |
 | 2026-11-08 | Planning audit | Found `FileRunRecorder::finalize()` combines receipt finalization, atomic rename, parent sync, and opening the published run; `FileRunSession` reports every error as recorder-finalization failure and not-published. | Finding recorded in `experiments/EXPERIMENT_MATRIX.md` | User decision on characterizing current behavior or repairing the shared contract before F8-F/F8-P |
