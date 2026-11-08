@@ -2158,6 +2158,37 @@ mod tests {
         }
     }
 
+    struct CreateDestinationOnRunFinished {
+        destination: PathBuf,
+    }
+
+    impl PythonEmissionConsumer for CreateDestinationOnRunFinished {
+        fn emit_batch(&mut self, emissions: &[OwnedEmission]) -> Result<(), PythonSinkFailure> {
+            if emissions
+                .iter()
+                .any(|emission| matches!(emission, OwnedEmission::RunFinished(_)))
+            {
+                std::fs::write(&self.destination, b"occupied before publication")
+                    .expect("consumer can create the publication collision");
+            }
+            Ok(())
+        }
+
+        fn record_capability_outputs(
+            &mut self,
+            _outputs: &[CapabilityOutput],
+        ) -> Result<(), PythonSinkFailure> {
+            Ok(())
+        }
+
+        fn record_capability_receipts(
+            &mut self,
+            _receipts: &[CapabilityReceipt],
+        ) -> Result<(), PythonSinkFailure> {
+            Ok(())
+        }
+    }
+
     struct SuccessfulSession {
         request: ExecutionRequest,
     }
@@ -2470,6 +2501,55 @@ mod tests {
         )
         .expect("run lifecycle returns structured outcomes");
         (result, captures, recorder_path)
+    }
+
+    #[test]
+    fn public_python_consumer_can_trigger_publication_collision_after_finalization() {
+        let parent = temporary_run_root("publish-collision-parent");
+        std::fs::create_dir_all(&parent).unwrap();
+        let published_path = parent.join("published-run");
+        let request = successful_request("publish-collision");
+        let mut session = SuccessfulSession {
+            request: request.clone(),
+        };
+        let consumer = CreateDestinationOnRunFinished {
+            destination: published_path.clone(),
+        };
+
+        let result = FileRunSession::run_with_sinks(
+            &mut session,
+            &request,
+            Some(FileRecorderRequest {
+                published_path: published_path.clone(),
+                limits: limits(),
+            }),
+            VersionStamp::from("test-v1"),
+            vec![(Some("collision-trigger".into()), Box::new(consumer))],
+            PythonBatchPolicy::default(),
+        )
+        .expect("publication collision is returned as a structured outcome");
+
+        assert!(matches!(
+            result.machine_execution,
+            MachineExecutionOutcome::Completed(_)
+        ));
+        assert_eq!(result.evidence_fulfillment.status, EvidenceStatus::Complete);
+        assert!(matches!(
+            result.recorder_finalization,
+            RecorderFinalizationOutcome::Finalized(_)
+        ));
+        assert!(matches!(
+            result.publication,
+            PublicationOutcome::NotPublished { .. }
+        ));
+        assert!(result.published.is_none());
+        assert_eq!(
+            result.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::Complete
+        );
+        assert!(published_path.is_file());
+
+        std::fs::remove_dir_all(parent).unwrap();
     }
 
     fn run_with_failing_consumer(

@@ -52,10 +52,10 @@ proposal and the user's explicit approval before implementation.
 | F5 | Terminate the process before recorder finalization, including graceful stop and external kill. | Supervisor records exit/partial directory; returned outcomes are absent after kill and are not fabricated. | Deterministic stop point may require a hook; approval required |
 | F6 | Exhaust one evidence budget under each supported overflow policy (`Fail`, `AllowIncomplete`). | `Fail` and `Truncated` paths, affected channel, observed bytes/items, machine result, and publication reported independently. | Public budgets; proposed |
 | F7 | Complete recording while evidence fulfillment is incomplete. | Complete `RecorderReceipt` may coexist with incomplete/failed `EvidenceReceipt`; publication follows the actual publication gate. | Public API if a supported incomplete evidence request can be constructed |
-| F8-C | Make recorder creation fail. | Execution/evidence status up to the failure point; recorder and publication outcomes remain distinct. | Public filesystem setup first |
-| F8-W | Fail a recorder write while execution is emitting. | Machine result, evidence fulfillment, recorder failure, and publication status at the failure point. | Filesystem mechanism first; otherwise propose a test hook |
+| F8-C | Make recorder creation fail. | Execution/evidence status up to the failure point; recorder and publication outcomes remain distinct. | **Paused:** current fan-out classifies recorder creation errors as evidence-delivery failures; central separation repair needed before exercising this path |
+| F8-W | Fail a recorder write while execution is emitting. | Machine result, evidence fulfillment, recorder failure, and publication status at the failure point. | **Paused:** current fan-out classifies recorder write errors as evidence-delivery failures; central separation repair needed before exercising this path |
 | F8-F | Fail recorder close/receipt finalization before publication. | Recorder is not finalized; publication was not attempted. | Outcome split implemented; deterministic failure trigger still needed |
-| F8-P | Fail atomic rename/publication after the recording has been finalized. | Finalized recorder receipt remains distinguishable from publication failure; a post-rename sync warning retains the published reference. | Outcome split implemented; deterministic failure trigger still needed |
+| F8-P | Fail atomic rename/publication after the recording has been finalized. | Finalized recorder receipt remains distinguishable from publication failure; a post-rename sync warning retains the published reference. | **Public trigger verified:** an online consumer creates the reserved destination on `RunFinished`; focused recorder test confirms finalized receipt survives `NotPublished` |
 | F9 | Cause a controlled session/machine execution failure after preparation. | Machine execution failure does not erase already available evidence or mislabel recorder/publish outcome. | Exact deterministic fault mechanism pending; hook approval if needed |
 | F10 | Compare a legitimate zero-emission channel with suppressed or interrupted expected evidence. | A requested channel with zero items may be `Complete` when the selected delivery path completed; the receipt does not establish that behavior occurred. Separately determine whether an injected drop can be accounted for. | Semantics **resolved by author**; a suppression hook requires a separate concrete proposal and approval |
 
@@ -78,9 +78,15 @@ Python facade accepts the separate `not_requested`, `not_attempted`,
 recorder format or staging recovery semantics changed.
 
 Formatting and `cargo check` for `glassvm_recorder` and the Python facade pass.
-No tests were run and no fault-injection hook was added. F8-F/F8-P can now be
-classified separately, but their deterministic failure triggers remain gated
-on an explicit hook proposal/approval or a reliable public filesystem method.
+The focused F8-P public-trigger test passes: a synchronous online consumer
+creates the requested destination on `RunFinished`, after which staging
+finalization succeeds and atomic publication reports `NotPublished` while
+preserving the recorder receipt. No test-only hook was added. F8-C and F8-W
+are paused because recorder create/write errors currently propagate through
+the evidence sink and are misclassified as evidence-delivery failures; fix
+that shared outcome boundary before running those cases. F8-F still needs a
+deterministic trigger; propose its exact test-only failure point for explicit
+approval before adding one.
 
 ## E3 — CHIP-8 corpus and evidence-volume sweep
 
