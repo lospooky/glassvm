@@ -19,7 +19,16 @@ GLASSVM_COMMAND = [
     "cargo",
     "test",
     "--workspace",
-    "--all-features",
+    "--locked",
+    "--no-fail-fast",
+]
+RECORDER_PYTHON_COMMAND = [
+    "cargo",
+    "test",
+    "--package",
+    "glassvm_recorder",
+    "--features",
+    "python",
     "--locked",
     "--no-fail-fast",
 ]
@@ -132,21 +141,24 @@ def main() -> int:
         result: dict[str, object] = {"repetition": repetition, "stages": {}}
         stages = result["stages"]
         assert isinstance(stages, dict)
-        stages["glassvm"] = run_stage(
+        stages["glassvm_workspace"] = run_stage(
             GLASSVM_ROOT,
             GLASSVM_COMMAND,
-            results_dir / f"r{repetition:02}-glassvm.log",
+            results_dir / f"r{repetition:02}-glassvm-workspace.log",
+        )
+        stages["recorder_python"] = run_stage(
+            GLASSVM_ROOT,
+            RECORDER_PYTHON_COMMAND,
+            results_dir / f"r{repetition:02}-recorder-python.log",
         )
         stages["machines"] = run_stage(
             machines_root,
             MACHINES_COMMAND,
             results_dir / f"r{repetition:02}-machines.log",
         )
-        result["status"] = (
-            "pass"
-            if stages["glassvm"]["exit_code"] == 0 and stages["machines"]["exit_code"] == 0
-            else "fail"
-        )
+        result["status"] = "pass" if all(
+            stage["exit_code"] == 0 for stage in stages.values()
+        ) else "fail"
         failed |= result["status"] != "pass"
         (results_dir / f"r{repetition:02}.json").write_text(
             json.dumps(result, indent=2) + "\n", encoding="utf-8"
@@ -157,7 +169,9 @@ def main() -> int:
         )
         print(
             f"repetition {repetition}: {result['status']} "
-            f"(GlassVM {stages['glassvm']['exit_code']}, machines {stages['machines']['exit_code']})",
+            "(GlassVM workspace "
+            f"{stages['glassvm_workspace']['exit_code']}, recorder/Python "
+            f"{stages['recorder_python']['exit_code']}, machines {stages['machines']['exit_code']})",
             flush=True,
         )
     manifest["finished_utc"] = dt.datetime.now(dt.timezone.utc).isoformat()
