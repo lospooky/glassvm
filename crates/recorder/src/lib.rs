@@ -1148,6 +1148,32 @@ impl RunEmissionSink {
     }
 }
 
+impl FileEmissionSink {
+    fn interrupted_outcomes(
+        &self,
+        execution_reason: &str,
+    ) -> (RecorderFinalizationOutcome, PublicationOutcome) {
+        match &self.failure {
+            Some(error) => (
+                RecorderFinalizationOutcome::Failed {
+                    message: error.to_string(),
+                },
+                PublicationOutcome::NotAttempted {
+                    reason: format!("recorder failed before publication: {error}"),
+                },
+            ),
+            None => (
+                RecorderFinalizationOutcome::NotFinalized {
+                    reason: execution_reason.to_owned(),
+                },
+                PublicationOutcome::NotAttempted {
+                    reason: execution_reason.to_owned(),
+                },
+            ),
+        }
+    }
+}
+
 impl EmissionSink for RunEmissionSink {
     fn emit(&mut self, emission: Emission<'_>) -> Result<(), SinkError> {
         let python_emission = match &emission {
@@ -1160,8 +1186,15 @@ impl EmissionSink for RunEmissionSink {
             Emission::EvidenceReceipt(receipt) => Emission::EvidenceReceipt(receipt),
             Emission::RunFinished(result) => Emission::RunFinished(result),
         };
-        if let Some(file) = &mut self.file {
-            file.emit(emission)?;
+        if let Some(file) = &mut self.file
+            && file.failure.is_none()
+            && let Err(error) = file.emit(emission)
+        {
+            // Recorder persistence is an independent consumer. Latch its
+            // failure and keep delivering the same emission to the online
+            // evidence path; BudgetedSink must not mistake recorder I/O for
+            // evidence-delivery failure.
+            file.failure = Some(error);
         }
         self.python.emit(python_emission)
     }
@@ -1238,6 +1271,16 @@ impl FileRunSession {
                 let mut inner = sink.into_inner();
                 let _ = inner.finish_python();
                 let python_sink_delivery = inner.python_outcome();
+                let (recorder_finalization, publication) = inner
+                    .file
+                    .as_ref()
+                    .map(|file| {
+                        file.interrupted_outcomes("execution did not reach recorder finalization")
+                    })
+                    .unwrap_or((
+                        RecorderFinalizationOutcome::NotRequested,
+                        PublicationOutcome::NotRequested,
+                    ));
                 return Ok(FileRunResult {
                     machine_execution: if interrupted_by_evidence {
                         MachineExecutionOutcome::InterruptedByEvidenceFailure { message }
@@ -1246,20 +1289,8 @@ impl FileRunSession {
                     },
                     evidence_fulfillment: evidence,
                     python_sink_delivery,
-                    recorder_finalization: if inner.file.is_some() {
-                        RecorderFinalizationOutcome::NotFinalized {
-                            reason: "execution did not reach recorder finalization".into(),
-                        }
-                    } else {
-                        RecorderFinalizationOutcome::NotRequested
-                    },
-                    publication: if inner.file.is_some() {
-                        PublicationOutcome::NotAttempted {
-                            reason: "execution did not reach recorder finalization".into(),
-                        }
-                    } else {
-                        PublicationOutcome::NotRequested
-                    },
+                    recorder_finalization,
+                    publication,
                     published: None,
                 });
             }
@@ -1272,24 +1303,20 @@ impl FileRunSession {
                 let mut inner = sink.into_inner();
                 let _ = inner.finish_python();
                 let python_sink_delivery = inner.python_outcome();
+                let (recorder_finalization, publication) = inner
+                    .file
+                    .as_ref()
+                    .map(|file| file.interrupted_outcomes("evidence receipt emission failed"))
+                    .unwrap_or((
+                        RecorderFinalizationOutcome::NotRequested,
+                        PublicationOutcome::NotRequested,
+                    ));
                 return Ok(FileRunResult {
                     machine_execution: execution,
                     evidence_fulfillment: evidence,
                     python_sink_delivery,
-                    recorder_finalization: if inner.file.is_some() {
-                        RecorderFinalizationOutcome::NotFinalized {
-                            reason: "evidence receipt emission failed".into(),
-                        }
-                    } else {
-                        RecorderFinalizationOutcome::NotRequested
-                    },
-                    publication: if inner.file.is_some() {
-                        PublicationOutcome::NotAttempted {
-                            reason: "evidence receipt emission failed".into(),
-                        }
-                    } else {
-                        PublicationOutcome::NotRequested
-                    },
+                    recorder_finalization,
+                    publication,
                     published: None,
                 });
             }
@@ -2548,6 +2575,139 @@ mod tests {
             PythonSinkDeliveryStatus::Complete
         );
         assert!(published_path.is_file());
+
+        std::fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn recorder_creation_failure_does_not_interrupt_execution_or_evidence_delivery() {
+        let parent = temporary_run_root("recorder-create-failure");
+        std::fs::create_dir_all(&parent).unwrap();
+        let blocked_parent = parent.join("not-a-directory");
+        std::fs::write(&blocked_parent, b"blocks recorder parent creation").unwrap();
+        let published_path = blocked_parent.join("published-run");
+        let request = successful_request("recorder-create-failure");
+        let mut session = SuccessfulSession {
+            request: request.clone(),
+        };
+        let captured = Arc::new(std::sync::Mutex::new(Vec::new()));
+
+        let result = FileRunSession::run_with_sinks(
+            &mut session,
+            &request,
+            Some(FileRecorderRequest {
+                published_path,
+                limits: limits(),
+            }),
+            VersionStamp::from("test-v1"),
+            vec![(
+                Some("capture".into()),
+                Box::new(CapturePythonConsumer(Arc::clone(&captured))),
+            )],
+            PythonBatchPolicy::default(),
+        )
+        .expect("recorder creation failure is a structured recorder outcome");
+
+        assert!(matches!(
+            result.machine_execution,
+            MachineExecutionOutcome::Completed(_)
+        ));
+        assert_eq!(result.evidence_fulfillment.status, EvidenceStatus::Complete);
+        assert_eq!(
+            result.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::Complete
+        );
+        assert!(matches!(
+            result.recorder_finalization,
+            RecorderFinalizationOutcome::Failed { .. }
+        ));
+        assert!(matches!(
+            result.publication,
+            PublicationOutcome::NotAttempted { .. }
+        ));
+        assert!(result.published.is_none());
+        let captured = captured.lock().unwrap();
+        assert!(
+            captured
+                .iter()
+                .any(|emission| matches!(emission, OwnedEmission::EvidenceReceipt(_)))
+        );
+        assert!(
+            captured
+                .iter()
+                .any(|emission| matches!(emission, OwnedEmission::RunFinished(_)))
+        );
+
+        std::fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn recorder_write_limit_failure_does_not_interrupt_execution_or_evidence_delivery() {
+        let parent = temporary_run_root("recorder-write-failure");
+        std::fs::create_dir_all(&parent).unwrap();
+        let published_path = parent.join("published-run");
+        let request = successful_request("recorder-write-failure");
+        let mut session = SuccessfulSession {
+            request: request.clone(),
+        };
+        let captured = Arc::new(std::sync::Mutex::new(Vec::new()));
+        let tiny_limits = RecorderLimits {
+            max_block_logical_bytes: 1,
+            max_segment_records: 1,
+            max_segment_logical_bytes: 1,
+            max_buffered_bytes_per_channel: 1,
+        };
+
+        let result = FileRunSession::run_with_sinks(
+            &mut session,
+            &request,
+            Some(FileRecorderRequest {
+                published_path,
+                limits: tiny_limits,
+            }),
+            VersionStamp::from("test-v1"),
+            vec![(
+                Some("capture".into()),
+                Box::new(CapturePythonConsumer(Arc::clone(&captured))),
+            )],
+            PythonBatchPolicy::default(),
+        )
+        .expect("recorder write failure is a structured recorder outcome");
+
+        assert!(matches!(
+            result.machine_execution,
+            MachineExecutionOutcome::Completed(_)
+        ));
+        assert_eq!(result.evidence_fulfillment.status, EvidenceStatus::Complete);
+        assert_eq!(
+            result.python_sink_delivery.status,
+            PythonSinkDeliveryStatus::Complete
+        );
+        assert!(matches!(
+            result.recorder_finalization,
+            RecorderFinalizationOutcome::Failed { .. }
+        ));
+        assert!(matches!(
+            result.publication,
+            PublicationOutcome::NotAttempted { .. }
+        ));
+        assert!(result.published.is_none());
+        let captured = captured.lock().unwrap();
+        assert!(
+            captured
+                .iter()
+                .any(|emission| matches!(emission, OwnedEmission::Event(_)))
+        );
+        assert!(
+            captured
+                .iter()
+                .any(|emission| matches!(emission, OwnedEmission::EvidenceReceipt(_)))
+        );
+        assert!(
+            captured
+                .iter()
+                .any(|emission| matches!(emission, OwnedEmission::RunFinished(_)))
+        );
 
         std::fs::remove_dir_all(parent).unwrap();
     }
