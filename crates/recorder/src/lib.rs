@@ -1940,11 +1940,11 @@ mod tests {
 
     use super::*;
     use glassvm_core::{
-        BudgetReceipt, Emission, EmissionBudgets, EmulatorSession, EventContext, EventKind,
-        EventSelection, EvidenceGuarantee, ExecutionControls, ExecutionEvent, ExecutionRequest,
-        InputCoordinate, InputId, InputSchedule, InputSource, MachineArtifactSpec,
-        MachineConfigSchema, MachineConfiguration, MachineIdentity, ObservationRequest,
-        PreparedRun, RunResult, StructuredValue, TypedInputPayload,
+        BudgetReceipt, ChannelStatus, Emission, EmissionBudgets, EmissionChannel, EmulatorSession,
+        EventContext, EventKind, EventSelection, EvidenceGuarantee, ExecutionControls,
+        ExecutionEvent, ExecutionRequest, InputCoordinate, InputId, InputSchedule, InputSource,
+        MachineArtifactSpec, MachineConfigSchema, MachineConfiguration, MachineIdentity,
+        ObservationRequest, PreparedRun, RunResult, StructuredValue, TypedInputPayload,
     };
 
     fn manifest(limits: RecorderLimits, channels: &[ReferenceChannel]) -> ReferenceRunManifest {
@@ -2250,6 +2250,67 @@ mod tests {
 
     struct SuccessfulSession {
         request: ExecutionRequest,
+    }
+
+    struct TwoEventSession {
+        request: ExecutionRequest,
+    }
+
+    impl EmulatorSession for TwoEventSession {
+        fn request(&self) -> &ExecutionRequest {
+            &self.request
+        }
+
+        fn execute(&mut self, sink: &mut dyn EmissionSink) -> Result<RunResult, String> {
+            sink.emit(Emission::RunStarted(&self.request))
+                .map_err(|error| error.to_string())?;
+            for sequence in 0..2 {
+                let event = ExecutionEvent::from_context(
+                    &EventContext {
+                        arch: self.request.machine_id.clone(),
+                        machine_version: VersionStamp::from("test-v1"),
+                        run_id: self.request.run_id.clone(),
+                        sequence,
+                        step: sequence,
+                        cycle_or_tick: Some(sequence),
+                        frame: None,
+                        pc: None,
+                        instruction: None,
+                    },
+                    EventKind::StepStarted,
+                );
+                sink.emit(Emission::Event(&event))
+                    .map_err(|error| error.to_string())?;
+            }
+            let result = RunResult {
+                common: glassvm_core::CommonMetrics {
+                    cycles: 2,
+                    frames: 0,
+                    termination: "test_complete".into(),
+                    boot_success: true,
+                },
+                capabilities: Vec::new(),
+            };
+            sink.emit(Emission::RunFinished(&result))
+                .map_err(|error| error.to_string())?;
+            Ok(result)
+        }
+
+        fn step_frame(&mut self) -> Result<(), String> {
+            unreachable!("test session is not stepped")
+        }
+
+        fn reset(&mut self) -> Result<(), String> {
+            unreachable!("test session is not reset")
+        }
+
+        fn snapshot(&self) -> Result<Vec<u8>, String> {
+            unreachable!("test session does not snapshot")
+        }
+
+        fn restore_snapshot(&mut self, _bytes: &[u8]) -> Result<(), String> {
+            unreachable!("test session does not restore")
+        }
     }
 
     impl EmulatorSession for SuccessfulSession {
@@ -2816,6 +2877,154 @@ mod tests {
             .path();
         assert!(staging_run.join("evidence-receipt.json").is_file());
         assert!(!staging_run.join("recorder-receipt.json").exists());
+
+        std::fs::remove_dir_all(parent).unwrap();
+    }
+
+    #[test]
+    fn evidence_budget_fail_and_allow_incomplete_have_distinct_file_run_outcomes() {
+        let make_request = |run_id: &str, overflow| {
+            let mut request = successful_request(run_id);
+            request.observation.budgets.max_normalized_events = Some(1);
+            request.observation.overflow = overflow;
+            request
+        };
+
+        let fail_parent = temporary_run_root("budget-fail-run");
+        std::fs::create_dir_all(&fail_parent).unwrap();
+        let fail_path = fail_parent.join("published-run");
+        let fail_request = make_request("budget-fail-run", glassvm_core::OverflowPolicy::Fail);
+        let mut fail_session = TwoEventSession {
+            request: fail_request.clone(),
+        };
+        let fail_result = FileRunSession::run_with_sinks(
+            &mut fail_session,
+            &fail_request,
+            Some(FileRecorderRequest {
+                published_path: fail_path,
+                limits: limits(),
+                fail_finalization_after_channel_close: false,
+            }),
+            VersionStamp::from("test-v1"),
+            Vec::new(),
+            PythonBatchPolicy::default(),
+        )
+        .unwrap();
+        assert!(matches!(
+            fail_result.machine_execution,
+            MachineExecutionOutcome::InterruptedByEvidenceFailure { .. }
+        ));
+        assert_eq!(
+            fail_result.evidence_fulfillment.status,
+            EvidenceStatus::Failed
+        );
+        assert_eq!(
+            fail_result.evidence_fulfillment.budgets.exceeded,
+            Some(glassvm_core::BudgetKind::NormalizedEvents)
+        );
+        assert!(matches!(
+            fail_result.recorder_finalization,
+            RecorderFinalizationOutcome::NotFinalized { .. }
+        ));
+        assert!(matches!(
+            fail_result.publication,
+            PublicationOutcome::NotAttempted { .. }
+        ));
+        assert!(fail_result.published.is_none());
+        std::fs::remove_dir_all(fail_parent).unwrap();
+
+        let incomplete_parent = temporary_run_root("budget-incomplete-run");
+        std::fs::create_dir_all(&incomplete_parent).unwrap();
+        let incomplete_path = incomplete_parent.join("published-run");
+        let incomplete_request = make_request(
+            "budget-incomplete-run",
+            glassvm_core::OverflowPolicy::AllowIncomplete,
+        );
+        let mut incomplete_session = TwoEventSession {
+            request: incomplete_request.clone(),
+        };
+        let incomplete_result = FileRunSession::run_with_sinks(
+            &mut incomplete_session,
+            &incomplete_request,
+            Some(FileRecorderRequest {
+                published_path: incomplete_path,
+                limits: limits(),
+                fail_finalization_after_channel_close: false,
+            }),
+            VersionStamp::from("test-v1"),
+            Vec::new(),
+            PythonBatchPolicy::default(),
+        )
+        .unwrap();
+        assert!(matches!(
+            incomplete_result.machine_execution,
+            MachineExecutionOutcome::Completed(_)
+        ));
+        assert_eq!(
+            incomplete_result.evidence_fulfillment.status,
+            EvidenceStatus::Incomplete
+        );
+        let event_channel = incomplete_result
+            .evidence_fulfillment
+            .channels
+            .iter()
+            .find(|channel| channel.channel == EmissionChannel::NormalizedEvents)
+            .unwrap();
+        assert_eq!(event_channel.status, ChannelStatus::Truncated);
+        assert_eq!(event_channel.item_count, 1);
+        let RecorderFinalizationOutcome::Finalized(recorder_receipt) =
+            incomplete_result.recorder_finalization
+        else {
+            panic!("incomplete evidence may still be physically finalized");
+        };
+        assert_eq!(recorder_receipt.status, RecorderStatus::Complete);
+        assert_eq!(recorder_receipt.evidence_status, EvidenceStatus::Incomplete);
+        assert!(matches!(
+            incomplete_result.publication,
+            PublicationOutcome::Published
+        ));
+        assert!(incomplete_result.published.is_some());
+        std::fs::remove_dir_all(incomplete_parent).unwrap();
+    }
+
+    #[test]
+    fn requested_frame_channel_with_zero_artifacts_is_complete_without_claiming_occurrence() {
+        let parent = temporary_run_root("zero-frame-channel");
+        std::fs::create_dir_all(&parent).unwrap();
+        let published_path = parent.join("published-run");
+        let mut request = successful_request("zero-frame-channel");
+        request.observation.frames.capture = FrameCapture::Hashes;
+        let mut session = SuccessfulSession {
+            request: request.clone(),
+        };
+
+        let result = FileRunSession::run(
+            &mut session,
+            &request,
+            &published_path,
+            VersionStamp::from("test-v1"),
+            limits(),
+        )
+        .unwrap();
+
+        assert!(matches!(
+            result.machine_execution,
+            MachineExecutionOutcome::Completed(_)
+        ));
+        let frames = result
+            .evidence_fulfillment
+            .channels
+            .iter()
+            .find(|channel| channel.channel == EmissionChannel::Frames)
+            .expect("requested frame channel is accounted");
+        assert_eq!(frames.status, ChannelStatus::Complete);
+        assert_eq!(frames.item_count, 0);
+        assert!(matches!(result.publication, PublicationOutcome::Published));
+        let published = result.published.as_ref().unwrap();
+        assert_eq!(
+            published.evidence_receipt().status,
+            EvidenceStatus::Complete
+        );
 
         std::fs::remove_dir_all(parent).unwrap();
     }

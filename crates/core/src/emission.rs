@@ -753,6 +753,19 @@ mod tests {
     }
 
     #[derive(Debug, Default)]
+    struct RejectEvent;
+
+    impl EmissionSink for RejectEvent {
+        fn emit(&mut self, emission: Emission<'_>) -> Result<(), SinkError> {
+            if matches!(emission, Emission::Event(_)) {
+                Err(SinkError::new("normalized event delivery rejected"))
+            } else {
+                Ok(())
+            }
+        }
+    }
+
+    #[derive(Debug, Default)]
     struct CapabilityOutputSink {
         outputs: usize,
     }
@@ -795,6 +808,39 @@ mod tests {
             ChannelStatus::Failed,
             "normalized channel records the failed overflow"
         );
+    }
+
+    #[test]
+    fn rust_sink_event_error_is_recorded_as_evidence_failure() {
+        let mut request = ObservationRequest::summary();
+        request.normalized_events.events = EventSelection::All;
+        let mut sink = BudgetedSink::new(
+            RejectEvent,
+            request,
+            RunId::from("rust-sink-failure"),
+            MachineId::from("test"),
+            VersionStamp::from("test.v1"),
+        )
+        .expect("budget sink");
+
+        let error = sink
+            .emit(Emission::Event(&event(0)))
+            .expect_err("Rust sink rejection is returned to the session");
+        assert!(
+            error
+                .message()
+                .contains("normalized event delivery rejected")
+        );
+        let receipt = sink.receipt();
+        assert_eq!(receipt.status, EvidenceStatus::Failed);
+        assert_eq!(receipt.failure.as_ref().unwrap().message, error.message());
+        let normalized = receipt
+            .channels
+            .iter()
+            .find(|channel| channel.channel == EmissionChannel::NormalizedEvents)
+            .unwrap();
+        assert_eq!(normalized.status, ChannelStatus::Failed);
+        assert_eq!(normalized.item_count, 0);
     }
 
     #[test]

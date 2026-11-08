@@ -111,20 +111,20 @@ delivery, recorder finalization, and publication.
 
 | Case | Coverage | Status |
 | --- | --- | --- |
-| F1 | Required unsupported capability and unsupported evidence kinds | Planned |
-| F2 | Optional capability with an unsatisfied prerequisite | Planned |
-| F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Planned |
-| F3 | Python callback exception at a deterministic boundary | Planned |
-| F4 | Rust sink error at a deterministic boundary | Planned |
-| F5 | Graceful interruption and process kill before recorder finalization, where supported | Planned |
-| F6 | Budget exhaustion under each supported overflow policy | Planned |
-| F7 | Published finalized physical recording with incomplete evidence, where permitted | Planned |
+| F1 | Required unsupported capability and unsupported evidence kinds | Existing core preparation tests verified; E1 repetitions pending |
+| F2 | Optional capability with an unsatisfied prerequisite | Existing core preparation tests verified; E1 repetitions pending |
+| F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Existing core conformance tests verified; E1 repetitions pending |
+| F3 | Python callback exception at a deterministic boundary | Existing recorder/Python tests verified; E1 repetitions pending |
+| F4 | Rust sink error at a deterministic boundary | Ordinary emission rejection verified. Capability callbacks have no fallible Rust signature; F3 covers fallible Python callbacks. |
+| F5 | Graceful interruption and process kill before recorder finalization, where supported | Open: no graceful-stop operation exists; external-kill subprocess harness needs proposal/approval |
+| F6 | Budget exhaustion under each supported overflow policy | Focused end-to-end file-run checks verified for `Fail` and `AllowIncomplete`; E1 repetitions pending |
+| F7 | Published finalized physical recording with incomplete evidence, where permitted | Existing recorder test verified; E1 repetitions pending |
 | F8-C | Recorder creation failure | Public filesystem trigger verified; recorder failure remains separate from completed machine/evidence paths |
 | F8-W | Recorder write failure during execution | Public hard-limit trigger verified; recorder failure remains separate from completed machine/evidence paths |
 | F8-F | Recorder finalization failure | Approved test-only trigger verified after channel closure and before recorder-receipt write; staging remains inspectable |
 | F8-P | Publication failure after finalization | Public destination-collision trigger verified; finalized receipt is preserved |
-| F9 | Controlled machine/session execution fault | Planned |
-| F10 | Missing, suppressed, or interrupted expected evidence | Zero-item channel may be complete when delivery succeeds; receipt alone does not prove occurrence. Suppression injection needs an approved hook. |
+| F9 | Controlled machine/session execution fault | Existing file-run test verified; E1 repetitions pending |
+| F10 | Missing, suppressed, or interrupted expected evidence | Zero-frame channel and budget truncation checks verified. No expected-count or silent-drop claim is made. |
 
 - [ ] Choose public-API mechanisms first and document any test-only hooks.
 - [ ] Specify expected attribution for each stage of recorder failure.
@@ -312,6 +312,8 @@ Figure 4 clarifications found in the harness await retained-run verification:
 | Q6 | Does a contract defect pause the whole campaign or only the affected path? | **Resolved:** pause the affected path and report immediately; continue independent work. | E1 execution |
 | Q7 | How should E1 handle the combined recorder-finalization/publication result? | **Resolved and implemented:** finalize the staged recording separately, publish by atomic rename, and report post-rename sync problems as publication warnings. Recorder create/write failures are also latched separately from evidence delivery and machine execution. | F8-C/F8-W/F8-F/F8-P triggers verified; other E1 cases remain |
 | Q8 | Does a requested channel with zero items prove that the behavior did not occur? | **Resolved:** no. A channel may be complete if its delivery path completed with zero items; the receipt accounts for fulfillment, not occurrence. Suppression detection needs an explicit test condition. | F10 matrix and any proposed hook |
+| Q9 | Should F4 include Rust capability-output callback failure? | **Proposed:** no. The Rust `EmissionSink` capability callbacks return `()`, so they have no failure channel; test ordinary Rust emission rejection and keep fallible callback coverage under Python F3. | Confirm scope before describing F4 as covering capability callbacks |
+| Q10 | How should F5 handle graceful stop and external process kill? | **Proposed:** the current `EmulatorSession` exposes no graceful-stop/cancel operation. If F5 is retained, test external kill only with a separately approved subprocess harness and report graceful stop as unsupported by the current lifecycle. | Author decision, then approve the exact harness before adding it |
 
 Proposed defaults are not author decisions. Resolve mandatory gates before
 dependent work. Mechanism questions, including final-state comparison and
@@ -332,6 +334,7 @@ input-value/snapshot support, belong in the S0 API audit.
 | 2026-11-08 | Recorder outcome repair | Split finalized staging from atomic publication, retained finalized receipts on publication failure, and represented post-rename sync failure as published with a warning. Updated Python result validation for `not_requested`, `not_attempted`, and `published_with_warning`. Formatting and crate/facade builds pass; tests and fault trials were not run. | `crates/recorder/src/lib.rs`, `python/facade/src/lib.rs` | Propose deterministic F8 failure triggers for explicit approval; then resume E1 cases |
 | 2026-11-08 | Recorder/evidence separation and public triggers | Latched recorder create/write failures inside the shared fan-out so they do not become evidence-delivery failures or interrupt machine execution. Verified F8-C using a filesystem parent-path blocker, F8-W using the smallest valid recorder block limit, and F8-P using an online consumer that creates the publish destination at `RunFinished`. Recorder all-features suite passes (33 tests), formatting passes, and the Python facade check passes. | `crates/recorder/src/lib.rs`, `experiments/EXPERIMENT_MATRIX.md` | Propose the exact F8-F test-only hook for explicit approval |
 | 2026-11-08 | F8-F finalization trigger | With explicit approval, added a private `#[cfg(test)]` failure switch that returns an injected finalization error after segment closure and before recorder-receipt creation. The focused test confirms execution/evidence completion, a failed recorder outcome, publication not attempted, and inspectable staging with no recorder receipt. The all-features recorder suite passes (34 tests), formatting passes, and recorder/facade checks pass without warnings. | `crates/recorder/src/lib.rs`, `experiments/EXPERIMENT_MATRIX.md` | Continue to remaining E1 cases |
+| 2026-11-08 | Remaining public failure cases | Added end-to-end recorder lifecycle checks for both evidence-budget overflow policies and a requested zero-frame channel. Confirmed existing core preparation/dependency tests, Python callback failure tests, recorder/evidence coexistence test, and machine-failure result test; added a Rust ordinary-emission rejection test. Capability callback failures cannot be represented by the Rust `EmissionSink` signature. Core all-features passes (72 unit tests plus prohibited-surface check); recorder all-features passes (36 tests); formatting and recorder/facade checks pass. | `crates/core/src/emission.rs`, `crates/recorder/src/lib.rs`, `experiments/EXPERIMENT_MATRIX.md` | Resolve F4 scope and F5 process-stop harness before any additional wrapper or hook |
 | 2026-11-08 | Planning | Author selected the existing Glass Relay reference carts for E7's input-driven cases. | E7 fixture decision recorded | Verify supported combinations and nonempty evidence before measurement |
 | 2026-11-08 | Planning | Drafted a case-level coverage matrix and parameter proposal for E1/E2/E3/E4/E5/E6/E7/CE1. No campaign trials or new hooks were run or added. | `experiments/EXPERIMENT_MATRIX.md` | Resolve freeze gates; pause F8-F/F8-P pending outcome-boundary decision |
 | 2026-11-08 | Planning audit | Found `FileRunRecorder::finalize()` combines receipt finalization, atomic rename, parent sync, and opening the published run; `FileRunSession` reports every error as recorder-finalization failure and not-published. | Finding recorded in `experiments/EXPERIMENT_MATRIX.md` | User decision on characterizing current behavior or repairing the shared contract before F8-F/F8-P |

@@ -44,20 +44,20 @@ proposal and the user's explicit approval before implementation.
 
 | Case | Stimulus and coverage | Expected inspection | Gate / status |
 | --- | --- | --- | --- |
-| F1 | Request an unsupported required capability and unsupported normalized/native evidence kind. | Preparation fails before `RunStarted`; no execution or publication outcome is reported as successful. | Public preparation path; proposed |
-| F2 | Request a capability optionally while omitting one declared prerequisite. | Preparation succeeds; capability is explicitly unavailable with its reason; unrelated execution proceeds. | Public preparation path; proposed |
-| F2-D | Exercise required/optional dependency closure, shared prerequisites, transitive dependencies, and an optional dependency failure. | Resolved prerequisite set and unavailable reasons; optional dependency does not escalate to global required failure. | Existing conformance seams first; any synthetic provider/hook needs approval |
-| F3 | Raise from a Python consumer on an ordinary emission batch, capability output, and capability receipt. | Python delivery failure is structured and separate from machine execution, evidence, recorder, and publication outcomes. | Consumer can raise through public API; proposed |
-| F4 | Return a Rust sink error at an ordinary emission and at a capability callback. | Same outcome separation as F3; preserve delivered-item count and failure boundary. | Small Rust harness may be required; show exact harness proposal for approval |
-| F5 | Terminate the process before recorder finalization, including graceful stop and external kill. | Supervisor records exit/partial directory; returned outcomes are absent after kill and are not fabricated. | Deterministic stop point may require a hook; approval required |
-| F6 | Exhaust one evidence budget under each supported overflow policy (`Fail`, `AllowIncomplete`). | `Fail` and `Truncated` paths, affected channel, observed bytes/items, machine result, and publication reported independently. | Public budgets; proposed |
-| F7 | Complete recording while evidence fulfillment is incomplete. | Complete `RecorderReceipt` may coexist with incomplete/failed `EvidenceReceipt`; publication follows the actual publication gate. | Public API if a supported incomplete evidence request can be constructed |
+| F1 | Request an unsupported required capability and unsupported normalized/native evidence kind. | Preparation fails before `RunStarted`; no execution or publication outcome is reported as successful. | **Existing core preparation tests verified**; E1 repetitions pending |
+| F2 | Request a capability optionally while omitting one declared prerequisite. | Preparation succeeds; capability is explicitly unavailable with its reason; unrelated execution proceeds. | **Existing core preparation tests verified**; E1 repetitions pending |
+| F2-D | Exercise required/optional dependency closure, shared prerequisites, transitive dependencies, and an optional dependency failure. | Resolved prerequisite set and unavailable reasons; optional dependency does not escalate to global required failure. | **Existing core conformance tests verified**; E1 repetitions pending |
+| F3 | Raise from a Python consumer on an ordinary emission batch, capability output, and capability receipt. | Python delivery failure is structured and separate from machine execution, evidence, recorder, and publication outcomes. | **Existing recorder/Python tests verified**; E1 repetitions pending |
+| F4 | Return a Rust sink error at an ordinary emission. | The budgeted evidence receipt records the rejected channel/item and failure; session code receives the sink error. | **Ordinary emission verified.** Rust capability-output/receipt callbacks return no `Result`; callback failure is not expressible in this interface and is exercised only through the fallible Python path in F3. |
+| F5 | Terminate the process before recorder finalization, including graceful stop and external kill. | Supervisor records exit/partial directory; returned outcomes are absent after kill and are not fabricated. | **Open:** `EmulatorSession` has no graceful-stop operation; an external-kill subprocess harness needs a concrete proposal/approval |
+| F6 | Exhaust one evidence budget under each supported overflow policy (`Fail`, `AllowIncomplete`). | `Fail` and `Truncated` paths, affected channel, observed bytes/items, machine result, and publication reported independently. | **Focused file-run trigger verified** for both policies; E1 repetitions pending |
+| F7 | Complete recording while evidence fulfillment is incomplete. | Complete `RecorderReceipt` may coexist with incomplete/failed `EvidenceReceipt`; publication follows the actual publication gate. | **Existing recorder test verified**; E1 repetitions pending |
 | F8-C | Make recorder creation fail through a filesystem parent-path collision. | Execution/evidence status up to the failure point; recorder and publication outcomes remain distinct. | **Public trigger verified:** execution and Python delivery complete; recorder reports failure and publication is not attempted |
 | F8-W | Reject a recorder channel write with the smallest valid hard block limit. | Machine result, evidence fulfillment, recorder failure, and publication status at the failure point. | **Public trigger verified:** execution and Python delivery complete; evidence remains complete; recorder reports failure and publication is not attempted |
 | F8-F | Inject a recorder finalization error after channel segments close but before the recorder receipt is written. | Machine/evidence outcomes remain complete; recorder finalization fails, staging remains inspectable, and publication is not attempted. | **Approved test-only trigger verified** |
 | F8-P | Fail atomic rename/publication after the recording has been finalized. | Finalized recorder receipt remains distinguishable from publication failure; a post-rename sync warning retains the published reference. | **Public trigger verified:** an online consumer creates the reserved destination on `RunFinished`; focused recorder test confirms finalized receipt survives `NotPublished` |
-| F9 | Cause a controlled session/machine execution failure after preparation. | Machine execution failure does not erase already available evidence or mislabel recorder/publish outcome. | Exact deterministic fault mechanism pending; hook approval if needed |
-| F10 | Compare a legitimate zero-emission channel with suppressed or interrupted expected evidence. | A requested channel with zero items may be `Complete` when the selected delivery path completed; the receipt does not establish that behavior occurred. Separately determine whether an injected drop can be accounted for. | Semantics **resolved by author**; a suppression hook requires a separate concrete proposal and approval |
+| F9 | Cause a controlled session/machine execution failure after preparation. | Machine execution failure does not erase already available evidence or mislabel recorder/publish outcome. | **Existing file-run test verified**; E1 repetitions pending |
+| F10 | Compare a legitimate zero-emission channel with budget-truncated evidence. | Zero items can be complete without proving occurrence; an allowed budget overflow is explicitly truncated/incomplete. | **Focused file-run checks verified** for zero frames and truncation under F6. No silent-drop or expected-count claim is made. |
 
 ### Recorder boundary defect and proposed repair
 
@@ -79,7 +79,8 @@ recorder format or staging recovery semantics changed.
 
 Formatting and `cargo check` for `glassvm_recorder` and the Python facade pass.
 `cargo fmt --all -- --check` and `cargo test -p glassvm_recorder
---all-features` pass as well (34 tests after the approved F8-F hook).
+--all-features` pass as well (36 tests). The core all-features suite passes
+(72 unit tests plus its prohibited-surface integration check).
 The focused F8-P public-trigger test passes: a synchronous online consumer
 creates the requested destination on `RunFinished`, after which staging
 finalization succeeds and atomic publication reports `NotPublished` while
