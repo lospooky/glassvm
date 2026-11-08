@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import platform
 import re
 import subprocess
 import sys
@@ -119,6 +120,12 @@ def main() -> int:
         "release": EXPECTED_VERSION,
         "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "repetitions": 3,
+        "host": {
+            "platform": platform.platform(),
+            "python": platform.python_version(),
+            "rustc": subprocess.check_output(["rustc", "--version"], text=True).strip(),
+            "cargo": subprocess.check_output(["cargo", "--version"], text=True).strip(),
+        },
         "glassvm": {
             "root": str(GLASSVM_ROOT),
             "revision": git_value(GLASSVM_ROOT, "rev-parse", "HEAD"),
