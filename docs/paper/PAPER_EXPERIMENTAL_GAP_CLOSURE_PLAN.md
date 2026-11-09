@@ -166,6 +166,23 @@ fault-injection study using submitted machine programs.
 
 ## S2 / E3 + CE1 — Corpus and campaign economics
 
+### Selected candidate corpora and CE1 cohorts
+
+Candidate selection has already been performed. These are the retained sets,
+with the current limits of their screening and redistribution evidence:
+
+| Machine | Candidate set | CE1 subset |
+| --- | --- | --- |
+| CHIP-8 | 45 independently sourced public-ROM candidates with classic CHIP-8 verifier classification and recorded CC0/MIT/GPL license terms; see `experiments/chip8-public-candidates.tsv`. The larger E3 cohort remains to be finalized from the candidate pool. A 75-ROM project-authored autonomous corpus remains a documented fallback. | IBM Logo Test, Horse World Online, and Octojam 2 Title; pinned with digests and provenance in the machines repository's `chip8/fixtures/paper/cohort.toml`. |
+| PICO-8 | 30 autonomous visual candidates reconstructed from the Fraser dataset, selected by source and ten-frame execution screens. The carts and manifest are retained under `experiments/pico8-corpus-pilot/`; dataset license markers and the asset-rights limitation are documented in `CORPUS.md`. | Hilbert Space Filling Curve, Flame, and PICO-8 Screensaver; pinned in the machines repository's `pico8/fixtures/paper/ce1/cohort.toml`. |
+| TIC-80 | 30 autonomous visual candidates retained from a 180-cart exploratory screen. Sources, digests, and license markers are in `experiments/tic80-corpus-pilot/manifest.json`; most downloaded carts remain local-only pending rights review. | Boing Ball Demo, Guckidemo, and Milky Way in TIC-80; pinned in the machines repository's `tic80/fixtures/paper/ce1/cohort.toml`. |
+
+The CE1 subsets passed the recorded 600-frame empty-input screen and were
+used in the completed 135-trial selection matrix. Ten-frame screening and
+static input scans do not establish full compatibility or representativeness.
+The selected candidate pools are distinct from the final E3 corpus and its
+deduplication and eligibility decisions.
+
 ### E3 corpus sweep
 
 #### CHIP-8 corpus decision record (2026-11-08)
