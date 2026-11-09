@@ -154,8 +154,8 @@ delivery, recorder finalization, and publication.
 | F7 | Published finalized physical recording with incomplete evidence, where permitted | All nine F6 `allow_incomplete` trials reported a complete recorder receipt, incomplete evidence receipt, and successful publication; both receipt files were observed before cleanup. |
 | F8-C | Recorder creation failure | Nine independent per-machine trials: machine execution and evidence completed; recorder failed and publication was not attempted. |
 | F8-W | Recorder write failure during execution | Nine independent per-machine Rust sessions used the public one-byte recorder block limit; execution and evidence completed, recorder failed, and publication was not attempted. |
-| F8-F | Recorder finalization failure | Approved test-only-trigger assertions passed in all three repeated suite runs; staging remains inspectable |
-| F8-P | Publication failure after finalization | Public destination-collision assertions passed in all three repeated suite runs; finalized receipt is preserved |
+| F8-F | Recorder finalization failure | Approved private `#[cfg(test)]` trigger passed in three recorder suite repetitions and left inspectable staging. The private switch is not exposed to separate bundle sessions; per-machine trials have not been run. |
+| F8-P | Publication failure after finalization | Nine independent per-machine destination-collision trials finalized recorder receipts but reported publication failure with no published handle. |
 | F9 | Controlled machine/session execution fault | File-run execution-failure assertions passed in all three repeated suite runs; machine conformance suites also passed for all three bundles |
 | F10 | Missing, suppressed, or interrupted expected evidence | Zero-frame and budget-truncation assertions passed in all three repeated suite runs. No expected-count or silent-drop claim is made. |
 
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F8-P | Nine public destination-collision trials preserved finalized recorder receipts and reported publication failure without a published handle. | `experiments/measurements/e1-f8p-local-repair/` | Continue F9; F8-F remains source-test-only for the approved private switch. |
 | 2026-11-09 | E1 F8-W | The public recorder hard-block limit produced the expected write failure in nine independent machine sessions, without interrupting execution or evidence. | `glassvm-machines/conformance/paper/e1-f8w-local-repair/`, commits `c55bdec`, `1b7f428` | Continue F8-F. |
 | 2026-11-09 | E1 F8-C | A file blocking the recorder parent path produced recorder failures in nine independent machine runs; execution and evidence completed. | `experiments/measurements/e1-f8c-local-repair/` | Continue F8-W. |
 | 2026-11-09 | E1 F7 | Checked all nine F6 `allow_incomplete` trials: complete recorder receipt, incomplete evidence, successful publication, and both receipt files present before cleanup. | `experiments/measurements/e1-f7-local-repair.json`, `experiments/check_e1_f7.py` | Continue recorder failure cases F8-C/W/F/P. |
