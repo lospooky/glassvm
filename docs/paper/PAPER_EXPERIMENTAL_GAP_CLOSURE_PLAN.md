@@ -27,8 +27,8 @@ CHIP-8 cohort, count, and duplicate policy to be frozen.
   `glassvm-machines` `paper-publication` branch, in `conformance/paper/ce1/`
   (campaign commit `0dd8dce`, results commit `ab1612a`).
 - E1's three recorded source-suite repetitions remain distinct from the
-  per-machine fault-injection experiment. Begin the latter with public-API F1
-  required-capability rejection, preserving each trial's request and outcome.
+  per-machine fault-injection experiment, which began with public-API F1
+  required-capability rejection and retained each trial's request and outcome.
 - F1 required-capability rejection: 3 independent processes for each of
   CHIP-8, PICO-8 and TIC-80 rejected an undeclared required capability at
   preparation. No execution was invoked. Raw records and environment evidence:

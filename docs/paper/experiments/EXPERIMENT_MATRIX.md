@@ -1,13 +1,17 @@
 # Experiment coverage matrix and parameter proposal
 
-Updated: 2026-11-08  
-Status: **proposal for review; parameters not frozen; no trials run under this matrix.**
+Updated: 2026-11-09
+
+Status: **partial execution**. The approved CE1 selection matrix and E1's
+required-capability rejection case have been run; remaining experiment cells
+and their individual freeze gates are still open.
 
 This document turns the approved experiment briefs and tracking plan into
 case-level coverage. It is a proposal, not authorization to add test hooks or
 begin resource-heavy trials. Existing published 0.3.1 implementations and
-fixtures are the comparison baseline unless a separately approved test-only
-revision is needed.
+fixtures were the original comparison baseline. The completed CE1 and F1
+trials instead used published GlassVM 0.3.2 and machine bundles 0.3.3 after
+the approved outcome repairs; see their retained provenance.
 
 ## Common protocol
 
@@ -44,7 +48,7 @@ proposal and the user's explicit approval before implementation.
 
 | Case | Stimulus and coverage | Expected inspection | Gate / status |
 | --- | --- | --- | --- |
-| F1 | Request an unsupported required capability and unsupported normalized/native evidence kind. | Preparation fails before `RunStarted`; no execution or publication outcome is reported as successful. | **Passed in all 3 source-suite repetitions** |
+| F1 | Request an unsupported required capability and unsupported normalized/native evidence kind. | Preparation fails before `RunStarted`; no execution or publication outcome is reported as successful. | Required-capability rejection passed in 9 independent trials (3 per machine); normalized/native kind trials remain open. Core assertions also passed in 3 source-suite repetitions. |
 | F2 | Request a capability optionally while omitting one declared prerequisite. | Preparation succeeds; capability is explicitly unavailable with its reason; unrelated execution proceeds. | **Passed in all 3 source-suite repetitions** |
 | F2-D | Exercise required/optional dependency closure, shared prerequisites, transitive dependencies, and an optional dependency failure. | Resolved prerequisite set and unavailable reasons; optional dependency does not escalate to global required failure. | **Passed in all 3 source-suite repetitions** |
 | F3 | Raise from a Python consumer on an ordinary emission batch, capability output, and capability receipt. | Python delivery failure is structured and separate from machine execution, evidence, recorder, and publication outcomes. | **Python-enabled recorder tests passed in all 3 repetitions** |
@@ -109,9 +113,10 @@ publication attempt, and inspectable staging without a recorder receipt.
 ### Candidate screen proposal
 
 Begin with the 45 public-corpus metadata candidates already inventoried in
-`experiments/chip8-public-candidates.tsv`. Before execution, manually resolve
-their CHIP-8 profile discrepancy and verify source/license evidence. Do not
-copy or redistribute ROM bytes. Run one isolated empty-input screening trial
+`experiments/chip8-public-candidates.tsv`. Three selected CE1 fixtures are
+already retained in the machine repository. For additional candidates, resolve
+their CHIP-8 profile discrepancy and verify source/license and redistribution
+evidence before adding their bytes. Run one isolated empty-input screening trial
 per candidate with a 600-frame bound and frame hashes. Keep every candidate
 with admitted classic CHIP-8 execution, no execution/evidence failure, and the
 600-frame bound outcome declared by the workload. Static “no key opcode” is not enough;
@@ -144,20 +149,22 @@ qualify, the upper bound is 315 runs. This is a planning count, not a result.
 
 ### Workload question
 
-The current manifest has one established workload per machine. A cross-machine
-program-population comparison needs more than one specimen per machine, but the
-candidate pools have different provenance and rights status. **Author-approved
-target:** three cleared, executable workloads per machine, including the
-established fixture where suitable. If three cleared
-specimens are unavailable for PICO-8 or TIC-80, either narrow the claim to
-repeated runs of the established fixture or pause CE1; do not treat repetitions
-of one program as a multi-program campaign.
+Three workloads per machine were selected and pinned in the machine repository's
+CE1 cohort manifests. Candidate-pool provenance and rights limits are recorded
+in the main tracking plan and the cohort manifests.
 
 ### Policy cells
 
-Use the same program, configuration, input schedule, execution bound, and
-downstream summary algorithm within each paired block. The proposal uses 600
-frames for all CE1 cells; confirm this is sufficient for the selected carts.
+The completed matrix used 600 frames and the same program, configuration,
+input schedule, and execution bound across five approved policies: disabled;
+selected events plus hashes; selected events plus full frames; all events plus
+hashes; and all events plus full frames. Three repetitions per workload and
+policy produced 135 successful trials. Requests, receipts, raw records, and
+summary are in `glassvm-machines/conformance/paper/ce1/`.
+
+The following earlier proposal specifies the still-open downstream-filtering
+and online-reduction comparison. P3 and P4 were not part of the completed
+selection matrix; do not label that matrix as a source-versus-filter study.
 
 | Policy | Requested evidence and retention | Main quantities |
 | --- | --- | --- |
@@ -167,16 +174,17 @@ frames for all CE1 cells; confirm this is sufficient for the selected carts.
 | P4 — selective online reduction | Same request as P2; the same consumer computes the same summary online and retains only compact output. | Produced/processed/retained quantities and costs, paired with P3. |
 | P5 — observation disabled | No evidence request; same execution material and controls. | Execution baseline, process RSS and wall time. |
 
-Proposed repetitions: three per policy/workload, each in a fresh process. The
+For the outstanding P3/P4 comparison, the proposal is three repetitions per
+policy/workload, each in a fresh process. The
 same compact summary from P3 and P4 makes downstream filtration comparable to
 selection before execution. To show campaign-size arithmetic without presenting
 it as measurement, report per-run values scaled to 10 and 100 independent runs.
 If the brief requires observed multi-run campaign scaling rather than arithmetic
 projections, add measured 10-run and 100-run batches only after the first cohort
 pilot and resource review. At the proposed three workloads per machine, the
-primary matrix is 3 machines × 3 workloads × 5 policies × 3 repetitions = 135
-trials. If only one established workload per machine is cleared, it is 45
-trials and supports a repeated-run comparison, not a program-population claim.
+earlier proposed five-mode matrix would have contained 135 trials. The actual
+completed 135-trial matrix used the approved selection policies listed above;
+additional downstream comparison counts must be specified separately.
 
 ## E2, E4, E7, E5, and E6 coverage
 
@@ -205,5 +213,6 @@ schema silently.
 4. Freeze actual randomized execution order, warmup handling, raw-record schema,
    storage cleanup verification, and regeneration commands in the manifest.
 
-Until these gates are resolved, all values in this document remain proposals;
-no S1–S6 campaign result should be represented as collected.
+These gates apply to the remaining unrun cells. The CE1 selection matrix and
+F1 required-capability trials were separately specified and completed; their
+retained manifests are the authority for their actual parameters and results.
