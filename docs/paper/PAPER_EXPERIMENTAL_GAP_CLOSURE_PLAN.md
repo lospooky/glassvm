@@ -36,6 +36,13 @@ event selector; see the latest execution-ledger entry.
   preparation. No execution was invoked. Raw records and environment evidence:
   `experiments/measurements/e1-f1-required-capability-0.3.3/`. F1's unsupported
   normalized/native evidence-kind cases remain open.
+- Repair audit: the current `NormalizerCatalog` declares capabilities but no
+  complete inventory of normalized or native event kinds. Capability
+  prerequisites check requested selections, but direct kind selectors cannot be
+  checked against a bundle's declared emissions. Repair requires explicit
+  bundle declarations and preparation-time validation, followed by migration
+  and conformance coverage for all three publication bundles. E1 remains
+  paused until the repaired path is available and the affected F1 cases run.
 
 This document reconciles the **GlassVM: Experimental Gap Closure** brief and
 the **New and revised experiments for §5 Evaluation** brief. Update its
