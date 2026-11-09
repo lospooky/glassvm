@@ -150,7 +150,7 @@ delivery, recorder finalization, and publication.
 | F3 | Python callback exception at a deterministic boundary | 27 independent machine trials covered event batches, capability outputs and receipts. All reported Python delivery failure and execution interrupted by evidence failure; recorders were not finalized and publication was not attempted. |
 | F4 | Rust sink error at a deterministic boundary | Nine independent machine sessions returned a sink-caused error and failed evidence receipt when a caller-owned Rust sink rejected the first normalized event. Recorder and publication were not requested; capability callbacks have no fallible Rust signature. |
 | F5 | Graceful interruption and process kill before recorder finalization, where supported | Nine independent machine children were killed at the approved `RunFinished` barrier. Staging remained, with no returned result or published run. Graceful stop is unsupported. |
-| F6 | Budget exhaustion under each supported overflow policy | `Fail` and `AllowIncomplete` file-run assertions passed in all three repeated suite runs |
+| F6 | Budget exhaustion under each supported overflow policy | 18 independent per-machine trials covered `Fail` and `AllowIncomplete`; all reported the expected evidence and execution outcomes. Full receipts retained. |
 | F7 | Published finalized physical recording with incomplete evidence, where permitted | Recorder/evidence separation assertions passed in all three repeated suite runs |
 | F8-C | Recorder creation failure | Public filesystem-trigger assertions passed in all three repeated suite runs |
 | F8-W | Recorder write failure during execution | Public hard-limit-trigger assertions passed in all three repeated suite runs |
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F6 | Ran both normalized-event budget overflow policies, three repetitions per machine; all 18 trials produced their expected outcomes. | `experiments/measurements/e1-f6-local-repair/` | Evaluate F7 publication and recorder receipts from the nine `allow_incomplete` trials. |
 | 2026-11-09 | E1 F5 | Killed three child sessions per machine at the `RunFinished` consumer barrier; each left staging and no returned or published run. | `experiments/measurements/e1-f5-local-repair/` | Continue E1 F6. |
 | 2026-11-09 | E1 F4 | Three independent sessions per machine rejected the first normalized event in a caller-owned Rust consumer. All nine returned an error and a failed evidence receipt. | `glassvm-machines/conformance/paper/e1-f4-local-repair/`, commits `78de1d3`, `ef1bb13` | Continue E1 F5. |
 | 2026-11-09 | E1 F3 | Ran three repetitions per machine and callback boundary (27 trials); all reported the Python failure separately and did not classify it as a machine fault. | `experiments/measurements/e1-f3-local-repair/` | Continue E1 F4. |
