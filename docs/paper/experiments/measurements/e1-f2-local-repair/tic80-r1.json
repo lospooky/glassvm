@@ -1,0 +1,243 @@
+{
+  "artifact": {
+    "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+    "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+  },
+  "case": "F2",
+  "machine": "tic80",
+  "preparation": {
+    "prospective_details": "opaque in Python facade",
+    "status": "accepted"
+  },
+  "repetition": 1,
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "tic80.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "runtime": {
+            "Text": "lua"
+          }
+        }
+      }
+    },
+    "controls": {
+      "bundle_limits": [],
+      "frame_limit": 2,
+      "step_limit": null
+    },
+    "observation": {
+      "budgets": {},
+      "capabilities": [
+        {
+          "id": "tic80.input_summary",
+          "parameters": {},
+          "required": false
+        }
+      ],
+      "frames": {
+        "capture": "none"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": "none",
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    },
+    "schedule": {
+      "entries": [],
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    }
+  },
+  "result": {
+    "evidence_fulfillment": {
+      "budgets": {
+        "configured": {
+          "max_capability_bytes": null,
+          "max_frame_bytes": null,
+          "max_input_value_bytes": null,
+          "max_input_value_events": null,
+          "max_native_bytes": null,
+          "max_native_events": null,
+          "max_normalized_bytes": null,
+          "max_normalized_events": null,
+          "max_snapshot_bytes": null,
+          "max_total_logical_bytes": null
+        },
+        "exceeded": null,
+        "observed_logical_bytes": 0
+      },
+      "capabilities": [
+        {
+          "id": "tic80.input_summary",
+          "logical_bytes": 0,
+          "message": "input-value evidence channel is not selected",
+          "output_schema": null,
+          "status": "unavailable"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "normalized_events",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "capabilities",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "native_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "frames",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "snapshots",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "input_value_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "envelope",
+          "encoded_bytes": null,
+          "item_count": 2,
+          "logical_bytes": 0,
+          "requested": true,
+          "status": "complete"
+        }
+      ],
+      "failure": null,
+      "fulfilled_guarantee": "summary",
+      "machine_id": "tic80",
+      "machine_version": "tic80-python-bundle",
+      "requested_guarantee": "summary",
+      "run_id": "python-tic80-1",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "status": "complete"
+    },
+    "machine_execution": {
+      "result": {
+        "capabilities": [],
+        "common": {
+          "boot_success": true,
+          "cycles": 2,
+          "frames": 2,
+          "termination": "frame_limit"
+        }
+      },
+      "status": "completed"
+    },
+    "publication": {
+      "status": "published"
+    },
+    "published_run": {
+      "path": "/tmp/glassvm-e1-f2-_as0tm43/published",
+      "published": true
+    },
+    "python_sink_delivery": {
+      "batches_delivered": 0,
+      "failure": null,
+      "items_delivered": 0,
+      "logical_bytes_delivered": 0,
+      "peak_batch_items": 0,
+      "peak_batch_logical_bytes": 0,
+      "sink_count": 0,
+      "status": "not_requested"
+    },
+    "recorder_finalization": {
+      "result": {
+        "block_count": 0,
+        "channels": [],
+        "encoded_bytes": 0,
+        "evidence_receipt_published": true,
+        "evidence_status": "complete",
+        "failure": null,
+        "file_count": 3,
+        "finalized": true,
+        "logical_bytes": 0,
+        "record_count": 0,
+        "schema": {
+          "id": "glassvm.recorder_receipt",
+          "version": {
+            "major": 1,
+            "minor": 1,
+            "patch": 0
+          }
+        },
+        "segment_count": 0,
+        "status": "complete"
+      },
+      "status": "finalized"
+    }
+  }
+}

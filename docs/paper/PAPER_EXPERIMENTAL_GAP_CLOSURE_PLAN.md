@@ -145,7 +145,7 @@ delivery, recorder finalization, and publication.
 | Case | Coverage | Status |
 | --- | --- | --- |
 | F1 | Required unsupported capability and unsupported evidence kinds | Repaired local-wheel rerun: 27/27 unsupported capability, normalized-kind and native-kind requests rejected across three machines; 3/3 supported-selector controls accepted. Execution was not invoked. |
-| F2 | Optional capability with an unsatisfied prerequisite | Core preparation assertions passed in all three repeated suite runs |
+| F2 | Optional capability with an unsatisfied prerequisite | 9/9 independent Python executions completed and receipts marked the optional input-summary capability unavailable with the missing-channel reason. Rust three-bundle conformance checks prospective unavailability; Python prepared details are opaque. |
 | F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Core dependency-closure assertions passed in all three repeated suite runs |
 | F3 | Python callback exception at a deterministic boundary | Python-enabled recorder assertions passed in all three repeated suite runs |
 | F4 | Rust sink error at a deterministic boundary | Core ordinary-emission failure assertions passed in all three repeated suite runs; capability callbacks have no fallible Rust signature |
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F2 | Three independent runs per machine requested optional input summary without input-value evidence. All 9 executed and published; receipts recorded unavailability and the missing-channel reason. | `experiments/measurements/e1-f2-local-repair/`; local repair wheels | Continue E1 dependency-closure case F2-D. |
 | 2026-11-09 | E1 F1 repair and rerun | Added bundle event-kind inventories and preparation validation; locally built bundle wheels rejected all 27 unsupported requests and accepted 3 supported controls. | `experiments/measurements/e1-f1-local-repair/`; GlassVM `1388313`, machines `53ec568` | Continue E1 F2. No crates or wheels were published. |
 | 2026-11-09 | E1 F1 normalized kind probe | A public preparation request selecting `extension:glassvm.paper.unsupported-event` was accepted by CHIP-8. No execution was invoked. This differs from F1's expected preparation rejection, so the per-case sequence stopped immediately. | `experiments/measurements/e1-f1-required-capability-0.3.3/f1-normalized-selector-probe.json`; one diagnostic probe using GlassVM 0.3.2 and CHIP-8 0.3.3 | Review whether arbitrary normalized event selectors are intentionally permitted. If not, define the repair and affected reruns before resuming F1. |
 | 2026-11-09 | CE1 selection matrix | Ran the approved five selection policies over three pinned workloads per machine, three repetitions each; 135/135 completed with complete evidence fulfillment and finalized, published recorders. | `glassvm-machines` `paper-publication`, `0dd8dce` and `ab1612a`; `conformance/paper/ce1/` | Source-selection versus downstream-filtering/online-reduction comparison remains open. |
