@@ -1,0 +1,115 @@
+{
+  "case": "F5",
+  "child_exit_code": -9,
+  "files": [
+    {
+      "bytes": 30,
+      "path": "ready"
+    },
+    {
+      "bytes": 1561,
+      "path": "request.json"
+    },
+    {
+      "bytes": 71084,
+      "path": ".staging/run-95600-1794254894890302692-0/manifest.json"
+    },
+    {
+      "bytes": 0,
+      "path": ".staging/run-95600-1794254894890302692-0/frames/segment-000000.gvmseg"
+    },
+    {
+      "bytes": 0,
+      "path": ".staging/run-95600-1794254894890302692-0/normalized/segment-000000.gvmseg"
+    }
+  ],
+  "machine": "pico8",
+  "published_exists": false,
+  "ready": true,
+  "repetition": 2,
+  "request": {
+    "artifact_path": "paper/ce1/01.p8",
+    "artifact_sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc",
+    "configuration": {
+      "schema": {
+        "id": "pico8.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "instruction_budget": {
+            "Unsigned": 500000
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          }
+        }
+      }
+    },
+    "controls": {
+      "bundle_limits": [],
+      "frame_limit": 2,
+      "step_limit": null
+    },
+    "observation": {
+      "budgets": {},
+      "capabilities": [],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "frame_completed",
+            "input_applied",
+            {
+              "extension": "glassvm.graphics_activity"
+            }
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    },
+    "schedule": {
+      "entries": [],
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    }
+  },
+  "returned_result": false,
+  "staging_exists": true,
+  "stderr": "",
+  "stdout": ""
+}

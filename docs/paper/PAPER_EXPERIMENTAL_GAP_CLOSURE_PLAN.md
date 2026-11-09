@@ -149,7 +149,7 @@ delivery, recorder finalization, and publication.
 | F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Nine independent preparation processes passed using a synthetic capability diamond over each real bundle input catalog. Optional missing prerequisites remained unavailable, required ones failed, and a complete request resolved the shared dependency. This is preparation-only; no synthetic normalizer executed. |
 | F3 | Python callback exception at a deterministic boundary | 27 independent machine trials covered event batches, capability outputs and receipts. All reported Python delivery failure and execution interrupted by evidence failure; recorders were not finalized and publication was not attempted. |
 | F4 | Rust sink error at a deterministic boundary | Nine independent machine sessions returned a sink-caused error and failed evidence receipt when a caller-owned Rust sink rejected the first normalized event. Recorder and publication were not requested; capability callbacks have no fallible Rust signature. |
-| F5 | Graceful interruption and process kill before recorder finalization, where supported | External-kill subprocess assertion passed in all three repeated suite runs; graceful stop is unsupported by the current session interface |
+| F5 | Graceful interruption and process kill before recorder finalization, where supported | Nine independent machine children were killed at the approved `RunFinished` barrier. Staging remained, with no returned result or published run. Graceful stop is unsupported. |
 | F6 | Budget exhaustion under each supported overflow policy | `Fail` and `AllowIncomplete` file-run assertions passed in all three repeated suite runs |
 | F7 | Published finalized physical recording with incomplete evidence, where permitted | Recorder/evidence separation assertions passed in all three repeated suite runs |
 | F8-C | Recorder creation failure | Public filesystem-trigger assertions passed in all three repeated suite runs |
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F5 | Killed three child sessions per machine at the `RunFinished` consumer barrier; each left staging and no returned or published run. | `experiments/measurements/e1-f5-local-repair/` | Continue E1 F6. |
 | 2026-11-09 | E1 F4 | Three independent sessions per machine rejected the first normalized event in a caller-owned Rust consumer. All nine returned an error and a failed evidence receipt. | `glassvm-machines/conformance/paper/e1-f4-local-repair/`, commits `78de1d3`, `ef1bb13` | Continue E1 F5. |
 | 2026-11-09 | E1 F3 | Ran three repetitions per machine and callback boundary (27 trials); all reported the Python failure separately and did not classify it as a machine fault. | `experiments/measurements/e1-f3-local-repair/` | Continue E1 F4. |
 | 2026-11-09 | E1 F2-D | Three independent processes per machine exercised a synthetic shared/transitive dependency diamond against the real bundle input catalogs. Optional-missing, required-missing, and complete-prerequisite assertions passed in all nine. | `glassvm-machines/conformance/paper/e1-f2d-local-repair/`, commits `5d80242`, `8044d31` | Continue E1 F3. |

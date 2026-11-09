@@ -1,0 +1,119 @@
+{
+  "case": "F5",
+  "child_exit_code": -9,
+  "files": [
+    {
+      "bytes": 30,
+      "path": "ready"
+    },
+    {
+      "bytes": 1653,
+      "path": "request.json"
+    },
+    {
+      "bytes": 500758,
+      "path": ".staging/run-95603-1794254895341187595-0/manifest.json"
+    },
+    {
+      "bytes": 0,
+      "path": ".staging/run-95603-1794254895341187595-0/frames/segment-000000.gvmseg"
+    },
+    {
+      "bytes": 0,
+      "path": ".staging/run-95603-1794254895341187595-0/normalized/segment-000000.gvmseg"
+    }
+  ],
+  "machine": "tic80",
+  "published_exists": false,
+  "ready": true,
+  "repetition": 2,
+  "request": {
+    "artifact_path": "paper/ce1/04-Boing-Ball-Demo.tic",
+    "artifact_sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1",
+    "configuration": {
+      "schema": {
+        "id": "tic80.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "runtime": {
+            "Text": "lua"
+          }
+        }
+      }
+    },
+    "controls": {
+      "bundle_limits": [],
+      "frame_limit": 2,
+      "step_limit": null
+    },
+    "observation": {
+      "budgets": {},
+      "capabilities": [],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "frame_completed",
+            "input_sampled",
+            "input_applied",
+            {
+              "extension": "glassvm.graphics_activity"
+            },
+            {
+              "extension": "tic80.trace"
+            }
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    },
+    "schedule": {
+      "entries": [],
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    }
+  },
+  "returned_result": false,
+  "staging_exists": true,
+  "stderr": "",
+  "stdout": ""
+}

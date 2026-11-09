@@ -1,0 +1,113 @@
+{
+  "case": "F5",
+  "child_exit_code": -9,
+  "files": [
+    {
+      "bytes": 30,
+      "path": "ready"
+    },
+    {
+      "bytes": 1501,
+      "path": "request.json"
+    },
+    {
+      "bytes": 58742,
+      "path": ".staging/run-95597-1794254894618790390-0/manifest.json"
+    },
+    {
+      "bytes": 0,
+      "path": ".staging/run-95597-1794254894618790390-0/frames/segment-000000.gvmseg"
+    },
+    {
+      "bytes": 0,
+      "path": ".staging/run-95597-1794254894618790390-0/normalized/segment-000000.gvmseg"
+    }
+  ],
+  "machine": "chip8",
+  "published_exists": false,
+  "ready": true,
+  "repetition": 2,
+  "request": {
+    "artifact_path": "paper/2-ibm-logo.ch8",
+    "artifact_sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067",
+    "configuration": {
+      "schema": {
+        "id": "chip8.machine_configuration",
+        "version": {
+          "major": 2,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 12
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "quirks": {
+            "Text": "chip8"
+          }
+        }
+      }
+    },
+    "controls": {
+      "bundle_limits": [],
+      "frame_limit": 2,
+      "step_limit": null
+    },
+    "observation": {
+      "budgets": {},
+      "capabilities": [],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "frame_completed",
+            "display_write",
+            "input_sampled"
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    },
+    "schedule": {
+      "entries": [],
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    }
+  },
+  "returned_result": false,
+  "staging_exists": true,
+  "stderr": "",
+  "stdout": ""
+}

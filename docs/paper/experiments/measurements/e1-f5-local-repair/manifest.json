@@ -1,0 +1,1065 @@
+{
+  "case": "F5",
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "packages": {
+    "glassvm": "0.3.2",
+    "glassvm-chip8": "0.3.3",
+    "glassvm-pico8": "0.3.3",
+    "glassvm-tic80": "0.3.3"
+  },
+  "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]",
+  "rows": [
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1501,
+          "path": "request.json"
+        },
+        {
+          "bytes": 58742,
+          "path": ".staging/run-95596-1794254894532045589-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95596-1794254894532045589-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95596-1794254894532045589-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "chip8",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 1,
+      "request": {
+        "artifact_path": "paper/2-ibm-logo.ch8",
+        "artifact_sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067",
+        "configuration": {
+          "schema": {
+            "id": "chip8.machine_configuration",
+            "version": {
+              "major": 2,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 12
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "quirks": {
+                "Text": "chip8"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "display_write",
+                "input_sampled"
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1501,
+          "path": "request.json"
+        },
+        {
+          "bytes": 58742,
+          "path": ".staging/run-95597-1794254894618790390-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95597-1794254894618790390-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95597-1794254894618790390-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "chip8",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 2,
+      "request": {
+        "artifact_path": "paper/2-ibm-logo.ch8",
+        "artifact_sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067",
+        "configuration": {
+          "schema": {
+            "id": "chip8.machine_configuration",
+            "version": {
+              "major": 2,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 12
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "quirks": {
+                "Text": "chip8"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "display_write",
+                "input_sampled"
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1501,
+          "path": "request.json"
+        },
+        {
+          "bytes": 58742,
+          "path": ".staging/run-95598-1794254894703351191-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95598-1794254894703351191-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95598-1794254894703351191-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "chip8",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 3,
+      "request": {
+        "artifact_path": "paper/2-ibm-logo.ch8",
+        "artifact_sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067",
+        "configuration": {
+          "schema": {
+            "id": "chip8.machine_configuration",
+            "version": {
+              "major": 2,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 12
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "quirks": {
+                "Text": "chip8"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "display_write",
+                "input_sampled"
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1561,
+          "path": "request.json"
+        },
+        {
+          "bytes": 71084,
+          "path": ".staging/run-95599-1794254894786058291-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95599-1794254894786058291-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95599-1794254894786058291-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "pico8",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 1,
+      "request": {
+        "artifact_path": "paper/ce1/01.p8",
+        "artifact_sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc",
+        "configuration": {
+          "schema": {
+            "id": "pico8.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "instruction_budget": {
+                "Unsigned": 500000
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "input_applied",
+                {
+                  "extension": "glassvm.graphics_activity"
+                }
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1561,
+          "path": "request.json"
+        },
+        {
+          "bytes": 71084,
+          "path": ".staging/run-95600-1794254894890302692-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95600-1794254894890302692-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95600-1794254894890302692-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "pico8",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 2,
+      "request": {
+        "artifact_path": "paper/ce1/01.p8",
+        "artifact_sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc",
+        "configuration": {
+          "schema": {
+            "id": "pico8.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "instruction_budget": {
+                "Unsigned": 500000
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "input_applied",
+                {
+                  "extension": "glassvm.graphics_activity"
+                }
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1561,
+          "path": "request.json"
+        },
+        {
+          "bytes": 71084,
+          "path": ".staging/run-95601-1794254894972215692-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95601-1794254894972215692-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95601-1794254894972215692-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "pico8",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 3,
+      "request": {
+        "artifact_path": "paper/ce1/01.p8",
+        "artifact_sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc",
+        "configuration": {
+          "schema": {
+            "id": "pico8.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "instruction_budget": {
+                "Unsigned": 500000
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "input_applied",
+                {
+                  "extension": "glassvm.graphics_activity"
+                }
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1653,
+          "path": "request.json"
+        },
+        {
+          "bytes": 500758,
+          "path": ".staging/run-95602-1794254895076348893-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95602-1794254895076348893-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95602-1794254895076348893-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "tic80",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 1,
+      "request": {
+        "artifact_path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "artifact_sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1",
+        "configuration": {
+          "schema": {
+            "id": "tic80.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "runtime": {
+                "Text": "lua"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "input_sampled",
+                "input_applied",
+                {
+                  "extension": "glassvm.graphics_activity"
+                },
+                {
+                  "extension": "tic80.trace"
+                }
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1653,
+          "path": "request.json"
+        },
+        {
+          "bytes": 500758,
+          "path": ".staging/run-95603-1794254895341187595-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95603-1794254895341187595-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95603-1794254895341187595-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "tic80",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 2,
+      "request": {
+        "artifact_path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "artifact_sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1",
+        "configuration": {
+          "schema": {
+            "id": "tic80.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "runtime": {
+                "Text": "lua"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "input_sampled",
+                "input_applied",
+                {
+                  "extension": "glassvm.graphics_activity"
+                },
+                {
+                  "extension": "tic80.trace"
+                }
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "case": "F5",
+      "child_exit_code": -9,
+      "files": [
+        {
+          "bytes": 30,
+          "path": "ready"
+        },
+        {
+          "bytes": 1653,
+          "path": "request.json"
+        },
+        {
+          "bytes": 500758,
+          "path": ".staging/run-95604-1794254895612253697-0/manifest.json"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95604-1794254895612253697-0/frames/segment-000000.gvmseg"
+        },
+        {
+          "bytes": 0,
+          "path": ".staging/run-95604-1794254895612253697-0/normalized/segment-000000.gvmseg"
+        }
+      ],
+      "machine": "tic80",
+      "published_exists": false,
+      "ready": true,
+      "repetition": 3,
+      "request": {
+        "artifact_path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "artifact_sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1",
+        "configuration": {
+          "schema": {
+            "id": "tic80.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "runtime": {
+                "Text": "lua"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "hashes"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": {
+              "kinds": [
+                "frame_completed",
+                "input_sampled",
+                "input_applied",
+                {
+                  "extension": "glassvm.graphics_activity"
+                },
+                {
+                  "extension": "tic80.trace"
+                }
+              ]
+            },
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "returned_result": false,
+      "staging_exists": true,
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "runner_sha256": "ddd768eccb2af2d5dc051bc832a2084a78f0eaa90aafa295b13b925395f9f020",
+  "source": {
+    "glassvm": "344f23762eedbbaa1d6d78ba02392f3575bc8d7e",
+    "machines": "ef1bb13ef0cce5b0ccc7898cc49ee5898fd4aac3"
+  },
+  "trials": 9,
+  "wheel_sha256": {
+    "glassvm_chip8-0.3.3-cp314-cp314-linux_x86_64.whl": "ab2fcafefa8a047ac3f266063ef9b458aeb8600f33f8b39a7798577a81d60db9",
+    "glassvm_pico8-0.3.3-cp314-cp314-linux_x86_64.whl": "ec3346d86aae7e5c12a3a6af9d4cacbc50c04955f61eb70f037b3d3759b850aa",
+    "glassvm_tic80-0.3.3-cp314-cp314-linux_x86_64.whl": "08c5c793d58f040f30017990fd01af4945d9f18986eaa2dad460511b10d01571"
+  }
+}
