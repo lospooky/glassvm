@@ -153,7 +153,7 @@ delivery, recorder finalization, and publication.
 | F6 | Budget exhaustion under each supported overflow policy | 18 independent per-machine trials covered `Fail` and `AllowIncomplete`; all reported the expected evidence and execution outcomes. Full receipts retained. |
 | F7 | Published finalized physical recording with incomplete evidence, where permitted | All nine F6 `allow_incomplete` trials reported a complete recorder receipt, incomplete evidence receipt, and successful publication; both receipt files were observed before cleanup. |
 | F8-C | Recorder creation failure | Nine independent per-machine trials: machine execution and evidence completed; recorder failed and publication was not attempted. |
-| F8-W | Recorder write failure during execution | Public hard-limit-trigger assertions passed in all three repeated suite runs |
+| F8-W | Recorder write failure during execution | Nine independent per-machine Rust sessions used the public one-byte recorder block limit; execution and evidence completed, recorder failed, and publication was not attempted. |
 | F8-F | Recorder finalization failure | Approved test-only-trigger assertions passed in all three repeated suite runs; staging remains inspectable |
 | F8-P | Publication failure after finalization | Public destination-collision assertions passed in all three repeated suite runs; finalized receipt is preserved |
 | F9 | Controlled machine/session execution fault | File-run execution-failure assertions passed in all three repeated suite runs; machine conformance suites also passed for all three bundles |
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F8-W | The public recorder hard-block limit produced the expected write failure in nine independent machine sessions, without interrupting execution or evidence. | `glassvm-machines/conformance/paper/e1-f8w-local-repair/`, commits `c55bdec`, `1b7f428` | Continue F8-F. |
 | 2026-11-09 | E1 F8-C | A file blocking the recorder parent path produced recorder failures in nine independent machine runs; execution and evidence completed. | `experiments/measurements/e1-f8c-local-repair/` | Continue F8-W. |
 | 2026-11-09 | E1 F7 | Checked all nine F6 `allow_incomplete` trials: complete recorder receipt, incomplete evidence, successful publication, and both receipt files present before cleanup. | `experiments/measurements/e1-f7-local-repair.json`, `experiments/check_e1_f7.py` | Continue recorder failure cases F8-C/W/F/P. |
 | 2026-11-09 | E1 F6 | Ran both normalized-event budget overflow policies, three repetitions per machine; all 18 trials produced their expected outcomes. | `experiments/measurements/e1-f6-local-repair/` | Evaluate F7 publication and recorder receipts from the nine `allow_incomplete` trials. |
