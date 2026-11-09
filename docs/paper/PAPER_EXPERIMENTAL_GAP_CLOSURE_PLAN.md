@@ -152,7 +152,7 @@ delivery, recorder finalization, and publication.
 | F5 | Graceful interruption and process kill before recorder finalization, where supported | Nine independent machine children were killed at the approved `RunFinished` barrier. Staging remained, with no returned result or published run. Graceful stop is unsupported. |
 | F6 | Budget exhaustion under each supported overflow policy | 18 independent per-machine trials covered `Fail` and `AllowIncomplete`; all reported the expected evidence and execution outcomes. Full receipts retained. |
 | F7 | Published finalized physical recording with incomplete evidence, where permitted | All nine F6 `allow_incomplete` trials reported a complete recorder receipt, incomplete evidence receipt, and successful publication; both receipt files were observed before cleanup. |
-| F8-C | Recorder creation failure | Public filesystem-trigger assertions passed in all three repeated suite runs |
+| F8-C | Recorder creation failure | Nine independent per-machine trials: machine execution and evidence completed; recorder failed and publication was not attempted. |
 | F8-W | Recorder write failure during execution | Public hard-limit-trigger assertions passed in all three repeated suite runs |
 | F8-F | Recorder finalization failure | Approved test-only-trigger assertions passed in all three repeated suite runs; staging remains inspectable |
 | F8-P | Publication failure after finalization | Public destination-collision assertions passed in all three repeated suite runs; finalized receipt is preserved |
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F8-C | A file blocking the recorder parent path produced recorder failures in nine independent machine runs; execution and evidence completed. | `experiments/measurements/e1-f8c-local-repair/` | Continue F8-W. |
 | 2026-11-09 | E1 F7 | Checked all nine F6 `allow_incomplete` trials: complete recorder receipt, incomplete evidence, successful publication, and both receipt files present before cleanup. | `experiments/measurements/e1-f7-local-repair.json`, `experiments/check_e1_f7.py` | Continue recorder failure cases F8-C/W/F/P. |
 | 2026-11-09 | E1 F6 | Ran both normalized-event budget overflow policies, three repetitions per machine; all 18 trials produced their expected outcomes. | `experiments/measurements/e1-f6-local-repair/` | Evaluate F7 publication and recorder receipts from the nine `allow_incomplete` trials. |
 | 2026-11-09 | E1 F5 | Killed three child sessions per machine at the `RunFinished` consumer barrier; each left staging and no returned or published run. | `experiments/measurements/e1-f5-local-repair/` | Continue E1 F6. |

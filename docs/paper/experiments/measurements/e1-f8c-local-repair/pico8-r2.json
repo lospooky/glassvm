@@ -1,0 +1,218 @@
+{
+  "artifact": {
+    "path": "paper/ce1/01.p8",
+    "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+  },
+  "case": "F8-C",
+  "files_before_cleanup": [
+    "block"
+  ],
+  "machine": "pico8",
+  "repetition": 2,
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "pico8.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "instruction_budget": {
+            "Unsigned": 500000
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          }
+        }
+      }
+    },
+    "controls": {
+      "bundle_limits": [],
+      "frame_limit": 2,
+      "step_limit": null
+    },
+    "observation": {
+      "budgets": {},
+      "capabilities": [],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "frame_completed",
+            "input_applied",
+            {
+              "extension": "glassvm.graphics_activity"
+            }
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    },
+    "schedule": {
+      "entries": [],
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    }
+  },
+  "result": {
+    "evidence_fulfillment": {
+      "budgets": {
+        "configured": {
+          "max_capability_bytes": null,
+          "max_frame_bytes": null,
+          "max_input_value_bytes": null,
+          "max_input_value_events": null,
+          "max_native_bytes": null,
+          "max_native_events": null,
+          "max_normalized_bytes": null,
+          "max_normalized_events": null,
+          "max_snapshot_bytes": null,
+          "max_total_logical_bytes": null
+        },
+        "exceeded": null,
+        "observed_logical_bytes": 2616
+      },
+      "capabilities": [],
+      "channels": [
+        {
+          "channel": "normalized_events",
+          "encoded_bytes": null,
+          "item_count": 4,
+          "logical_bytes": 1652,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "capabilities",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "native_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "frames",
+          "encoded_bytes": null,
+          "item_count": 2,
+          "logical_bytes": 964,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "snapshots",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "input_value_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "envelope",
+          "encoded_bytes": null,
+          "item_count": 2,
+          "logical_bytes": 0,
+          "requested": true,
+          "status": "complete"
+        }
+      ],
+      "failure": null,
+      "fulfilled_guarantee": "summary",
+      "machine_id": "pico8",
+      "machine_version": "pico8-python-bundle",
+      "requested_guarantee": "summary",
+      "run_id": "python-pico8-1",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "status": "complete"
+    },
+    "machine_execution": {
+      "result": {
+        "capabilities": [],
+        "common": {
+          "boot_success": true,
+          "cycles": 2,
+          "frames": 2,
+          "termination": "frame_limit"
+        }
+      },
+      "status": "completed"
+    },
+    "publication": {
+      "details": {
+        "reason": "recorder finalization failed before publication"
+      },
+      "status": "not_attempted"
+    },
+    "published_run": null,
+    "python_sink_delivery": {
+      "batches_delivered": 0,
+      "failure": null,
+      "items_delivered": 0,
+      "logical_bytes_delivered": 0,
+      "peak_batch_items": 0,
+      "peak_batch_logical_bytes": 0,
+      "sink_count": 0,
+      "status": "not_requested"
+    },
+    "recorder_finalization": {
+      "result": {
+        "message": "segment I/O failed: File exists (os error 17)"
+      },
+      "status": "failed"
+    }
+  },
+  "trigger": "recorder parent path occupied by file"
+}
