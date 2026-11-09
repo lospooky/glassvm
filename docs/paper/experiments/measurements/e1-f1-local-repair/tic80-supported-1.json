@@ -1,0 +1,88 @@
+{
+  "artifact": {
+    "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+    "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+  },
+  "case": "supported",
+  "configuration": {
+    "schema": {
+      "id": "tic80.machine_configuration",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    },
+    "value": {
+      "Map": {
+        "cycles_per_frame": {
+          "Unsigned": 1
+        },
+        "machine_seed": {
+          "Unsigned": 0
+        },
+        "runtime": {
+          "Text": "lua"
+        }
+      }
+    }
+  },
+  "controls": {
+    "bundle_limits": [],
+    "frame_limit": 600,
+    "step_limit": null
+  },
+  "execution_invoked": false,
+  "machine": "tic80",
+  "observation": {
+    "budgets": {},
+    "capabilities": [],
+    "frames": {
+      "capture": "none"
+    },
+    "guarantee": "summary",
+    "input_value_evidence": {
+      "enabled": false
+    },
+    "native_evidence": {
+      "all": false,
+      "enabled": true,
+      "kinds": [
+        "tic80.execution_summary"
+      ]
+    },
+    "normalized_events": {
+      "access_detail": "none",
+      "events": {
+        "kinds": [
+          "frame_completed"
+        ]
+      },
+      "state_diffs": false
+    },
+    "overflow": "fail",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "snapshots": {
+      "capture": "none"
+    }
+  },
+  "preparation": {
+    "status": "accepted"
+  },
+  "repetition": 1,
+  "schedule": {
+    "entries": [],
+    "schema": {
+      "id": "glassvm.input_schedule",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,2681 @@
+{
+  "cpu": "AMD Ryzen 9 5900X 12-Core Processor",
+  "description": "F1 repaired local-source wheel trials; no execution invoked",
+  "glassvm_revision": "4f5766864f4e5aee5c915f13f023466140442f75",
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "machines_revision": "53ec568c14550cba6728179dee32b90e9f5388a7",
+  "packages": {
+    "glassvm": "0.3.2",
+    "glassvm-chip8": "0.3.3",
+    "glassvm-pico8": "0.3.3",
+    "glassvm-tic80": "0.3.3"
+  },
+  "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]",
+  "rows": [
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/2-ibm-logo.ch8",
+        "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+      },
+      "case": "supported",
+      "configuration": {
+        "schema": {
+          "id": "chip8.machine_configuration",
+          "version": {
+            "major": 2,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 12
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "quirks": {
+              "Text": "chip8"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "chip8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "chip8.execution_summary"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              "frame_completed"
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "status": "accepted"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/01.p8",
+        "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+      },
+      "case": "supported",
+      "configuration": {
+        "schema": {
+          "id": "pico8.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "instruction_budget": {
+              "Unsigned": 500000
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "pico8",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "pico8.execution_summary"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              "frame_completed"
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "status": "accepted"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "capability",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [
+          {
+            "id": "glassvm.paper.unsupported-capability",
+            "parameters": {},
+            "required": true
+          }
+        ],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "normalized",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": false,
+          "kinds": []
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              {
+                "extension": "glassvm.paper.unsupported-event"
+              }
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 2,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "native",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "glassvm.paper.unsupported-native"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": "none",
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "error_type": "ValueError",
+        "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+        "status": "rejected"
+      },
+      "repetition": 3,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    },
+    {
+      "artifact": {
+        "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+        "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+      },
+      "case": "supported",
+      "configuration": {
+        "schema": {
+          "id": "tic80.machine_configuration",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        },
+        "value": {
+          "Map": {
+            "cycles_per_frame": {
+              "Unsigned": 1
+            },
+            "machine_seed": {
+              "Unsigned": 0
+            },
+            "runtime": {
+              "Text": "lua"
+            }
+          }
+        }
+      },
+      "controls": {
+        "bundle_limits": [],
+        "frame_limit": 600,
+        "step_limit": null
+      },
+      "execution_invoked": false,
+      "machine": "tic80",
+      "observation": {
+        "budgets": {},
+        "capabilities": [],
+        "frames": {
+          "capture": "none"
+        },
+        "guarantee": "summary",
+        "input_value_evidence": {
+          "enabled": false
+        },
+        "native_evidence": {
+          "all": false,
+          "enabled": true,
+          "kinds": [
+            "tic80.execution_summary"
+          ]
+        },
+        "normalized_events": {
+          "access_detail": "none",
+          "events": {
+            "kinds": [
+              "frame_completed"
+            ]
+          },
+          "state_diffs": false
+        },
+        "overflow": "fail",
+        "schema_version": {
+          "major": 2,
+          "minor": 1,
+          "patch": 0
+        },
+        "snapshots": {
+          "capture": "none"
+        }
+      },
+      "preparation": {
+        "status": "accepted"
+      },
+      "repetition": 1,
+      "schedule": {
+        "entries": [],
+        "schema": {
+          "id": "glassvm.input_schedule",
+          "version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          }
+        }
+      }
+    }
+  ],
+  "runner_sha256": "a870fd246027b31b74496fac3f927889ed2cd6a2068f851384ce963a53943f97",
+  "trials": 30,
+  "wheels": {
+    "glassvm_chip8-0.3.3-cp314-cp314-linux_x86_64.whl": "ab2fcafefa8a047ac3f266063ef9b458aeb8600f33f8b39a7798577a81d60db9",
+    "glassvm_pico8-0.3.3-cp314-cp314-linux_x86_64.whl": "ec3346d86aae7e5c12a3a6af9d4cacbc50c04955f61eb70f037b3d3759b850aa",
+    "glassvm_tic80-0.3.3-cp314-cp314-linux_x86_64.whl": "08c5c793d58f040f30017990fd01af4945d9f18986eaa2dad460511b10d01571"
+  }
+}

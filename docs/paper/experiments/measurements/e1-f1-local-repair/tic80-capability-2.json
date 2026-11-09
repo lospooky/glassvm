@@ -1,0 +1,90 @@
+{
+  "artifact": {
+    "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+    "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+  },
+  "case": "capability",
+  "configuration": {
+    "schema": {
+      "id": "tic80.machine_configuration",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    },
+    "value": {
+      "Map": {
+        "cycles_per_frame": {
+          "Unsigned": 1
+        },
+        "machine_seed": {
+          "Unsigned": 0
+        },
+        "runtime": {
+          "Text": "lua"
+        }
+      }
+    }
+  },
+  "controls": {
+    "bundle_limits": [],
+    "frame_limit": 600,
+    "step_limit": null
+  },
+  "execution_invoked": false,
+  "machine": "tic80",
+  "observation": {
+    "budgets": {},
+    "capabilities": [
+      {
+        "id": "glassvm.paper.unsupported-capability",
+        "parameters": {},
+        "required": true
+      }
+    ],
+    "frames": {
+      "capture": "none"
+    },
+    "guarantee": "summary",
+    "input_value_evidence": {
+      "enabled": false
+    },
+    "native_evidence": {
+      "all": false,
+      "enabled": false,
+      "kinds": []
+    },
+    "normalized_events": {
+      "access_detail": "none",
+      "events": "none",
+      "state_diffs": false
+    },
+    "overflow": "fail",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "snapshots": {
+      "capture": "none"
+    }
+  },
+  "preparation": {
+    "error_type": "ValueError",
+    "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+    "status": "rejected"
+  },
+  "repetition": 2,
+  "schedule": {
+    "entries": [],
+    "schema": {
+      "id": "glassvm.input_schedule",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    }
+  }
+}

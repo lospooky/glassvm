@@ -1,0 +1,90 @@
+{
+  "artifact": {
+    "path": "paper/ce1/01.p8",
+    "sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc"
+  },
+  "case": "normalized",
+  "configuration": {
+    "schema": {
+      "id": "pico8.machine_configuration",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    },
+    "value": {
+      "Map": {
+        "cycles_per_frame": {
+          "Unsigned": 1
+        },
+        "instruction_budget": {
+          "Unsigned": 500000
+        },
+        "machine_seed": {
+          "Unsigned": 0
+        }
+      }
+    }
+  },
+  "controls": {
+    "bundle_limits": [],
+    "frame_limit": 600,
+    "step_limit": null
+  },
+  "execution_invoked": false,
+  "machine": "pico8",
+  "observation": {
+    "budgets": {},
+    "capabilities": [],
+    "frames": {
+      "capture": "none"
+    },
+    "guarantee": "summary",
+    "input_value_evidence": {
+      "enabled": false
+    },
+    "native_evidence": {
+      "all": false,
+      "enabled": false,
+      "kinds": []
+    },
+    "normalized_events": {
+      "access_detail": "none",
+      "events": {
+        "kinds": [
+          {
+            "extension": "glassvm.paper.unsupported-event"
+          }
+        ]
+      },
+      "state_diffs": false
+    },
+    "overflow": "fail",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "snapshots": {
+      "capture": "none"
+    }
+  },
+  "preparation": {
+    "error_type": "ValueError",
+    "message": "unsupported normalized event kind Extension(\"glassvm.paper.unsupported-event\")",
+    "status": "rejected"
+  },
+  "repetition": 1,
+  "schedule": {
+    "entries": [],
+    "schema": {
+      "id": "glassvm.input_schedule",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    }
+  }
+}

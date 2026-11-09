@@ -1,0 +1,86 @@
+{
+  "artifact": {
+    "path": "paper/2-ibm-logo.ch8",
+    "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+  },
+  "case": "native",
+  "configuration": {
+    "schema": {
+      "id": "chip8.machine_configuration",
+      "version": {
+        "major": 2,
+        "minor": 0,
+        "patch": 0
+      }
+    },
+    "value": {
+      "Map": {
+        "cycles_per_frame": {
+          "Unsigned": 12
+        },
+        "machine_seed": {
+          "Unsigned": 0
+        },
+        "quirks": {
+          "Text": "chip8"
+        }
+      }
+    }
+  },
+  "controls": {
+    "bundle_limits": [],
+    "frame_limit": 600,
+    "step_limit": null
+  },
+  "execution_invoked": false,
+  "machine": "chip8",
+  "observation": {
+    "budgets": {},
+    "capabilities": [],
+    "frames": {
+      "capture": "none"
+    },
+    "guarantee": "summary",
+    "input_value_evidence": {
+      "enabled": false
+    },
+    "native_evidence": {
+      "all": false,
+      "enabled": true,
+      "kinds": [
+        "glassvm.paper.unsupported-native"
+      ]
+    },
+    "normalized_events": {
+      "access_detail": "none",
+      "events": "none",
+      "state_diffs": false
+    },
+    "overflow": "fail",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "snapshots": {
+      "capture": "none"
+    }
+  },
+  "preparation": {
+    "error_type": "ValueError",
+    "message": "unsupported native event kind \"glassvm.paper.unsupported-native\"",
+    "status": "rejected"
+  },
+  "repetition": 1,
+  "schedule": {
+    "entries": [],
+    "schema": {
+      "id": "glassvm.input_schedule",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    }
+  }
+}
