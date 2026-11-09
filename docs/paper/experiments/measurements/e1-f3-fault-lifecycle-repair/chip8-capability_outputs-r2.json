@@ -1,0 +1,254 @@
+{
+  "artifact": {
+    "path": "paper/2-ibm-logo.ch8",
+    "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+  },
+  "callbacks_seen": [
+    "event_batch",
+    "capability_outputs"
+  ],
+  "case": "F3",
+  "machine": "chip8",
+  "repetition": 2,
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "chip8.machine_configuration",
+        "version": {
+          "major": 2,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 12
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "quirks": {
+            "Text": "chip8"
+          }
+        }
+      }
+    },
+    "controls": {
+      "bundle_limits": [],
+      "frame_limit": 2,
+      "step_limit": null
+    },
+    "observation": {
+      "budgets": {},
+      "capabilities": [
+        {
+          "id": "chip8.visual_trajectory_motifs",
+          "parameters": {},
+          "required": true
+        }
+      ],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "frame_completed",
+            "display_write",
+            "input_sampled"
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    },
+    "schedule": {
+      "entries": [],
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    }
+  },
+  "result": {
+    "evidence_fulfillment": {
+      "budgets": {
+        "configured": {
+          "max_capability_bytes": null,
+          "max_frame_bytes": null,
+          "max_input_value_bytes": null,
+          "max_input_value_events": null,
+          "max_native_bytes": null,
+          "max_native_events": null,
+          "max_normalized_bytes": null,
+          "max_normalized_events": null,
+          "max_snapshot_bytes": null,
+          "max_total_logical_bytes": null
+        },
+        "exceeded": null,
+        "observed_logical_bytes": 6167
+      },
+      "capabilities": [
+        {
+          "id": "chip8.visual_trajectory_motifs",
+          "logical_bytes": 253,
+          "message": null,
+          "output_schema": {
+            "id": "chip8.visual_trajectory_motifs",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "status": "fulfilled"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "normalized_events",
+          "encoded_bytes": null,
+          "item_count": 9,
+          "logical_bytes": 4891,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "capabilities",
+          "encoded_bytes": null,
+          "item_count": 1,
+          "logical_bytes": 354,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "native_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "frames",
+          "encoded_bytes": null,
+          "item_count": 2,
+          "logical_bytes": 922,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "snapshots",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "input_value_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "envelope",
+          "encoded_bytes": null,
+          "item_count": 1,
+          "logical_bytes": 0,
+          "requested": true,
+          "status": "failed"
+        }
+      ],
+      "failure": {
+        "channel": "envelope",
+        "message": "Python sink delivery previously failed: RuntimeError: RuntimeError: E1 F3 capability_outputs"
+      },
+      "fulfilled_guarantee": null,
+      "machine_id": "chip8",
+      "machine_version": "chip8-python-bundle",
+      "requested_guarantee": "summary",
+      "run_id": "python-chip8-1",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "status": "failed"
+    },
+    "machine_execution": {
+      "result": {
+        "message": "emission sink rejected run data: Python sink delivery previously failed: RuntimeError: RuntimeError: E1 F3 capability_outputs"
+      },
+      "status": "interrupted_by_evidence_failure"
+    },
+    "publication": {
+      "details": {
+        "reason": "execution did not reach recorder finalization"
+      },
+      "status": "not_attempted"
+    },
+    "published_run": null,
+    "python_sink_delivery": {
+      "batches_delivered": 2,
+      "failure": {
+        "batch_size": 1,
+        "callback": "capability_outputs",
+        "exception_message": "RuntimeError: E1 F3 capability_outputs",
+        "exception_type": "RuntimeError",
+        "sink_identity": "python-sink-0",
+        "sink_index": 0,
+        "successfully_delivered_items": 0
+      },
+      "items_delivered": 12,
+      "logical_bytes_delivered": 28482,
+      "peak_batch_items": 11,
+      "peak_batch_logical_bytes": 22383,
+      "sink_count": 1,
+      "status": "failed"
+    },
+    "recorder_finalization": {
+      "result": {
+        "reason": "execution did not reach recorder finalization"
+      },
+      "status": "not_finalized"
+    }
+  },
+  "staging_paths_before_cleanup": [
+    ".staging",
+    ".staging/run-112172-1794256369810849119-0",
+    ".staging/run-112172-1794256369810849119-0/frames",
+    ".staging/run-112172-1794256369810849119-0/capabilities",
+    ".staging/run-112172-1794256369810849119-0/normalized",
+    ".staging/run-112172-1794256369810849119-0/manifest.json",
+    ".staging/run-112172-1794256369810849119-0/frames/segment-000000.gvmseg",
+    ".staging/run-112172-1794256369810849119-0/capabilities/segment-000000.gvmseg",
+    ".staging/run-112172-1794256369810849119-0/normalized/segment-000000.gvmseg"
+  ],
+  "trigger": "capability_outputs"
+}

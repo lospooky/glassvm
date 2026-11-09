@@ -1,0 +1,260 @@
+{
+  "artifact": {
+    "path": "paper/ce1/04-Boing-Ball-Demo.tic",
+    "sha256": "addf46825b075b73f93ccd15378dd2a674e6214908af8cad141908fcd01009b1"
+  },
+  "callbacks_seen": [
+    "event_batch",
+    "capability_outputs"
+  ],
+  "case": "F3",
+  "machine": "tic80",
+  "repetition": 1,
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "tic80.machine_configuration",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 1
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "runtime": {
+            "Text": "lua"
+          }
+        }
+      }
+    },
+    "controls": {
+      "bundle_limits": [],
+      "frame_limit": 2,
+      "step_limit": null
+    },
+    "observation": {
+      "budgets": {},
+      "capabilities": [
+        {
+          "id": "tic80.visual.motifs",
+          "parameters": {},
+          "required": true
+        }
+      ],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": {
+          "kinds": [
+            "frame_completed",
+            "input_sampled",
+            "input_applied",
+            {
+              "extension": "glassvm.graphics_activity"
+            },
+            {
+              "extension": "tic80.trace"
+            }
+          ]
+        },
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    },
+    "schedule": {
+      "entries": [],
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    }
+  },
+  "result": {
+    "evidence_fulfillment": {
+      "budgets": {
+        "configured": {
+          "max_capability_bytes": null,
+          "max_frame_bytes": null,
+          "max_input_value_bytes": null,
+          "max_input_value_events": null,
+          "max_native_bytes": null,
+          "max_native_events": null,
+          "max_normalized_bytes": null,
+          "max_normalized_events": null,
+          "max_snapshot_bytes": null,
+          "max_total_logical_bytes": null
+        },
+        "exceeded": null,
+        "observed_logical_bytes": 3630
+      },
+      "capabilities": [
+        {
+          "id": "tic80.visual.motifs",
+          "logical_bytes": 130,
+          "message": null,
+          "output_schema": {
+            "id": "tic80.visual.motifs",
+            "version": {
+              "major": 2,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "status": "fulfilled"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "normalized_events",
+          "encoded_bytes": null,
+          "item_count": 6,
+          "logical_bytes": 2488,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "capabilities",
+          "encoded_bytes": null,
+          "item_count": 1,
+          "logical_bytes": 220,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "native_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "frames",
+          "encoded_bytes": null,
+          "item_count": 2,
+          "logical_bytes": 922,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "snapshots",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "input_value_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "envelope",
+          "encoded_bytes": null,
+          "item_count": 1,
+          "logical_bytes": 0,
+          "requested": true,
+          "status": "failed"
+        }
+      ],
+      "failure": {
+        "channel": "envelope",
+        "message": "Python sink delivery previously failed: RuntimeError: RuntimeError: E1 F3 capability_outputs"
+      },
+      "fulfilled_guarantee": null,
+      "machine_id": "tic80",
+      "machine_version": "tic80-python-bundle",
+      "requested_guarantee": "summary",
+      "run_id": "python-tic80-1",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "status": "failed"
+    },
+    "machine_execution": {
+      "result": {
+        "message": "Python sink delivery previously failed: RuntimeError: RuntimeError: E1 F3 capability_outputs"
+      },
+      "status": "interrupted_by_evidence_failure"
+    },
+    "publication": {
+      "details": {
+        "reason": "execution did not reach recorder finalization"
+      },
+      "status": "not_attempted"
+    },
+    "published_run": null,
+    "python_sink_delivery": {
+      "batches_delivered": 2,
+      "failure": {
+        "batch_size": 1,
+        "callback": "capability_outputs",
+        "exception_message": "RuntimeError: E1 F3 capability_outputs",
+        "exception_type": "RuntimeError",
+        "sink_identity": "python-sink-0",
+        "sink_index": 0,
+        "successfully_delivered_items": 0
+      },
+      "items_delivered": 9,
+      "logical_bytes_delivered": 161034,
+      "peak_batch_items": 8,
+      "peak_batch_logical_bytes": 157416,
+      "sink_count": 1,
+      "status": "failed"
+    },
+    "recorder_finalization": {
+      "result": {
+        "reason": "execution did not reach recorder finalization"
+      },
+      "status": "not_finalized"
+    }
+  },
+  "staging_paths_before_cleanup": [
+    ".staging",
+    ".staging/run-112189-1794256371831187607-0",
+    ".staging/run-112189-1794256371831187607-0/frames",
+    ".staging/run-112189-1794256371831187607-0/capabilities",
+    ".staging/run-112189-1794256371831187607-0/normalized",
+    ".staging/run-112189-1794256371831187607-0/manifest.json",
+    ".staging/run-112189-1794256371831187607-0/frames/segment-000000.gvmseg",
+    ".staging/run-112189-1794256371831187607-0/capabilities/segment-000000.gvmseg",
+    ".staging/run-112189-1794256371831187607-0/normalized/segment-000000.gvmseg"
+  ],
+  "trigger": "capability_outputs"
+}
