@@ -1,0 +1,111 @@
+{
+  "artifact": {
+    "path": "paper/2-ibm-logo.ch8",
+    "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+  },
+  "configuration": {
+    "schema": {
+      "id": "chip8.machine_configuration",
+      "version": {
+        "major": 2,
+        "minor": 0,
+        "patch": 0
+      }
+    },
+    "value": {
+      "Map": {
+        "cycles_per_frame": {
+          "Unsigned": 12
+        },
+        "machine_seed": {
+          "Unsigned": 0
+        },
+        "quirks": {
+          "Text": "chip8"
+        }
+      }
+    }
+  },
+  "execution_controls": {
+    "bundle_limits": [],
+    "frame_limit": 600,
+    "step_limit": null
+  },
+  "helper_sha256": "172563b36c370963d39a1033f2342c20afd8c947602b84b731e03f27945c6207",
+  "host": {
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.14.3"
+  },
+  "input_schedule": {
+    "entries": [],
+    "schema": {
+      "id": "glassvm.input_schedule",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    }
+  },
+  "machine_id": "chip8",
+  "observation_request": {
+    "budgets": {},
+    "capabilities": [],
+    "frames": {
+      "capture": "none"
+    },
+    "guarantee": "summary",
+    "input_value_evidence": {
+      "enabled": false
+    },
+    "native_evidence": {
+      "all": false,
+      "enabled": false,
+      "kinds": []
+    },
+    "normalized_events": {
+      "access_detail": "none",
+      "events": {
+        "kinds": [
+          {
+            "extension": "glassvm.paper.unsupported-event"
+          }
+        ]
+      },
+      "state_diffs": false
+    },
+    "overflow": "fail",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "snapshots": {
+      "capture": "none"
+    }
+  },
+  "observed_utc": "2026-11-09T18:52:37.957252+00:00",
+  "outcomes": {
+    "consumer_delivery": "not_requested",
+    "evidence_fulfillment": "not_started",
+    "machine_execution": "not_started",
+    "preparation": {
+      "execution": "not_invoked",
+      "preparation": "accepted_unexpectedly",
+      "reason": "preparation accepted an undeclared normalized extension event selector"
+    },
+    "publication": "not_attempted",
+    "recorder_finalization": "not_started"
+  },
+  "packages": {
+    "glassvm": "0.3.2",
+    "glassvm-chip8": "0.3.3"
+  },
+  "probe": "unsupported_normalized_event_kind",
+  "repetition": 1,
+  "schema": "glassvm.e1-f1-probe",
+  "source": {
+    "glassvm": "d9ff143e9f163dfffe78b981bdf4b6bdac39c5dc",
+    "machines": "a19d32341a10367471035d97e724685525c2ca2c"
+  }
+}

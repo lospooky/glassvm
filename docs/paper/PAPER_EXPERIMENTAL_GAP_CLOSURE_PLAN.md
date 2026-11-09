@@ -10,7 +10,9 @@ five-policy selection matrix has 135 completed trials across nine workloads.
 These runs do not complete the planned source-selection versus downstream
 filtering comparison. E2–E7 remain open; prior baseline studies remain
 available separately. Q2–Q10 are resolved; Q1 still requires the full E3
-CHIP-8 cohort, count, and duplicate policy to be frozen.
+CHIP-8 cohort, count, and duplicate policy to be frozen. E1 is paused at F1:
+one public-API probe found that preparation accepts an undeclared normalized
+event selector; see the latest execution-ledger entry.
 
 ### Progress update — 2026-11-09
 
@@ -133,7 +135,7 @@ delivery, recorder finalization, and publication.
 
 | Case | Coverage | Status |
 | --- | --- | --- |
-| F1 | Required unsupported capability and unsupported evidence kinds | Core assertions passed in three suite repetitions; required-capability rejection also passed in nine independent per-machine trials. Unsupported normalized/native kind trials remain open. |
+| F1 | Required unsupported capability and unsupported evidence kinds | Required-capability rejection passed in nine independent per-machine trials. One CHIP-8 probe unexpectedly accepted an undeclared normalized event selector during preparation; execution was not invoked. Stop F1 and review this behavior before continuing. Native-kind trial not run. |
 | F2 | Optional capability with an unsatisfied prerequisite | Core preparation assertions passed in all three repeated suite runs |
 | F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Core dependency-closure assertions passed in all three repeated suite runs |
 | F3 | Python callback exception at a deterministic boundary | Python-enabled recorder assertions passed in all three repeated suite runs |
@@ -387,6 +389,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F1 normalized kind probe | A public preparation request selecting `extension:glassvm.paper.unsupported-event` was accepted by CHIP-8. No execution was invoked. This differs from F1's expected preparation rejection, so the per-case sequence stopped immediately. | `experiments/measurements/e1-f1-required-capability-0.3.3/f1-normalized-selector-probe.json`; one diagnostic probe using GlassVM 0.3.2 and CHIP-8 0.3.3 | Review whether arbitrary normalized event selectors are intentionally permitted. If not, define the repair and affected reruns before resuming F1. |
 | 2026-11-09 | CE1 selection matrix | Ran the approved five selection policies over three pinned workloads per machine, three repetitions each; 135/135 completed with complete evidence fulfillment and finalized, published recorders. | `glassvm-machines` `paper-publication`, `0dd8dce` and `ab1612a`; `conformance/paper/ce1/` | Source-selection versus downstream-filtering/online-reduction comparison remains open. |
 | 2026-11-09 | E1 F1 | Ran three fresh-process required-capability rejection trials per machine; 9/9 rejected the undeclared capability during preparation. | `experiments/measurements/e1-f1-required-capability-0.3.3/`, `b6382e8` | Run F1 unsupported normalized/native evidence kinds and the remaining E1 cases. |
 | 2026-11-08 | Planning | Reconciled briefs and recorded this checklist. No new trials executed. | This document, initially uncommitted on `manuscript` | Q1–Q6 and S0 specification |
