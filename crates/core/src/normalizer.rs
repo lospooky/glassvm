@@ -515,6 +515,8 @@ mod tests {
             schema_version: crate::NORMALIZER_CONTRACT_SCHEMA_VERSION,
             normalizer_id: "test.normalizer".into(),
             normalizer_version: "test.v1".into(),
+            normalized_event_kinds: Vec::new(),
+            native_event_kinds: Vec::new(),
             capabilities: vec![CapabilityDescriptor {
                 schema: id.schema(),
                 output_type: "json.object".into(),

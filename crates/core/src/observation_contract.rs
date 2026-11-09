@@ -241,6 +241,29 @@ impl PreparedObservation {
         if let Err(error) = catalog.validate() {
             errors.push(error);
         }
+        for key in &catalog.normalized_event_kinds {
+            if parse_event_kind_key(key).is_none() || key == "extension:" {
+                errors.push(format!("invalid declared normalized event kind {key:?}"));
+            }
+        }
+        if let EventSelection::Kinds(kinds) = &request.normalized_events.events {
+            for kind in kinds {
+                if !catalog
+                    .normalized_event_kinds
+                    .iter()
+                    .any(|key| parse_event_kind_key(key).as_ref() == Some(kind))
+                {
+                    errors.push(format!("unsupported normalized event kind {kind:?}"));
+                }
+            }
+        }
+        if request.native_evidence.enabled && !request.native_evidence.all {
+            for kind in &request.native_evidence.kinds {
+                if !catalog.native_event_kinds.contains(kind) {
+                    errors.push(format!("unsupported native event kind {kind:?}"));
+                }
+            }
+        }
         if !errors.is_empty() {
             return Err(errors);
         }
@@ -1101,8 +1124,37 @@ mod tests {
             schema_version: glassvm_normalizer_contract::NORMALIZER_CONTRACT_SCHEMA_VERSION,
             normalizer_id: "test.prepared.normalizer".into(),
             normalizer_version: "test.v1".into(),
+            normalized_event_kinds: vec!["instruction_decoded".into(), "frame_completed".into()],
+            native_event_kinds: vec!["sweep".into(), "other".into()],
             capabilities,
         }
+    }
+
+    #[test]
+    fn preparation_validates_direct_event_kind_selections() {
+        let catalog = test_catalog(vec![]);
+        let mut request = ObservationRequest::summary();
+        request.normalized_events.events =
+            EventSelection::Kinds(BTreeSet::from([EventKind::FrameCompleted]));
+        request.native_evidence.enabled = true;
+        request.native_evidence.kinds = vec!["sweep".into()];
+        PreparedObservation::prepare(&catalog, &request).unwrap();
+        request.normalized_events.events =
+            EventSelection::Kinds(BTreeSet::from([EventKind::Extension(
+                "glassvm.paper.unsupported-event".into(),
+            )]));
+        request.native_evidence.kinds = vec!["unknown.native".into()];
+        let errors = PreparedObservation::prepare(&catalog, &request).unwrap_err();
+        assert!(
+            errors
+                .iter()
+                .any(|e| e.contains("unsupported normalized event kind"))
+        );
+        assert!(
+            errors
+                .iter()
+                .any(|e| e.contains("unsupported native event kind"))
+        );
     }
 
     #[test]

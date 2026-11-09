@@ -308,6 +308,10 @@ pub struct NormalizerCatalog {
     pub schema_version: SchemaVersion,
     pub normalizer_id: String,
     pub normalizer_version: String,
+    /// Canonical normalized event-kind keys supported by the bundle.
+    pub normalized_event_kinds: Vec<String>,
+    /// Native event kinds supported by the bundle.
+    pub native_event_kinds: Vec<String>,
     pub capabilities: Vec<CapabilityDescriptor>,
 }
 
@@ -317,6 +321,8 @@ impl NormalizerCatalog {
             schema_version: NORMALIZER_CONTRACT_SCHEMA_VERSION,
             normalizer_id: normalizer_id.into(),
             normalizer_version: normalizer_version.into(),
+            normalized_event_kinds: Vec::new(),
+            native_event_kinds: Vec::new(),
             capabilities: Vec::new(),
         }
     }
@@ -339,6 +345,18 @@ impl NormalizerCatalog {
         }
         if self.normalizer_version.trim().is_empty() {
             return Err("normalizer catalog has an empty normalizer version".into());
+        }
+
+        for (label, kinds) in [
+            ("normalized", &self.normalized_event_kinds),
+            ("native", &self.native_event_kinds),
+        ] {
+            let mut seen = std::collections::BTreeSet::new();
+            for kind in kinds {
+                if kind.is_empty() || kind.trim() != kind || !seen.insert(kind) {
+                    return Err(format!("invalid or duplicate {label} event kind {kind:?}"));
+                }
+            }
         }
 
         let mut seen = std::collections::BTreeSet::new();
@@ -445,6 +463,8 @@ mod tests {
             schema_version: NORMALIZER_CONTRACT_SCHEMA_VERSION,
             normalizer_id: "test.normalizer".into(),
             normalizer_version: "test.v1".into(),
+            normalized_event_kinds: Vec::new(),
+            native_event_kinds: Vec::new(),
             capabilities: vec![CapabilityDescriptor {
                 schema: CapabilitySchema {
                     id: id.clone(),
@@ -498,6 +518,8 @@ mod tests {
             schema_version: NORMALIZER_CONTRACT_SCHEMA_VERSION,
             normalizer_id: "test.normalizer".into(),
             normalizer_version: "test.v1".into(),
+            normalized_event_kinds: Vec::new(),
+            native_event_kinds: Vec::new(),
             capabilities: vec![descriptor],
         };
         catalog.validate().unwrap();
@@ -512,6 +534,8 @@ mod tests {
             schema_version: NORMALIZER_CONTRACT_SCHEMA_VERSION,
             normalizer_id: "test.normalizer".into(),
             normalizer_version: "test.v1".into(),
+            normalized_event_kinds: Vec::new(),
+            native_event_kinds: Vec::new(),
             capabilities: vec![CapabilityDescriptor {
                 schema: capability.schema(),
                 output_type: "json.object".into(),
