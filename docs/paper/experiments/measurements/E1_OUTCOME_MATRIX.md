@@ -51,6 +51,10 @@ The earlier F1 accepted-selector anomaly is retained separately.
   structured trial artifacts. F9's machine-specific acceptance checks were
   finalized after inspecting code and pilot outcomes, so they are not an
   independently preregistered confirmation of those differences.
+- The F9 pilot exposed differing machine/evidence outcomes. The implementation
+  was inspected and the measured cases were then run, but the requested pause
+  for author review did not occur at that point. Treat those differences as
+  observations requiring review, not as a preregistered equivalence result.
 - These locally built bundle wheels share 0.3.3 metadata with the published
   packages but are different artifacts; source and wheel digests are retained
   in each manifest. Full paper-suite regeneration remains pending.

@@ -177,7 +177,9 @@ fault-injection study using submitted machine programs.
   machine-specific outcomes and F10's untested silent-drop behavior.
 - [x] Produce the five-domain matrix and F2/F6/F7 receipt reports.
 - [ ] Review F9's machine-specific reporting and assess the effect of
-  unretained exploratory pilots on the campaign's evidential claims.
+  unretained exploratory pilots on the campaign's evidential claims. The F9
+  pilot revealed differing outcomes; the implementation was inspected and
+  measured trials proceeded without the requested pause for author review.
 
 ## S2 / E3 + CE1 — Corpus and campaign economics
 
