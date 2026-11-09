@@ -1,0 +1,133 @@
+{
+  "case": "F7",
+  "count": 9,
+  "rows": [
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "chip8",
+      "repetition": 1,
+      "source": "e1-f6-local-repair/chip8-allow_incomplete-r1.json"
+    },
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "chip8",
+      "repetition": 2,
+      "source": "e1-f6-local-repair/chip8-allow_incomplete-r2.json"
+    },
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "chip8",
+      "repetition": 3,
+      "source": "e1-f6-local-repair/chip8-allow_incomplete-r3.json"
+    },
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "pico8",
+      "repetition": 1,
+      "source": "e1-f6-local-repair/pico8-allow_incomplete-r1.json"
+    },
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "pico8",
+      "repetition": 2,
+      "source": "e1-f6-local-repair/pico8-allow_incomplete-r2.json"
+    },
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "pico8",
+      "repetition": 3,
+      "source": "e1-f6-local-repair/pico8-allow_incomplete-r3.json"
+    },
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "tic80",
+      "repetition": 1,
+      "source": "e1-f6-local-repair/tic80-allow_incomplete-r1.json"
+    },
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "tic80",
+      "repetition": 2,
+      "source": "e1-f6-local-repair/tic80-allow_incomplete-r2.json"
+    },
+    {
+      "checks": {
+        "evidence_incomplete": true,
+        "evidence_receipt_published": true,
+        "machine_completed": true,
+        "published": true,
+        "receipt_files_present": true,
+        "recorder_reports_incomplete_evidence": true,
+        "recording_complete": true
+      },
+      "machine": "tic80",
+      "repetition": 3,
+      "source": "e1-f6-local-repair/tic80-allow_incomplete-r3.json"
+    }
+  ],
+  "source": "E1 F6 allow_incomplete trials; no new executions"
+}
