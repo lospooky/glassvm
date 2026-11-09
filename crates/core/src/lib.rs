@@ -117,11 +117,20 @@ pub struct CommonMetrics {
     pub boot_success: bool,
 }
 
+/// A machine fault recorded in an otherwise completed session result.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MachineFault {
+    pub code: String,
+    pub message: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RunResult {
     pub common: CommonMetrics,
     pub capabilities: Vec<CapabilityOutput>,
+    pub fault: Option<MachineFault>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

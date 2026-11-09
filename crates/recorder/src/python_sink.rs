@@ -908,6 +908,7 @@ mod batching_tests {
         ));
 
         let result = RunResult {
+            fault: None,
             common: CommonMetrics {
                 cycles: 20,
                 frames: 2,
@@ -1176,6 +1177,7 @@ mod batching_tests {
             );
             let receipt = evidence_receipt();
             let result = RunResult {
+                fault: None,
                 common: CommonMetrics {
                     cycles: 20,
                     frames: 2,
@@ -1310,6 +1312,7 @@ mod batching_tests {
             );
             let receipt = evidence_receipt();
             let result = RunResult {
+                fault: None,
                 common: CommonMetrics {
                     cycles: 20,
                     frames: 2,

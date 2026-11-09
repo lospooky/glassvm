@@ -51,6 +51,7 @@ impl EmulatorSession for SyntheticSession {
                 .map_err(|error| error.to_string())?;
         }
         let result = RunResult {
+            fault: None,
             common: CommonMetrics {
                 cycles: self.event_count as u64,
                 frames: 0,

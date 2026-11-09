@@ -2283,6 +2283,7 @@ mod tests {
                     .map_err(|error| error.to_string())?;
             }
             let result = RunResult {
+                fault: None,
                 common: glassvm_core::CommonMetrics {
                     cycles: 2,
                     frames: 0,
@@ -2338,6 +2339,7 @@ mod tests {
             sink.emit(Emission::Event(&event))
                 .map_err(|error| error.to_string())?;
             let result = RunResult {
+                fault: None,
                 common: glassvm_core::CommonMetrics {
                     cycles: 1,
                     frames: 0,
@@ -2529,6 +2531,7 @@ mod tests {
                 }
             }
             let result = RunResult {
+                fault: None,
                 common: glassvm_core::CommonMetrics {
                     cycles: 1,
                     frames: 0,
