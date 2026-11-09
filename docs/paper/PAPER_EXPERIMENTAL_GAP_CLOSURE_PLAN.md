@@ -1,21 +1,16 @@
 # GlassVM experimental gap closure plan and progress
 
-Updated: 2026-11-08
+Updated: 2026-11-09
 
-Status: case-level matrix drafted, not frozen. The scoped F1–F10 trigger and
-conformance checks have been exercised; F4 covers the fallible Rust emission
-path, F5 covers external process kill, and F10 does not claim silent-drop or
-expected-count detection. The recorder/evidence and finalization/publication
-outcome repairs are implemented and verified. Three repeated source-level E1
-fault/accounting and machine-conformance suite runs pass at package version
-0.3.2; these are test repetitions, not new measured workload trials. S1–S6
-campaign trials remain unrun under this plan. Author-approved CE1 workload
-count and zero-item receipt semantics are recorded below.
-A separate exploratory TIC-80 cart screen was run on 2026-11-08; its results
-and rights limitations are recorded in
-`experiments/tic80-corpus-pilot/README.md`. Q2–Q10 are resolved. Q1 has a
-provisional CHIP-8 cohort recommendation; public-corpus screening is preferred
-before the final freeze.
+Status: the complete E1–E7 matrix is not frozen. E1's scoped F1–F10 source
+assertions passed in three suite repetitions, and the recorder outcome repairs
+are implemented. The first independent per-machine E1 case, F1 required
+capability rejection, has nine recorded successful rejections. CE1's approved
+five-policy selection matrix has 135 completed trials across nine workloads.
+These runs do not complete the planned source-selection versus downstream
+filtering comparison. E2–E7 remain open; prior baseline studies remain
+available separately. Q2–Q10 are resolved; Q1 still requires the full E3
+CHIP-8 cohort, count, and duplicate policy to be frozen.
 
 ### Progress update — 2026-11-09
 
@@ -138,7 +133,7 @@ delivery, recorder finalization, and publication.
 
 | Case | Coverage | Status |
 | --- | --- | --- |
-| F1 | Required unsupported capability and unsupported evidence kinds | Core preparation assertions passed in all three repeated suite runs |
+| F1 | Required unsupported capability and unsupported evidence kinds | Core assertions passed in three suite repetitions; required-capability rejection also passed in nine independent per-machine trials. Unsupported normalized/native kind trials remain open. |
 | F2 | Optional capability with an unsatisfied prerequisite | Core preparation assertions passed in all three repeated suite runs |
 | F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Core dependency-closure assertions passed in all three repeated suite runs |
 | F3 | Python callback exception at a deterministic boundary | Python-enabled recorder assertions passed in all three repeated suite runs |
@@ -190,19 +185,24 @@ fault-injection study using submitted machine programs.
   CC0/MIT/GPL terms: 38 CC0-1.0, two MIT, and five GPL variants. The metadata
   lists 16 author names. Forty are CC0 or MIT. Twenty have a static draw flag.
   A stricter intersection also requiring `machine_hint=chip8` yields 21.
-- The verifier classifies 24 of the 45 as classic CHIP-8 even though their
+- At the time of the 2026-11-08 inventory, the verifier classified 24 of the
+  45 as classic CHIP-8 even though their
   metadata hint says SCHIP or XO-CHIP; their reports list no extension
   instructions. Resolve this profile discrepancy during eligibility review.
-  The 45 remain candidates, not approved fixtures: static absence of key-input
+  The 45 were candidates at that point: static absence of key-input
   instructions does not establish that a ROM progresses without input, and
-  source/license provenance still needs review. No dynamic eligibility run or
-  public-ROM corpus sweep has been performed. Do not redistribute the external
-  ROM bytes as part of this work without a separate rights decision.
+  source/license provenance needed review. At that time no dynamic eligibility
+  run or public-ROM corpus sweep had been performed. The subsequent candidate
+  screening and selected CE1 fixtures are described below; the complete E3
+  sweep remains unrun.
 - The candidate inventory is recorded in
   `experiments/chip8-public-candidates.tsv`, keyed by ROM ID and SHA-256. It
   contains metadata references only; no external ROM bytes were copied.
-- Final cohort, count, source revision, ROM digests, and exact-duplicate policy
-  remain subject to author approval before E3 trials.
+- Since this initial inventory, public candidates have been dynamically screened
+  and three public CHIP-8 fixtures have been pinned for CE1 in the machines
+  repository. That three-ROM subset is not the full E3 corpus. The full E3
+  cohort, count, source revision, digests, and duplicate policy remain to be
+  frozen before its trials.
 
 - [ ] Finish screening public CHIP-8 corpus candidates for no-input execution,
   exact CHIP-8 profile, source provenance, and usable license terms; then freeze
@@ -221,28 +221,40 @@ fault-injection study using submitted machine programs.
 This supplements E3 to fulfill the first brief. Run the smaller comparison across
 CHIP-8, PICO-8, and TIC-80; freeze the specific workloads before measurement.
 
-- [ ] Select and freeze three cleared workloads per machine (author-approved
+- [x] Select and freeze three cleared workloads per machine (author-approved
   target); establish provenance and rights before measurement.
-- [ ] Declare explicit comprehensive supported requests for each bundle.
+- [x] Pin and run the approved five selection policies: disabled; selected
+  events plus hashes or full frames; all events plus hashes or full frames.
+  The independent-process matrix completed 135 of 135 trials; see the machines
+  repository's `conformance/paper/ce1/` for requests, raw data, and summary.
+- [x] Declare all-normalized-event requests for each bundle in that matrix.
+- [ ] Specify any broader comprehensive request needed for the downstream
+  filtering comparison; the completed matrix did not request native evidence,
+  capabilities, snapshots, or input-value evidence.
 - [ ] Declare the downstream filtering/reduction algorithm.
-- [ ] Pair identical execution material across five policies:
-  comprehensive observation with recording; selective observation with recording;
-  comprehensive observation followed by downstream filtering/reduction;
-  selective observation with online reduction and compact retention; disabled.
-- [ ] Measure requested, emitted, processed, retained, and recorded quantities
-  separately, including encoded bytes and published directory size.
+- [ ] Design and run the remaining paired comparison of comprehensive evidence
+  followed by downstream filtering against source selection and online reduction.
+  The completed five-policy matrix measured selection and recording, not these
+  downstream processing modes.
+- [x] Record emitted logical evidence bytes, recorder logical and encoded
+  bytes, and published directory size for the completed CE1 selection matrix.
+- [ ] Measure downstream processed and retained quantities for the remaining
+  filtering and online-reduction comparison.
 - [ ] Measure trial/controller RSS, wall time, batching/backpressure, and producer
   and consumer costs where independently instrumentable.
 - [ ] Vary program count and run count, and sweep length on the smaller set.
 - [ ] Report measured source-selection versus downstream-filtering costs.
 
-Exploratory TIC-80 workload scouting (separate from CE1): 180 public catalog
+Exploratory TIC-80 workload scouting on 2026-11-08: 180 public catalog
 candidates were screened on the installed TIC-80 provider. Thirty passed a
 ten-frame, empty-input, changing-fingerprint screen with no direct input API
-calls found by a source scan. This is not a frozen CE1 workload set. Only five
+calls found by a source scan. This screening set was not itself a frozen CE1
+workload set. Only five
 selected carts carry a clear license statement in embedded source; three have
-template/ambiguous wording and 22 state no license. The downloaded carts remain
-Git-ignored and local-only pending rights review. See
+template/ambiguous wording and 22 state no license. The pilot's downloaded
+carts remain local-only. Three subsequently screened carts with explicit
+MIT/CC0 markers were pinned for CE1 in the machines repository; see
+`tic80/fixtures/paper/ce1/cohort.toml`. For the pilot see
 [`experiments/tic80-corpus-pilot/`](experiments/tic80-corpus-pilot/).
 
 ## S3 / E2 — Retaining baseline and longest-run repetitions
@@ -284,7 +296,8 @@ Figure 4 clarifications found in the harness await retained-run verification:
 - [ ] Use the existing Glass Relay reference carts and their scheduled
   press/release input as the input-driven E7 fixtures for CHIP-8, PICO-8, and
   TIC-80. Verify supported combinations and nonempty channel emission before
-  measurement.
+  measurement. This uses the carts as fixtures; the separate Glass Relay
+  behavioral demonstration remains outside this campaign.
 - [ ] Add at least one mixed request per machine with nonempty scheduled input,
   input-value evidence, and snapshots, with three repetitions (nine additional
   trials proposed, subject to supported combinations).
@@ -357,6 +370,8 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | CE1 selection matrix | Ran the approved five selection policies over three pinned workloads per machine, three repetitions each; 135/135 completed with complete evidence fulfillment and finalized, published recorders. | `glassvm-machines` `paper-publication`, `0dd8dce` and `ab1612a`; `conformance/paper/ce1/` | Source-selection versus downstream-filtering/online-reduction comparison remains open. |
+| 2026-11-09 | E1 F1 | Ran three fresh-process required-capability rejection trials per machine; 9/9 rejected the undeclared capability during preparation. | `experiments/measurements/e1-f1-required-capability-0.3.3/`, `b6382e8` | Run F1 unsupported normalized/native evidence kinds and the remaining E1 cases. |
 | 2026-11-08 | Planning | Reconciled briefs and recorded this checklist. No new trials executed. | This document, initially uncommitted on `manuscript` | Q1–Q6 and S0 specification |
 | 2026-11-08 | Planning | Author selected the usual WSL2 host for timing experiments. | Q4 resolved in this document | Record host details before E5/E6 |
 | 2026-11-08 | Planning | Author allowed test-only hooks and wrappers with explicit confirmation before each addition and appropriate commits. | Q5 resolved in this document | Confirm each concrete hook before implementation |
