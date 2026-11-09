@@ -154,7 +154,7 @@ delivery, recorder finalization, and publication.
 | F7 | Published finalized physical recording with incomplete evidence, where permitted | All nine F6 `allow_incomplete` trials reported a complete recorder receipt, incomplete evidence receipt, and successful publication; both receipt files were observed before cleanup. |
 | F8-C | Recorder creation failure | Nine independent per-machine trials: machine execution and evidence completed; recorder failed and publication was not attempted. |
 | F8-W | Recorder write failure during execution | Nine independent per-machine Rust sessions used the public one-byte recorder block limit; execution and evidence completed, recorder failed, and publication was not attempted. |
-| F8-F | Recorder finalization failure | Approved private `#[cfg(test)]` trigger passed in three recorder suite repetitions and left inspectable staging. The private switch is not exposed to separate bundle sessions; per-machine trials have not been run. |
+| F8-F | Recorder finalization failure | Nine per-machine trials used a filesystem collision at the staged recorder-receipt path; execution/evidence/delivery completed, finalization failed, and publication was not attempted. The separately approved private switch also passed in three source-suite repetitions. |
 | F8-P | Publication failure after finalization | Nine independent per-machine destination-collision trials finalized recorder receipts but reported publication failure with no published handle. |
 | F9 | Controlled machine/session execution fault | Nine independent machine runs recorded CHIP-8's `InvalidOpcode` termination as a completed session and PICO-8/TIC-80 callback errors as failed sessions. Evidence was complete for CHIP-8/PICO-8 and incomplete for TIC-80; Python delivery completed. |
 | F10 | Missing, suppressed, or interrupted expected evidence | Nine per-machine zero-frame trials reported complete requested frame channels with zero items; F6 separately recorded budget truncation. No expected-count or silent-drop claim is made. |
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F8-F | Nine per-machine sessions blocked the staged recorder-receipt path with a directory; finalization failed after channel closure without publication. | `experiments/measurements/e1-f8f-local-repair/` | Audit the complete E1 case matrix. |
 | 2026-11-09 | E1 F10 | Three zero-frame trials per machine recorded complete requested frame channels with zero items; compared accounting with F6 truncation. | `experiments/measurements/e1-f10-local-repair/` | Audit remaining E1 gaps, including per-machine F8-F. |
 | 2026-11-09 | E1 F9 | Ran three controlled faulting programs per machine. CHIP-8 returned `InvalidOpcode`; PICO-8/TIC-80 returned callback errors, with different evidence completion outcomes. | `experiments/measurements/e1-f9-local-repair/` | Continue F10. |
 | 2026-11-09 | E1 F8-P | Nine public destination-collision trials preserved finalized recorder receipts and reported publication failure without a published handle. | `experiments/measurements/e1-f8p-local-repair/` | Continue F9; F8-F remains source-test-only for the approved private switch. |
