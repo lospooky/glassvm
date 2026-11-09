@@ -156,7 +156,7 @@ delivery, recorder finalization, and publication.
 | F8-W | Recorder write failure during execution | Nine independent per-machine Rust sessions used the public one-byte recorder block limit; execution and evidence completed, recorder failed, and publication was not attempted. |
 | F8-F | Recorder finalization failure | Approved private `#[cfg(test)]` trigger passed in three recorder suite repetitions and left inspectable staging. The private switch is not exposed to separate bundle sessions; per-machine trials have not been run. |
 | F8-P | Publication failure after finalization | Nine independent per-machine destination-collision trials finalized recorder receipts but reported publication failure with no published handle. |
-| F9 | Controlled machine/session execution fault | File-run execution-failure assertions passed in all three repeated suite runs; machine conformance suites also passed for all three bundles |
+| F9 | Controlled machine/session execution fault | Nine independent machine runs recorded CHIP-8's `InvalidOpcode` termination as a completed session and PICO-8/TIC-80 callback errors as failed sessions. Evidence was complete for CHIP-8/PICO-8 and incomplete for TIC-80; Python delivery completed. |
 | F10 | Missing, suppressed, or interrupted expected evidence | Zero-frame and budget-truncation assertions passed in all three repeated suite runs. No expected-count or silent-drop claim is made. |
 
 The repetitions are source-level conformance checks recorded in
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F9 | Ran three controlled faulting programs per machine. CHIP-8 returned `InvalidOpcode`; PICO-8/TIC-80 returned callback errors, with different evidence completion outcomes. | `experiments/measurements/e1-f9-local-repair/` | Continue F10. |
 | 2026-11-09 | E1 F8-P | Nine public destination-collision trials preserved finalized recorder receipts and reported publication failure without a published handle. | `experiments/measurements/e1-f8p-local-repair/` | Continue F9; F8-F remains source-test-only for the approved private switch. |
 | 2026-11-09 | E1 F8-W | The public recorder hard-block limit produced the expected write failure in nine independent machine sessions, without interrupting execution or evidence. | `glassvm-machines/conformance/paper/e1-f8w-local-repair/`, commits `c55bdec`, `1b7f428` | Continue F8-F. |
 | 2026-11-09 | E1 F8-C | A file blocking the recorder parent path produced recorder failures in nine independent machine runs; execution and evidence completed. | `experiments/measurements/e1-f8c-local-repair/` | Continue F8-W. |
