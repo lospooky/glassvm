@@ -157,7 +157,7 @@ delivery, recorder finalization, and publication.
 | F8-F | Recorder finalization failure | Approved private `#[cfg(test)]` trigger passed in three recorder suite repetitions and left inspectable staging. The private switch is not exposed to separate bundle sessions; per-machine trials have not been run. |
 | F8-P | Publication failure after finalization | Nine independent per-machine destination-collision trials finalized recorder receipts but reported publication failure with no published handle. |
 | F9 | Controlled machine/session execution fault | Nine independent machine runs recorded CHIP-8's `InvalidOpcode` termination as a completed session and PICO-8/TIC-80 callback errors as failed sessions. Evidence was complete for CHIP-8/PICO-8 and incomplete for TIC-80; Python delivery completed. |
-| F10 | Missing, suppressed, or interrupted expected evidence | Zero-frame and budget-truncation assertions passed in all three repeated suite runs. No expected-count or silent-drop claim is made. |
+| F10 | Missing, suppressed, or interrupted expected evidence | Nine per-machine zero-frame trials reported complete requested frame channels with zero items; F6 separately recorded budget truncation. No expected-count or silent-drop claim is made. |
 
 The repetitions are source-level conformance checks recorded in
 [`experiments/measurements/e1-repetitions-0.3.2/SUMMARY.md`](experiments/measurements/e1-repetitions-0.3.2/SUMMARY.md).
@@ -398,6 +398,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F10 | Three zero-frame trials per machine recorded complete requested frame channels with zero items; compared accounting with F6 truncation. | `experiments/measurements/e1-f10-local-repair/` | Audit remaining E1 gaps, including per-machine F8-F. |
 | 2026-11-09 | E1 F9 | Ran three controlled faulting programs per machine. CHIP-8 returned `InvalidOpcode`; PICO-8/TIC-80 returned callback errors, with different evidence completion outcomes. | `experiments/measurements/e1-f9-local-repair/` | Continue F10. |
 | 2026-11-09 | E1 F8-P | Nine public destination-collision trials preserved finalized recorder receipts and reported publication failure without a published handle. | `experiments/measurements/e1-f8p-local-repair/` | Continue F9; F8-F remains source-test-only for the approved private switch. |
 | 2026-11-09 | E1 F8-W | The public recorder hard-block limit produced the expected write failure in nine independent machine sessions, without interrupting execution or evidence. | `glassvm-machines/conformance/paper/e1-f8w-local-repair/`, commits `c55bdec`, `1b7f428` | Continue F8-F. |

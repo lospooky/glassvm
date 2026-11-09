@@ -1,0 +1,230 @@
+{
+  "artifact": {
+    "path": "paper/2-ibm-logo.ch8",
+    "sha256": "00072a250d2f7ccaa3ecc0182bac73e63c168abab96d7ea2df5eba6a4da49067"
+  },
+  "case": "F10-zero",
+  "file_paths_before_cleanup": [
+    "published/evidence-receipt.json",
+    "published/manifest.json",
+    "published/recorder-receipt.json"
+  ],
+  "machine": "chip8",
+  "repetition": 3,
+  "request": {
+    "configuration": {
+      "schema": {
+        "id": "chip8.machine_configuration",
+        "version": {
+          "major": 2,
+          "minor": 0,
+          "patch": 0
+        }
+      },
+      "value": {
+        "Map": {
+          "cycles_per_frame": {
+            "Unsigned": 12
+          },
+          "machine_seed": {
+            "Unsigned": 0
+          },
+          "quirks": {
+            "Text": "chip8"
+          }
+        }
+      }
+    },
+    "controls": {
+      "bundle_limits": [],
+      "frame_limit": 0,
+      "step_limit": null
+    },
+    "observation": {
+      "budgets": {},
+      "capabilities": [],
+      "frames": {
+        "capture": "hashes"
+      },
+      "guarantee": "summary",
+      "input_value_evidence": {
+        "enabled": false
+      },
+      "native_evidence": {
+        "all": false,
+        "enabled": false,
+        "kinds": []
+      },
+      "normalized_events": {
+        "access_detail": "none",
+        "events": "none",
+        "state_diffs": false
+      },
+      "overflow": "fail",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "snapshots": {
+        "capture": "none"
+      }
+    },
+    "schedule": {
+      "entries": [],
+      "schema": {
+        "id": "glassvm.input_schedule",
+        "version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    }
+  },
+  "result": {
+    "evidence_fulfillment": {
+      "budgets": {
+        "configured": {
+          "max_capability_bytes": null,
+          "max_frame_bytes": null,
+          "max_input_value_bytes": null,
+          "max_input_value_events": null,
+          "max_native_bytes": null,
+          "max_native_events": null,
+          "max_normalized_bytes": null,
+          "max_normalized_events": null,
+          "max_snapshot_bytes": null,
+          "max_total_logical_bytes": null
+        },
+        "exceeded": null,
+        "observed_logical_bytes": 0
+      },
+      "capabilities": [],
+      "channels": [
+        {
+          "channel": "normalized_events",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "capabilities",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "native_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "frames",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": true,
+          "status": "complete"
+        },
+        {
+          "channel": "snapshots",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "input_value_evidence",
+          "encoded_bytes": null,
+          "item_count": 0,
+          "logical_bytes": 0,
+          "requested": false,
+          "status": "omitted"
+        },
+        {
+          "channel": "envelope",
+          "encoded_bytes": null,
+          "item_count": 2,
+          "logical_bytes": 0,
+          "requested": true,
+          "status": "complete"
+        }
+      ],
+      "failure": null,
+      "fulfilled_guarantee": "summary",
+      "machine_id": "chip8",
+      "machine_version": "chip8-python-bundle",
+      "requested_guarantee": "summary",
+      "run_id": "python-chip8-1",
+      "schema_version": {
+        "major": 2,
+        "minor": 1,
+        "patch": 0
+      },
+      "status": "complete"
+    },
+    "machine_execution": {
+      "result": {
+        "capabilities": [],
+        "common": {
+          "boot_success": false,
+          "cycles": 0,
+          "frames": 0,
+          "termination": "Timeout"
+        }
+      },
+      "status": "completed"
+    },
+    "publication": {
+      "status": "published"
+    },
+    "published_run": {
+      "path": "/tmp/glassvm-e1-f10-_3k66ank/published",
+      "published": true
+    },
+    "python_sink_delivery": {
+      "batches_delivered": 0,
+      "failure": null,
+      "items_delivered": 0,
+      "logical_bytes_delivered": 0,
+      "peak_batch_items": 0,
+      "peak_batch_logical_bytes": 0,
+      "sink_count": 0,
+      "status": "not_requested"
+    },
+    "recorder_finalization": {
+      "result": {
+        "block_count": 0,
+        "channels": [],
+        "encoded_bytes": 0,
+        "evidence_receipt_published": true,
+        "evidence_status": "complete",
+        "failure": null,
+        "file_count": 3,
+        "finalized": true,
+        "logical_bytes": 0,
+        "record_count": 0,
+        "schema": {
+          "id": "glassvm.recorder_receipt",
+          "version": {
+            "major": 1,
+            "minor": 1,
+            "patch": 0
+          }
+        },
+        "segment_count": 0,
+        "status": "complete"
+      },
+      "status": "finalized"
+    }
+  }
+}
