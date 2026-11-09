@@ -20,9 +20,7 @@ The earlier F1 accepted-selector anomaly is retained separately.
 | F8-W recorder block limit | Completed | Complete | Not requested | Failed | Not attempted |
 | F8-F receipt-path collision | Completed | Complete | Complete | Failed | Not attempted |
 | F8-P publication destination collision | Completed | Complete | Complete | Finalized | Not published |
-| F9 CHIP-8 invalid opcode | Completed with `InvalidOpcode`, boot unsuccessful | Complete | Complete | Finalized | Published |
-| F9 PICO-8 callback error | Failed | Complete | Complete | Not finalized | Not attempted |
-| F9 TIC-80 callback error | Failed | Incomplete | Complete | Not finalized | Not attempted |
+| F9 recognized guest faults, after repair | Completed with a structured fault | Complete | Complete | Finalized | Published |
 | F10 zero-frame request | Completed | Complete; requested frame channel has zero items | Not requested | Finalized | Published |
 
 ## Receipt and scope notes
@@ -46,6 +44,11 @@ The earlier F1 accepted-selector anomaly is retained separately.
   detection, and a zero count does not prove a behavior did not occur.
 - F9 uses deliberately faulting programs; its machine-specific termination
   and evidence statuses do not establish equivalent machine behavior.
+- Before the fault-lifecycle repair, CHIP-8 returned a completed session with
+  `InvalidOpcode`, while PICO-8 and TIC-80 returned failed sessions; their
+  evidence statuses were respectively complete and incomplete. Those original
+  observations remain in `e1-f9-local-repair/`. The rerun in
+  `e1-f9-fault-lifecycle-repair/` uses locally built repaired wheels.
 - Exploratory single-run pilots were performed before the F2, F3, F8-C,
   F8-F, F9, and F10 matrices; their console output was not retained as
   structured trial artifacts. F9's machine-specific acceptance checks were

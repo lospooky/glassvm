@@ -5,8 +5,8 @@ Updated: 2026-11-09
 Status: the complete E1–E7 matrix is not frozen. E1's scoped F1–F10 cases
 have been exercised in per-machine processes and indexed in
 `experiments/measurements/E1_OUTCOME_MATRIX.md`, with scope limitations
-recorded there. F9's machine-specific evidence and execution outcomes need
-author review. CE1's approved
+recorded there. F9's machine-specific outcomes were reviewed; the approved
+fault-lifecycle repair and local-wheel rerun are recorded below. CE1's approved
 five-policy selection matrix has 135 completed trials across nine workloads.
 These runs do not complete the planned source-selection versus downstream
 filtering comparison. E2–E7 remain open; prior baseline studies remain
@@ -148,7 +148,7 @@ delivery, recorder finalization, and publication.
 | F1 | Required unsupported capability and unsupported evidence kinds | Repaired local-wheel rerun: 27/27 unsupported capability, normalized-kind and native-kind requests rejected across three machines; 3/3 supported-selector controls accepted. Execution was not invoked. |
 | F2 | Optional capability with an unsatisfied prerequisite | 9/9 independent Python executions completed and receipts marked the optional input-summary capability unavailable with the missing-channel reason. Rust three-bundle conformance checks prospective unavailability; Python prepared details are opaque. |
 | F2-D | Required/optional dependencies, shared prerequisites, transitive closure, and optional dependency failure | Nine independent preparation processes passed using a synthetic capability diamond over each real bundle input catalog. Optional missing prerequisites remained unavailable, required ones failed, and a complete request resolved the shared dependency. This is preparation-only; no synthetic normalizer executed. |
-| F3 | Python callback exception at a deterministic boundary | 27 independent machine trials covered event batches, capability outputs and receipts. All reported Python delivery failure and execution interrupted by evidence failure; recorders were not finalized and publication was not attempted. |
+| F3 | Python callback exception at a deterministic boundary | 27 independent machine trials covered event batches, capability outputs and receipts. All reported Python delivery failure and execution interrupted by evidence failure. The matrix passed again after the F9 lifecycle repair. |
 | F4 | Rust sink error at a deterministic boundary | Nine independent machine sessions returned a sink-caused error and failed evidence receipt when a caller-owned Rust sink rejected the first normalized event. Recorder and publication were not requested; capability callbacks have no fallible Rust signature. |
 | F5 | Graceful interruption and process kill before recorder finalization, where supported | Nine independent machine children were killed at the approved `RunFinished` barrier. Staging remained, with no returned result or published run. Graceful stop is unsupported. |
 | F6 | Budget exhaustion under each supported overflow policy | 18 independent per-machine trials covered `Fail` and `AllowIncomplete`; all reported the expected evidence and execution outcomes. Full receipts retained. |
@@ -157,7 +157,7 @@ delivery, recorder finalization, and publication.
 | F8-W | Recorder write failure during execution | Nine independent per-machine Rust sessions used the public one-byte recorder block limit; execution and evidence completed, recorder failed, and publication was not attempted. |
 | F8-F | Recorder finalization failure | Nine per-machine trials used a filesystem collision at the staged recorder-receipt path; execution/evidence/delivery completed, finalization failed, and publication was not attempted. The separately approved private switch also passed in three source-suite repetitions. |
 | F8-P | Publication failure after finalization | Nine independent per-machine destination-collision trials finalized recorder receipts but reported publication failure with no published handle. |
-| F9 | Controlled machine/session execution fault | Nine independent machine runs recorded CHIP-8's `InvalidOpcode` termination as a completed session and PICO-8/TIC-80 callback errors as failed sessions. Evidence was complete for CHIP-8/PICO-8 and incomplete for TIC-80; Python delivery completed. |
+| F9 | Controlled machine/session execution fault | After the approved lifecycle repair, nine independent reruns returned completed sessions with structured fault details, complete evidence, delivered receipts, finalized recorders, and publication. Earlier differing pre-repair results remain retained. |
 | F10 | Missing, suppressed, or interrupted expected evidence | Nine per-machine zero-frame trials reported complete requested frame channels with zero items; F6 separately recorded budget truncation. No expected-count or silent-drop claim is made. |
 
 The repetitions are source-level conformance checks recorded in
@@ -176,10 +176,12 @@ fault-injection study using submitted machine programs.
 - [x] Report observed deviations and unsupported cases, including F9's
   machine-specific outcomes and F10's untested silent-drop behavior.
 - [x] Produce the five-domain matrix and F2/F6/F7 receipt reports.
-- [ ] Review F9's machine-specific reporting and assess the effect of
-  unretained exploratory pilots on the campaign's evidential claims. The F9
-  pilot revealed differing outcomes; the implementation was inspected and
-  measured trials proceeded without the requested pause for author review.
+- [x] Review F9's machine-specific reporting; the author approved completed
+  session results with structured diagnostics for recognized guest faults.
+- [ ] Assess the effect of unretained exploratory pilots on the campaign's
+  evidential claims. The F9 pilot revealed differing outcomes; the implementation
+  was inspected and measured trials proceeded without the requested pause for
+  author review. Both pre-repair and repaired results are retained.
 
 ## S2 / E3 + CE1 — Corpus and campaign economics
 
@@ -404,6 +406,8 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 F3 post-repair | Repeated all 27 Python callback-failure trials after the F9 lifecycle repair; all retained structured Python delivery failure without reporting a machine fault. | `experiments/measurements/e1-f3-fault-lifecycle-repair/` | Preserve for final E1 review. |
+| 2026-11-09 | E1 F9 lifecycle repair | Unified recognized guest-fault lifecycles and added structured fault diagnostics; nine reruns delivered receipts and published complete evidence on all three machines. | `experiments/measurements/e1-f9-fault-lifecycle-repair/`; GlassVM `97e3ac4`, machines `ccda423` | Review remaining E1 limitations; retain pre-repair findings. |
 | 2026-11-09 | E1 synthesis | Indexed the scoped F1–F10 per-machine trials and receipt reports. Recorded F9's machine-dependent outcomes, F10's silent-drop limitation, and unretained exploratory pilots. | `experiments/measurements/E1_OUTCOME_MATRIX.md` | Review F9 differences and pilot limitations before treating E1 as fully closed. |
 | 2026-11-09 | E1 F8-F | Nine per-machine sessions blocked the staged recorder-receipt path with a directory; finalization failed after channel closure without publication. | `experiments/measurements/e1-f8f-local-repair/` | Audit the complete E1 case matrix. |
 | 2026-11-09 | E1 F10 | Three zero-frame trials per machine recorded complete requested frame channels with zero items; compared accounting with F6 truncation. | `experiments/measurements/e1-f10-local-repair/` | Audit remaining E1 gaps, including per-machine F8-F. |

@@ -1,0 +1,2292 @@
+{
+  "case": "F9",
+  "host": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "packages": {
+    "glassvm": "0.3.2",
+    "glassvm-chip8": "0.3.3",
+    "glassvm-pico8": "0.3.3",
+    "glassvm-tic80": "0.3.3"
+  },
+  "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]",
+  "rows": [
+    {
+      "artifact": {
+        "hex": "ffff",
+        "sha256": "ca2fd00fa001190744c15c317643ab092e7048ce086a243e2be9437c898de1bb"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 5,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "chip8",
+      "repetition": 1,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "chip8.machine_configuration",
+            "version": {
+              "major": 2,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 12
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "quirks": {
+                "Text": "chip8"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 2158
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 5,
+              "logical_bytes": 2158,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "chip8",
+          "machine_version": "chip8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-chip8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": false,
+              "cycles": 1,
+              "frames": 0,
+              "termination": "InvalidOpcode"
+            },
+            "fault": {
+              "code": "chip8.invalid_opcode",
+              "message": "CHIP-8 execution stopped: InvalidOpcode"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-zz1lerof/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 8,
+          "logical_bytes_delivered": 25362,
+          "peak_batch_items": 5,
+          "peak_batch_logical_bytes": 21474,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 1773,
+                  "logical_bytes": 2258,
+                  "record_count": 5,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 1773,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 2258,
+            "record_count": 5,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    },
+    {
+      "artifact": {
+        "hex": "ffff",
+        "sha256": "ca2fd00fa001190744c15c317643ab092e7048ce086a243e2be9437c898de1bb"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 5,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "chip8",
+      "repetition": 2,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "chip8.machine_configuration",
+            "version": {
+              "major": 2,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 12
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "quirks": {
+                "Text": "chip8"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 2158
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 5,
+              "logical_bytes": 2158,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "chip8",
+          "machine_version": "chip8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-chip8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": false,
+              "cycles": 1,
+              "frames": 0,
+              "termination": "InvalidOpcode"
+            },
+            "fault": {
+              "code": "chip8.invalid_opcode",
+              "message": "CHIP-8 execution stopped: InvalidOpcode"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-69b6mpj3/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 8,
+          "logical_bytes_delivered": 25362,
+          "peak_batch_items": 5,
+          "peak_batch_logical_bytes": 21474,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 1773,
+                  "logical_bytes": 2258,
+                  "record_count": 5,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 1773,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 2258,
+            "record_count": 5,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    },
+    {
+      "artifact": {
+        "hex": "ffff",
+        "sha256": "ca2fd00fa001190744c15c317643ab092e7048ce086a243e2be9437c898de1bb"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 5,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "chip8",
+      "repetition": 3,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "chip8.machine_configuration",
+            "version": {
+              "major": 2,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 12
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "quirks": {
+                "Text": "chip8"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 2158
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 5,
+              "logical_bytes": 2158,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "chip8",
+          "machine_version": "chip8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-chip8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": false,
+              "cycles": 1,
+              "frames": 0,
+              "termination": "InvalidOpcode"
+            },
+            "fault": {
+              "code": "chip8.invalid_opcode",
+              "message": "CHIP-8 execution stopped: InvalidOpcode"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-4tkfkx03/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 8,
+          "logical_bytes_delivered": 25362,
+          "peak_batch_items": 5,
+          "peak_batch_logical_bytes": 21474,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 1773,
+                  "logical_bytes": 2258,
+                  "record_count": 5,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 1773,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 2258,
+            "record_count": 5,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    },
+    {
+      "artifact": {
+        "hex": "7069636f2d3820636172747269646765202f2f20687474703a2f2f7777772e7069636f2d382e636f6d0a76657273696f6e2034310a5f5f6c75615f5f0a66756e6374696f6e205f647261772829206572726f72282245312046392072756e74696d65206661756c74222920656e640a",
+        "sha256": "65c9fa97fad1eab0e4e567c3298ce2fb89dcd3ccd29548a23046e92c184c5dab"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 2,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "pico8",
+      "repetition": 1,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "pico8.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "instruction_budget": {
+                "Unsigned": 500000
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 667
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 667,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 0,
+              "frames": 0,
+              "termination": "runtime_error"
+            },
+            "fault": {
+              "code": "pico8.callback_error",
+              "message": "PICO-8 _draw failed: runtime error: [string \"cartridge\"]:1: E1 F9 runtime fault\nstack traceback:\n\t[C]: in ?\n\t[C]: in function 'error'\n\t[string \"cartridge\"]:1: in function '_draw'"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-d99ojuif/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 5,
+          "logical_bytes_delivered": 8921,
+          "peak_batch_items": 2,
+          "peak_batch_logical_bytes": 6605,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 540,
+                  "logical_bytes": 707,
+                  "record_count": 2,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 540,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 707,
+            "record_count": 2,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    },
+    {
+      "artifact": {
+        "hex": "7069636f2d3820636172747269646765202f2f20687474703a2f2f7777772e7069636f2d382e636f6d0a76657273696f6e2034310a5f5f6c75615f5f0a66756e6374696f6e205f647261772829206572726f72282245312046392072756e74696d65206661756c74222920656e640a",
+        "sha256": "65c9fa97fad1eab0e4e567c3298ce2fb89dcd3ccd29548a23046e92c184c5dab"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 2,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "pico8",
+      "repetition": 2,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "pico8.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "instruction_budget": {
+                "Unsigned": 500000
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 667
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 667,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 0,
+              "frames": 0,
+              "termination": "runtime_error"
+            },
+            "fault": {
+              "code": "pico8.callback_error",
+              "message": "PICO-8 _draw failed: runtime error: [string \"cartridge\"]:1: E1 F9 runtime fault\nstack traceback:\n\t[C]: in ?\n\t[C]: in function 'error'\n\t[string \"cartridge\"]:1: in function '_draw'"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-njyraj2d/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 5,
+          "logical_bytes_delivered": 8921,
+          "peak_batch_items": 2,
+          "peak_batch_logical_bytes": 6605,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 540,
+                  "logical_bytes": 707,
+                  "record_count": 2,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 540,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 707,
+            "record_count": 2,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    },
+    {
+      "artifact": {
+        "hex": "7069636f2d3820636172747269646765202f2f20687474703a2f2f7777772e7069636f2d382e636f6d0a76657273696f6e2034310a5f5f6c75615f5f0a66756e6374696f6e205f647261772829206572726f72282245312046392072756e74696d65206661756c74222920656e640a",
+        "sha256": "65c9fa97fad1eab0e4e567c3298ce2fb89dcd3ccd29548a23046e92c184c5dab"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 2,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "pico8",
+      "repetition": 3,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "pico8.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "instruction_budget": {
+                "Unsigned": 500000
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 667
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 667,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "pico8",
+          "machine_version": "pico8-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-pico8-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 0,
+              "frames": 0,
+              "termination": "runtime_error"
+            },
+            "fault": {
+              "code": "pico8.callback_error",
+              "message": "PICO-8 _draw failed: runtime error: [string \"cartridge\"]:1: E1 F9 runtime fault\nstack traceback:\n\t[C]: in ?\n\t[C]: in function 'error'\n\t[string \"cartridge\"]:1: in function '_draw'"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-gmvs6ymr/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 5,
+          "logical_bytes_delivered": 8921,
+          "peak_batch_items": 2,
+          "peak_batch_logical_bytes": 6605,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 540,
+                  "logical_bytes": 707,
+                  "record_count": 2,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 540,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 707,
+            "record_count": 2,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    },
+    {
+      "artifact": {
+        "hex": "053f00002d2d207363726970743a206c75610a66756e6374696f6e205449432829206572726f72282245312046392072756e74696d65206661756c74222920656e640a",
+        "sha256": "e55638896536c9d12b1c877e8c67e63b9e3acdf68248dfaf2c9e27d946bdd1d2"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 2,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "tic80",
+      "repetition": 1,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "tic80.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "runtime": {
+                "Text": "lua"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 653
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 653,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "tic80",
+          "machine_version": "tic80-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-tic80-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 0,
+              "frames": 0,
+              "termination": "runtime_error"
+            },
+            "fault": {
+              "code": "tic80.callback_error",
+              "message": "TIC-80 TIC callback failed: runtime error: [string \"cartridge\"]:2: E1 F9 runtime fault\nstack traceback:\n\t[C]: in ?\n\t[C]: in function 'error'\n\t[string \"cartridge\"]:2: in function 'TIC'"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-huoju67i/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 5,
+          "logical_bytes_delivered": 8380,
+          "peak_batch_items": 2,
+          "peak_batch_logical_bytes": 6078,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 524,
+                  "logical_bytes": 693,
+                  "record_count": 2,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 524,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 693,
+            "record_count": 2,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    },
+    {
+      "artifact": {
+        "hex": "053f00002d2d207363726970743a206c75610a66756e6374696f6e205449432829206572726f72282245312046392072756e74696d65206661756c74222920656e640a",
+        "sha256": "e55638896536c9d12b1c877e8c67e63b9e3acdf68248dfaf2c9e27d946bdd1d2"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 2,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "tic80",
+      "repetition": 2,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "tic80.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "runtime": {
+                "Text": "lua"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 653
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 653,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "tic80",
+          "machine_version": "tic80-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-tic80-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 0,
+              "frames": 0,
+              "termination": "runtime_error"
+            },
+            "fault": {
+              "code": "tic80.callback_error",
+              "message": "TIC-80 TIC callback failed: runtime error: [string \"cartridge\"]:2: E1 F9 runtime fault\nstack traceback:\n\t[C]: in ?\n\t[C]: in function 'error'\n\t[string \"cartridge\"]:2: in function 'TIC'"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-qwha8w6e/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 5,
+          "logical_bytes_delivered": 8380,
+          "peak_batch_items": 2,
+          "peak_batch_logical_bytes": 6078,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 524,
+                  "logical_bytes": 693,
+                  "record_count": 2,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 524,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 693,
+            "record_count": 2,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    },
+    {
+      "artifact": {
+        "hex": "053f00002d2d207363726970743a206c75610a66756e6374696f6e205449432829206572726f72282245312046392072756e74696d65206661756c74222920656e640a",
+        "sha256": "e55638896536c9d12b1c877e8c67e63b9e3acdf68248dfaf2c9e27d946bdd1d2"
+      },
+      "case": "F9",
+      "counts": {
+        "event": 2,
+        "evidence_receipt": 1,
+        "run_finished": 1,
+        "run_started": 1
+      },
+      "file_paths_before_cleanup": [
+        "published/evidence-receipt.json",
+        "published/manifest.json",
+        "published/recorder-receipt.json",
+        "published/normalized/segment-000000.gvmseg"
+      ],
+      "machine": "tic80",
+      "repetition": 3,
+      "request": {
+        "configuration": {
+          "schema": {
+            "id": "tic80.machine_configuration",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          },
+          "value": {
+            "Map": {
+              "cycles_per_frame": {
+                "Unsigned": 1
+              },
+              "machine_seed": {
+                "Unsigned": 0
+              },
+              "runtime": {
+                "Text": "lua"
+              }
+            }
+          }
+        },
+        "controls": {
+          "bundle_limits": [],
+          "frame_limit": 2,
+          "step_limit": null
+        },
+        "observation": {
+          "budgets": {},
+          "capabilities": [],
+          "frames": {
+            "capture": "none"
+          },
+          "guarantee": "summary",
+          "input_value_evidence": {
+            "enabled": false
+          },
+          "native_evidence": {
+            "all": false,
+            "enabled": false,
+            "kinds": []
+          },
+          "normalized_events": {
+            "access_detail": "none",
+            "events": "all",
+            "state_diffs": false
+          },
+          "overflow": "fail",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "snapshots": {
+            "capture": "none"
+          }
+        },
+        "schedule": {
+          "entries": [],
+          "schema": {
+            "id": "glassvm.input_schedule",
+            "version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            }
+          }
+        }
+      },
+      "result": {
+        "evidence_fulfillment": {
+          "budgets": {
+            "configured": {
+              "max_capability_bytes": null,
+              "max_frame_bytes": null,
+              "max_input_value_bytes": null,
+              "max_input_value_events": null,
+              "max_native_bytes": null,
+              "max_native_events": null,
+              "max_normalized_bytes": null,
+              "max_normalized_events": null,
+              "max_snapshot_bytes": null,
+              "max_total_logical_bytes": null
+            },
+            "exceeded": null,
+            "observed_logical_bytes": 653
+          },
+          "capabilities": [],
+          "channels": [
+            {
+              "channel": "normalized_events",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 653,
+              "requested": true,
+              "status": "complete"
+            },
+            {
+              "channel": "capabilities",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "native_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "frames",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "snapshots",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "input_value_evidence",
+              "encoded_bytes": null,
+              "item_count": 0,
+              "logical_bytes": 0,
+              "requested": false,
+              "status": "omitted"
+            },
+            {
+              "channel": "envelope",
+              "encoded_bytes": null,
+              "item_count": 2,
+              "logical_bytes": 0,
+              "requested": true,
+              "status": "complete"
+            }
+          ],
+          "failure": null,
+          "fulfilled_guarantee": "summary",
+          "machine_id": "tic80",
+          "machine_version": "tic80-python-bundle",
+          "requested_guarantee": "summary",
+          "run_id": "python-tic80-1",
+          "schema_version": {
+            "major": 2,
+            "minor": 1,
+            "patch": 0
+          },
+          "status": "complete"
+        },
+        "machine_execution": {
+          "result": {
+            "capabilities": [],
+            "common": {
+              "boot_success": true,
+              "cycles": 0,
+              "frames": 0,
+              "termination": "runtime_error"
+            },
+            "fault": {
+              "code": "tic80.callback_error",
+              "message": "TIC-80 TIC callback failed: runtime error: [string \"cartridge\"]:2: E1 F9 runtime fault\nstack traceback:\n\t[C]: in ?\n\t[C]: in function 'error'\n\t[string \"cartridge\"]:2: in function 'TIC'"
+            }
+          },
+          "status": "completed"
+        },
+        "publication": {
+          "status": "published"
+        },
+        "published_run": {
+          "path": "/tmp/glassvm-e1-f9-srb5g0t4/published",
+          "published": true
+        },
+        "python_sink_delivery": {
+          "batches_delivered": 5,
+          "failure": null,
+          "items_delivered": 5,
+          "logical_bytes_delivered": 8380,
+          "peak_batch_items": 2,
+          "peak_batch_logical_bytes": 6078,
+          "sink_count": 1,
+          "status": "complete"
+        },
+        "recorder_finalization": {
+          "result": {
+            "block_count": 1,
+            "channels": [
+              {
+                "channel": "normalized_events",
+                "stats": {
+                  "block_count": 1,
+                  "encoded_bytes": 524,
+                  "logical_bytes": 693,
+                  "record_count": 2,
+                  "segment_count": 1
+                }
+              }
+            ],
+            "encoded_bytes": 524,
+            "evidence_receipt_published": true,
+            "evidence_status": "complete",
+            "failure": null,
+            "file_count": 4,
+            "finalized": true,
+            "logical_bytes": 693,
+            "record_count": 2,
+            "schema": {
+              "id": "glassvm.recorder_receipt",
+              "version": {
+                "major": 1,
+                "minor": 1,
+                "patch": 0
+              }
+            },
+            "segment_count": 1,
+            "status": "complete"
+          },
+          "status": "finalized"
+        }
+      }
+    }
+  ],
+  "runner_sha256": "fe8830ab4ab2839d9697909c49fbaa7526aad1a56a4662d67ea47850ef0e9905",
+  "source": {
+    "glassvm": "97e3ac448ce3516cc9064c79342ad064809ef198",
+    "machines": "ccda423604ec4941592006b1dae47de36f436059"
+  },
+  "trials": 9,
+  "wheel_sha256": {
+    "glassvm_chip8-0.3.3-cp314-cp314-linux_x86_64.whl": "c552d1f7b22a759a453f7b752888d0c813a1825fca5c372b4ddde847153c86e2",
+    "glassvm_pico8-0.3.3-cp314-cp314-linux_x86_64.whl": "aa051f870144f44722ae7966632811da5563491c60dca17d576c57d2d32164bd",
+    "glassvm_tic80-0.3.3-cp314-cp314-linux_x86_64.whl": "39a6655e41f90f3cd5fe316042e5e2240b8deafe609187b25a33149edc40447a"
+  }
+}
