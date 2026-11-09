@@ -2,10 +2,11 @@
 
 Updated: 2026-11-09
 
-Status: the complete E1–E7 matrix is not frozen. E1's scoped F1–F10 source
-assertions passed in three suite repetitions, and the recorder outcome repairs
-are implemented. The first independent per-machine E1 case, F1 required
-capability rejection, has nine recorded successful rejections. CE1's approved
+Status: the complete E1–E7 matrix is not frozen. E1's scoped F1–F10 cases
+have been exercised in per-machine processes and indexed in
+`experiments/measurements/E1_OUTCOME_MATRIX.md`, with scope limitations
+recorded there. F9's machine-specific evidence and execution outcomes need
+author review. CE1's approved
 five-policy selection matrix has 135 completed trials across nine workloads.
 These runs do not complete the planned source-selection versus downstream
 filtering comparison. E2–E7 remain open; prior baseline studies remain
@@ -166,14 +167,17 @@ suite, and the complete machine workspace suite in separate Cargo processes.
 This verifies the test assertions repeatedly; it is not a separate runtime
 fault-injection study using submitted machine programs.
 
-- [ ] Choose public-API mechanisms first and document any test-only hooks.
-- [ ] Specify expected attribution for each stage of recorder failure.
-- [ ] Run the applicable matrix in isolated processes.
-- [ ] Retain requests, preparation results, injected conditions, partial evidence,
+- [x] Choose public-API mechanisms first and document any test-only hooks.
+- [x] Specify expected attribution for each stage of recorder failure.
+- [x] Run the scoped applicable matrix in isolated processes.
+- [x] Retain requests, preparation results, injected conditions, partial evidence,
   process exits, and available receipts.
-- [ ] Distinguish supervisor observations after a kill from returned outcomes.
-- [ ] Report deviations and unsupported cases with reproducible commands.
-- [ ] Produce the five-domain matrix and F2/F6/F7 receipt reports.
+- [x] Distinguish supervisor observations after a kill from returned outcomes.
+- [x] Report observed deviations and unsupported cases, including F9's
+  machine-specific outcomes and F10's untested silent-drop behavior.
+- [x] Produce the five-domain matrix and F2/F6/F7 receipt reports.
+- [ ] Review F9's machine-specific reporting and assess the effect of
+  unretained exploratory pilots on the campaign's evidential claims.
 
 ## S2 / E3 + CE1 — Corpus and campaign economics
 
@@ -398,6 +402,7 @@ input-value/snapshot support, belong in the S0 API audit.
 
 | Date | Slice | Action and result | Artifact / revision | Next gate |
 | --- | --- | --- | --- | --- |
+| 2026-11-09 | E1 synthesis | Indexed the scoped F1–F10 per-machine trials and receipt reports. Recorded F9's machine-dependent outcomes, F10's silent-drop limitation, and unretained exploratory pilots. | `experiments/measurements/E1_OUTCOME_MATRIX.md` | Review F9 differences and pilot limitations before treating E1 as fully closed. |
 | 2026-11-09 | E1 F8-F | Nine per-machine sessions blocked the staged recorder-receipt path with a directory; finalization failed after channel closure without publication. | `experiments/measurements/e1-f8f-local-repair/` | Audit the complete E1 case matrix. |
 | 2026-11-09 | E1 F10 | Three zero-frame trials per machine recorded complete requested frame channels with zero items; compared accounting with F6 truncation. | `experiments/measurements/e1-f10-local-repair/` | Audit remaining E1 gaps, including per-machine F8-F. |
 | 2026-11-09 | E1 F9 | Ran three controlled faulting programs per machine. CHIP-8 returned `InvalidOpcode`; PICO-8/TIC-80 returned callback errors, with different evidence completion outcomes. | `experiments/measurements/e1-f9-local-repair/` | Continue F10. |
