@@ -17,6 +17,29 @@ and rights limitations are recorded in
 provisional CHIP-8 cohort recommendation; public-corpus screening is preferred
 before the final freeze.
 
+### Progress update — 2026-11-09
+
+- CE1's approved observation-policy matrix ran on the WSL2 host: three pinned
+  workloads per machine, five policies, and three repetitions (135 trials).
+  Every trial completed execution, evidence fulfillment, recorder finalization,
+  and publication. The published packages were GlassVM 0.3.2 and machine
+  bundles 0.3.3. The independent Python sink was not requested.
+- The five approved policies were disabled, selected events with hashes or
+  full frames, and all events with hashes or full frames. They do not establish
+  the planned comparison of source selection against downstream filtering and
+  online reduction; that part of campaign economics remains open.
+- Scripts, fixture pins, preflights, raw records, and summaries are on the
+  `glassvm-machines` `paper-publication` branch, in `conformance/paper/ce1/`
+  (campaign commit `0dd8dce`, results commit `ab1612a`).
+- E1's three recorded source-suite repetitions remain distinct from the
+  per-machine fault-injection experiment. Begin the latter with public-API F1
+  required-capability rejection, preserving each trial's request and outcome.
+- F1 required-capability rejection: 3 independent processes for each of
+  CHIP-8, PICO-8 and TIC-80 rejected an undeclared required capability at
+  preparation. No execution was invoked. Raw records and environment evidence:
+  `experiments/measurements/e1-f1-required-capability-0.3.3/`. F1's unsupported
+  normalized/native evidence-kind cases remain open.
+
 This document reconciles the **GlassVM: Experimental Gap Closure** brief and
 the **New and revised experiments for §5 Evaluation** brief. Update its
 checklists and execution ledger as each slice progresses.

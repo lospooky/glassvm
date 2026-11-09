@@ -1,0 +1,58 @@
+{
+  "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+  "ce1_helper_sha256": "172563b36c370963d39a1033f2342c20afd8c947602b84b731e03f27945c6207",
+  "command": "/tmp/glassvm-ce1-final-20261109-venv/bin/python docs/paper/experiments/run_e1_f1.py --output-dir docs/paper/experiments/measurements/e1-f1-required-capability-0.3.3",
+  "cpu": "AMD Ryzen 9 5900X 12-Core Processor",
+  "kernel": "6.18.54.1-microsoft-standard-WSL2",
+  "package_source_revisions": {
+    "glassvm": "8e2eef692e043f2973beb5ec99ea17ae3085fad7",
+    "glassvm-machines": "6a3e360831359aac019c3a69a8189c9a8c17593a"
+  },
+  "packages": {
+    "glassvm": {
+      "binaries": [
+        {
+          "path": "glassvm/glassvm.cpython-314-x86_64-linux-gnu.so",
+          "sha256": "a62257f1adf6063f622c1382425cb2bb9a26fed5440c062a004d32f3c70e2cb6"
+        }
+      ],
+      "version": "0.3.2"
+    },
+    "glassvm-chip8": {
+      "binaries": [
+        {
+          "path": "glassvm_chip8/glassvm_chip8.cpython-314-x86_64-linux-gnu.so",
+          "sha256": "ac4a62594c9e79ddcd9f35313b6634f128791c1572492dfcb2eb052dbec08c80"
+        }
+      ],
+      "version": "0.3.3"
+    },
+    "glassvm-pico8": {
+      "binaries": [
+        {
+          "path": "glassvm_pico8/glassvm_pico8.cpython-314-x86_64-linux-gnu.so",
+          "sha256": "358d9d8c122d33e6d95f08c5ff81062f95755b0703552a65bc568776e8ed7f6b"
+        }
+      ],
+      "version": "0.3.3"
+    },
+    "glassvm-tic80": {
+      "binaries": [
+        {
+          "path": "glassvm_tic80/glassvm_tic80.cpython-314-x86_64-linux-gnu.so",
+          "sha256": "734964c2b3ca7e5e535fdc3f6ae18fc4786cdd7754d809b948ae1b7ee6ba9524"
+        }
+      ],
+      "version": "0.3.3"
+    }
+  },
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "purpose": "Environment and artifact record for the F1 required-capability trials; collected immediately after execution.",
+  "python": "3.14.3 (main, Mar 10 2026, 18:18:50) [Clang 21.1.4 ]",
+  "runner_state": "Experiment script was uncommitted at execution; its exact SHA-256 is recorded above.",
+  "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+  "scope": "Public Python preparation; no execute call, sink, recorder, RunStarted or publication occurs after rejected preparation.",
+  "script_sha256": "ebaa9793ed6bb24d98f5284337c6987a913e39629fd5de72557a5cefcd55e041",
+  "source_revision_note": "Release source coordinates recorded in the previously pinned CE1 experiment; binaries identified separately by SHA-256.",
+  "uv": "uv 0.12.1 (x86_64-unknown-linux-gnu)"
+}

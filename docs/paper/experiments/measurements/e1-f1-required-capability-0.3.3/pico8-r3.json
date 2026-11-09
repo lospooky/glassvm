@@ -1,0 +1,94 @@
+{
+  "artifact_path": "paper/ce1/01.p8",
+  "artifact_sha256": "2d184e02e40145228e188cca5ef64c71c526851ed59e5c208a784343b2daa7bc",
+  "case": "F1-required-capability",
+  "configuration": {
+    "schema": {
+      "id": "pico8.machine_configuration",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    },
+    "value": {
+      "Map": {
+        "cycles_per_frame": {
+          "Unsigned": 1
+        },
+        "instruction_budget": {
+          "Unsigned": 500000
+        },
+        "machine_seed": {
+          "Unsigned": 0
+        }
+      }
+    }
+  },
+  "consumer_delivery": "not_requested",
+  "evidence_fulfillment": "not_started",
+  "execution_controls": {
+    "bundle_limits": [],
+    "frame_limit": 600,
+    "step_limit": null
+  },
+  "execution_invoked": false,
+  "input_schedule": {
+    "entries": [],
+    "schema": {
+      "id": "glassvm.input_schedule",
+      "version": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+      }
+    }
+  },
+  "machine": "pico8",
+  "machine_execution": "not_started",
+  "observation": {
+    "budgets": {},
+    "capabilities": [
+      {
+        "id": "glassvm.paper.unsupported-capability",
+        "parameters": {},
+        "required": true
+      }
+    ],
+    "frames": {
+      "capture": "none"
+    },
+    "guarantee": "summary",
+    "input_value_evidence": {
+      "enabled": false
+    },
+    "native_evidence": {
+      "all": false,
+      "enabled": false,
+      "kinds": []
+    },
+    "normalized_events": {
+      "access_detail": "none",
+      "events": "none",
+      "state_diffs": false
+    },
+    "overflow": "fail",
+    "schema_version": {
+      "major": 2,
+      "minor": 1,
+      "patch": 0
+    },
+    "snapshots": {
+      "capture": "none"
+    }
+  },
+  "preparation": {
+    "error_type": "ValueError",
+    "message": "required capability glassvm.paper.unsupported-capability is unavailable: capability is not declared by the normalizer catalog",
+    "status": "rejected"
+  },
+  "publication": "not_attempted",
+  "recorder_finalization": "not_started",
+  "repetition": 3,
+  "started_utc": "2026-11-09T18:42:14.239152+00:00"
+}
