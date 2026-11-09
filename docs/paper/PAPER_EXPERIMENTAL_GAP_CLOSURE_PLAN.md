@@ -61,6 +61,10 @@ separate outcome domains, and observations across different machine semantics.
 - Report bugs with reproductions before attempting fixes.
 - Distinguish expected behavior, observed behavior, and untested assumptions.
 - Establish resource ceilings and artifact-retention rules before measurements.
+- For this and future repairs, verify against local source dependencies without
+  republishing crates or wheels. Push the repair commits to GitHub without
+  issuing releases. Publish the coordinated versions together after the paper
+  suite can be regenerated from a fixed commit.
 - The current case-level proposal and freeze gates are in
   [`experiments/EXPERIMENT_MATRIX.md`](experiments/EXPERIMENT_MATRIX.md).
 
